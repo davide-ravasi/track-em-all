@@ -4,11 +4,11 @@ import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import "./App.css";
+import "./App.scss";
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <Header />
       <Router>
         <Switch>
