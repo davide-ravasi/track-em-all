@@ -1,14 +1,20 @@
 import React from "react";
+import { ShowListProps } from '../../typescript/types';
 
-type ShowListProps = {
-  title: string;
-};
+import './ShowList.scss';
+
+import ShowCard from '../ShowCard/ShowCard';
 
 export default function ShowList(props: ShowListProps) {
-  const { title } = props;
+  const { title, shows } = props;
   return (
-    <div className="show-list">
+    <div className="shows">
       <h1>{title}</h1>
+      <div className="shows__list">
+          {shows && shows.map((show) => {
+            return <ShowCard show={show} />
+          })}
+      </div>
     </div>
   );
 }
