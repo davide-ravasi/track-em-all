@@ -11,7 +11,7 @@ export default function ShowList(props: ShowListProps) {
     <div className="shows">
       <h1>{title}</h1>
       <div className="shows__list">
-          {shows && shows.map((show) => {
+          {shows && shows.slice(0,4).map((show) => {
             return <ShowCard show={show} />
           })}
       </div>
