@@ -1,4 +1,5 @@
 type Show = {
+  id: number;
   name: string;
   poster_path: string;
   vote_average: number;
@@ -9,7 +10,4 @@ type ShowListProps = {
   shows: Show[];
 };
 
-export type {
-    Show,
-    ShowListProps
-};
+export type { Show, ShowListProps };
