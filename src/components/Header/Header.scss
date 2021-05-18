@@ -1,0 +1,75 @@
+@import '../../styles/variables';
+
+.navbar {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: $max-page-width;
+    text-align: center;
+    background-color: $color-aside;
+    color: $color-main;
+    height: 80%;
+    position: sticky;
+
+    .logo {
+        font-size: 1.5rem;
+        margin: 1rem;
+    }
+
+    &__links {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    &__links:hover {
+        cursor: pointer;
+    }
+
+    &-container {
+        &--left {
+        align-items: center;
+        }
+
+        &--right {
+        display: flex;
+        align-items: center;
+        display: block;
+        padding: 1rem;
+        }
+    }
+    &__menuItem {
+        box-sizing: initial;
+        padding: 0 0.5rem;
+    }
+
+    &__Item {
+        display: flex;
+        text-align: center;
+        justify-content: space-between;
+        text-decoration: none;
+    }
+    &__Item li{
+        display: flex;
+    }
+    
+}
+
+.search {
+    background-color: transparent;
+    border: 2px solid #22254b;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 1.2rem;
+    padding: 0.5rem 1.5rem;
+    color: white;
+  }
+  
+  .search:focus {
+    outline: none;
+  }
+  
+  .search::placeholder {
+    color: white;
+  }
