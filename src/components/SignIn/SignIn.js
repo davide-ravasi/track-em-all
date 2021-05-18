@@ -17,17 +17,19 @@ export const useInput = (initialValue) => {
 };
 
 export default function Signin() {
-  function handleSubmit(e) {
-    e.preventDefault();
-    resetEmail();
-    resetPassword();
-  }
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-  const {
+  //const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  /*const {
     value: password,
     bind: bindPassword,
     reset: resetPassword,
   } = useInput("");
+*/
+  function handleSubmit(e) {
+    e.preventDefault();
+    //alert(`email: ${email} password ${password} `);
+    //resetEmail();
+    //resetPassword();
+  }
 
   return (
     <div>
@@ -40,7 +42,7 @@ export default function Signin() {
             name="email"
             required="required"
             placeholder="Email Address"
-            {...bindEmail}
+            /*{...bindEmail} */
           ></input>
         </div>
         <div>
@@ -50,7 +52,7 @@ export default function Signin() {
             name="password"
             required="required"
             placeholder="Password"
-            {...bindPassword}
+            /*{...bindPassword}*/
           ></input>
         </div>
         <div>
