@@ -44,7 +44,7 @@ export default function Header() {
               <ul className="navbar__Item">
                 <li>
                   <input
-                  className="navbar__menuItem"
+                  className=" search navbar__menuItem"
                   type="text"
                   placeholder="Search Movie"
                   value={searchTerm}
