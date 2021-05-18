@@ -3,4 +3,16 @@
 .footer {
   background-color: $color-aside;
   height: 2rem;
+  width: 100%;
+  max-width: $max-page-width;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &-item {
+    margin: 1rem;
+    text-transform: uppercase;
+    font-size: smaller;
+  }
 }
