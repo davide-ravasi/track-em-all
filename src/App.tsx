@@ -9,14 +9,14 @@ import "./App.scss";
 function App() {
   return (
     <div className="app">
-      <Header />
       <Router>
+        <Header />
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/about" exact component={AboutPage} />
         </Switch>
+        <Footer />
       </Router>
-      <Footer />
     </div>
   );
 }
