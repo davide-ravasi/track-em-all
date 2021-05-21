@@ -15,9 +15,9 @@ import "./App.scss";
 function App() {
   return (
     <div className="app">
-      <Header />
       <Router>
         <AuthProvider>
+          <Header />
           <Switch>
             <Route path="/" exact component={HomePage} />
             <Route path="/about" exact component={AboutPage} />
@@ -29,9 +29,9 @@ function App() {
               component={ExampleFirestoreUsage}
             />
           </Switch>
+          <Footer />
         </AuthProvider>
       </Router>
-      <Footer />
     </div>
   );
 }
