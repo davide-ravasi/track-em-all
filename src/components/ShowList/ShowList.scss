@@ -1,0 +1,16 @@
+@import '../../styles/variables';
+
+.shows {
+    h1 {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        color: $color-secondary;
+        font-weight: 300;
+    }
+    &__list {
+        margin-top: 0.6rem;
+        display: flex;
+        justify-content: space-between;
+        word-wrap: wrap;
+    }
+}
