@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Context } from "../../context/GlobalContext";
+import { Show } from "../../typescript/types";
 import ShowList from "../../components/ShowList/ShowList";
 import { populars } from "../../mock/popular-tv-show";
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Show[]>([]);
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const shows = populars.results;
 
