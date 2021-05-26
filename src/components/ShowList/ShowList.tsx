@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ShowListProps } from "../../typescript/types";
 
 import "./ShowList.scss";
@@ -7,13 +7,7 @@ import ShowCard from "../ShowCard/ShowCard";
 
 export default function ShowList(props: ShowListProps) {
   const { title, shows } = props;
-  const [cardAmount, setCardAmount] = useState<number>(4);
-
-  useEffect(() => {
-    if (window.screen.width >= 769) {
-      setCardAmount(6);
-    }
-  }, []);
+  const cardAmount = 6;
 
   return (
     <div className="shows">
@@ -27,10 +21,3 @@ export default function ShowList(props: ShowListProps) {
     </div>
   );
 }
-
-/*
-      {list &&
-        list.map((el) => {
-          return el.name;
-        })}
-*/
