@@ -35,9 +35,8 @@ type GlobalContext = {
   searchResults: Show[];
 };
 
-export type { Show, ShowListProps, GlobalContext };
 type ShowPageType = {
   id: string;
 };
 
-export type { Show, ShowListProps, ShowPageType };
+export type { Show, ShowListProps, ShowPageType, GlobalContext };

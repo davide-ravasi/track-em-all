@@ -7,6 +7,7 @@ import useApiCall from "../../hooks/UseApiCall";
 
 import VoteBox from "../../components/VoteBox/VoteBox";
 import Loader from "../../components/Loader/Loader";
+import ShowSeasons from "../../components/ShowSeasons/ShowSeasons";
 
 import { Show, ShowPageType } from "../../typescript/types";
 
@@ -91,6 +92,10 @@ export default function ShowPage(props: ShowPageType) {
               </div>
             </div>
           </div>
+        )}
+
+        {showData && (
+          <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
         )}
       </div>
     </div>
