@@ -3,17 +3,14 @@ import { useParams } from "react-router-dom";
 
 import useApiCall from "../../hooks/UseApiCall";
 
-import { Show } from "../../typescript/types";
+import { Show, ShowPageType } from "../../typescript/types";
 
 import "./ShowPage.scss";
-
-type ShowPageType = {
-  id: string;
-};
 
 export default function ShowPage(props: ShowPageType) {
   const { id } = useParams<ShowPageType>();
   const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}`;
+  const baseBigImgUrl = `${process.env.REACT_APP_BASE_IMG_URL}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}`;
 
   const [showData, setShowData] = useState<Show | null>();
   const { response, error, loading } = useApiCall(url);
@@ -21,6 +18,7 @@ export default function ShowPage(props: ShowPageType) {
   useEffect(() => {
     setShowData(response);
   }, [response, error, loading]);
+
   return (
     <div className="page">
       <div className="page__content-wrapper">
@@ -31,10 +29,38 @@ export default function ShowPage(props: ShowPageType) {
             <div className="show__media-wrapper">
               <img
                 alt={showData.name}
-                src={`${process.env.REACT_APP_BASE_IMG_URL}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}${showData.backdrop_path}`}
+                src={`${baseBigImgUrl}${showData.backdrop_path}`}
               />
             </div>
-            <div className="">{showData.name}</div>
+            <div className="show__title">{showData.name}</div>
+            <div className="show__genres">
+              {showData.genres &&
+                showData.genres.map((genre, i, arr) => {
+                  return (
+                    <span>
+                      {genre.name}
+                      {arr.length - 1 !== i && " / "}
+                    </span>
+                  );
+                })}
+            </div>
+            <div className="show__description">{showData.overview}</div>
+            <div className="show__creators">
+              <span>Created by: </span>
+              {showData.created_by &&
+                showData.created_by.map((creator, i, arr) => {
+                  return (
+                    <span>
+                      {creator.name}
+                      {arr.length - 1 !== i && ", "}
+                    </span>
+                  );
+                })}
+            </div>
+            <div className="show__details">
+              <p>Number of seasons: {showData.number_of_seasons} </p>
+              <p>Number of episodes: {showData.number_of_episodes}</p>
+            </div>
           </div>
         )}
       </div>
