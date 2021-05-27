@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
+import ShowPage from "./pages/ShowPage/ShowPage";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SignUp from "./components/Signup/Signup";
@@ -23,6 +24,7 @@ function App() {
             <Route path="/about" exact component={AboutPage} />
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
+            <Route path="/show/:id" exact component={ShowPage} />
             <Route
               path="/ExampleFirestoreUsage"
               exact

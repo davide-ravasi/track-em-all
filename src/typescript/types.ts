@@ -3,6 +3,7 @@ type Show = {
   name: string;
   poster_path: string;
   vote_average: number;
+  backdrop_path: string;
 };
 
 type ShowListProps = {
