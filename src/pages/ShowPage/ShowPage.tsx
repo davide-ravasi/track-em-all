@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import useApiCall from "../../hooks/UseApiCall";
 
 import VoteBox from "../../components/VoteBox/VoteBox";
+import Loader from "../../components/Loader/Loader";
 
 import { Show, ShowPageType } from "../../typescript/types";
 
@@ -27,7 +28,11 @@ export default function ShowPage(props: ShowPageType) {
     <div className="page">
       <div className="page__content-wrapper">
         {error && <div className="loading-error">{error}</div>}
-        {loading && <div className="loader">loading.....</div>}
+        {loading && (
+          <div className="loader">
+            <Loader />
+          </div>
+        )}
         {showData && (
           <div className="show">
             <div className="show__media-wrapper">
@@ -91,12 +96,3 @@ export default function ShowPage(props: ShowPageType) {
     </div>
   );
 }
-
-// https://api.themoviedb.org/3/tv/87917?api_key=b61f13ab08388482df500390ef8de990&language=en-US
-// id: 87917
-
-// creare url per immagine
-// esportare type interno
-// creare hook per call api
-// creare box episodi e seconda call
-// vedere per video youtube

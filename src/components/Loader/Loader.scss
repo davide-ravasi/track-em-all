@@ -1,0 +1,44 @@
+.loader {
+    min-height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    &__text {
+      margin-bottom: 1rem;
+    }
+    &__spinner {
+      display: inline-block;
+      width: 3em;
+      height: 3em;
+      color: inherit;
+      vertical-align: middle;
+      pointer-events: none;
+      border: 0.4em solid transparent;
+      border-top-color: currentcolor;
+      border-radius: 50%;
+      animation: 1s loader linear infinite;
+      position: relative;
+      &:before {
+        content: '';
+        display: block;
+        width: inherit;
+        height: inherit;
+        position: absolute;
+        top: -0.4em;
+        left: -0.4em;
+        border: 0.4em solid currentcolor;
+        border-radius: 50%;
+        opacity: 0.5;
+      }
+    }
+  }
+  
+  @keyframes loader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
