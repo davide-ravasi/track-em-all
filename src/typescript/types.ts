@@ -10,4 +10,9 @@ type ShowListProps = {
   shows: Show[];
 };
 
-export type { Show, ShowListProps };
+type GlobalContext = {
+  searchTerm: string;
+  searchResults: Show[];
+};
+
+export type { Show, ShowListProps, GlobalContext };
