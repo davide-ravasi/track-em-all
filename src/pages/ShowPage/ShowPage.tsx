@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 
 import useApiCall from "../../hooks/UseApiCall";
+
+import VoteBox from "../../components/VoteBox/VoteBox";
 
 import { Show, ShowPageType } from "../../typescript/types";
 
@@ -27,39 +31,59 @@ export default function ShowPage(props: ShowPageType) {
         {showData && (
           <div className="show">
             <div className="show__media-wrapper">
+              <button type="button" className="show__card-add">
+                <FontAwesomeIcon icon={faHeart} />
+              </button>
               <img
                 alt={showData.name}
                 src={`${baseBigImgUrl}${showData.backdrop_path}`}
               />
             </div>
-            <div className="show__title">{showData.name}</div>
-            <div className="show__genres">
-              {showData.genres &&
-                showData.genres.map((genre, i, arr) => {
-                  return (
-                    <span>
-                      {genre.name}
-                      {arr.length - 1 !== i && " / "}
-                    </span>
-                  );
-                })}
-            </div>
-            <div className="show__description">{showData.overview}</div>
-            <div className="show__creators">
-              <span>Created by: </span>
-              {showData.created_by &&
-                showData.created_by.map((creator, i, arr) => {
-                  return (
-                    <span>
-                      {creator.name}
-                      {arr.length - 1 !== i && ", "}
-                    </span>
-                  );
-                })}
-            </div>
-            <div className="show__details">
-              <p>Number of seasons: {showData.number_of_seasons} </p>
-              <p>Number of episodes: {showData.number_of_episodes}</p>
+            <div className="show__content-wrapper">
+              <div className="show__language">
+                <span>Languages: </span>
+                {showData.languages &&
+                  showData.languages.map((lang, i, arr) => {
+                    return (
+                      <span>
+                        {lang}
+                        {arr.length - 1 !== i && " / "}
+                      </span>
+                    );
+                  })}
+              </div>
+              <div className="show__title">
+                {showData.name}
+                <VoteBox vote={showData.vote_average} />
+              </div>
+              <div className="show__genres">
+                {showData.genres &&
+                  showData.genres.map((genre, i, arr) => {
+                    return (
+                      <span>
+                        {genre.name}
+                        {arr.length - 1 !== i && " / "}
+                      </span>
+                    );
+                  })}
+              </div>
+              <div className="show__description">{showData.overview}</div>
+              <div className="show__creators">
+                <span>Created by: </span>
+                {showData.created_by &&
+                  showData.created_by.map((creator, i, arr) => {
+                    return (
+                      <span>
+                        {creator.name}
+                        {arr.length - 1 !== i && ", "}
+                      </span>
+                    );
+                  })}
+              </div>
+              <div className="show__details">
+                <p>Number of seasons: {showData.number_of_seasons} </p>
+                <p>Number of episodes: {showData.number_of_episodes}</p>
+              </div>
             </div>
           </div>
         )}

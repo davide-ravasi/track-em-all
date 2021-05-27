@@ -2,6 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
+import VoteBox from "../VoteBox/VoteBox";
+
 import { Show } from "../../typescript/types";
 
 import "./ShowCard.scss";
@@ -28,7 +30,7 @@ export default function ShowCard(props: ShowProps) {
           <FontAwesomeIcon icon={faHeart} />
         </button>
         <img alt={name} src={`${baseThumbUrl}/${baseThumbW}/${poster_path}`} />
-        <span className="show__card-vote">{vote_average}</span>
+        <VoteBox vote={vote_average} />
       </div>
       <p className="show__card-name">{name}</p>
     </div>

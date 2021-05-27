@@ -5,6 +5,7 @@ type Show = {
   vote_average: number;
   backdrop_path: string;
   overview: string;
+  languages?: string[];
   created_by?: Creator[];
   genres?: Genre[];
   number_of_episodes?: number;
