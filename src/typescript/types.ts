@@ -39,4 +39,31 @@ type ShowPageType = {
   id: string;
 };
 
-export type { Show, ShowListProps, ShowPageType, GlobalContext };
+type ShowSeasonProps = {
+  season: number;
+  idShow: string;
+};
+
+type Season = {
+  name: String;
+  episodes: Episode[];
+};
+
+type Episode = {
+  id: number;
+  episode_number: number;
+  vote_average: number;
+  name: string;
+  still_path: string;
+  air_date: number;
+};
+
+export type {
+  Show,
+  ShowListProps,
+  ShowPageType,
+  GlobalContext,
+  ShowSeasonProps,
+  Season,
+  Episode,
+};

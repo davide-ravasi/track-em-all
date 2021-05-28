@@ -2,6 +2,8 @@ import React from "react";
 
 import ShowEpisodes from "../ShowEpisodes/ShowEpisodes";
 
+import "./ShowSeasons.scss";
+
 type ShowSeasonsProps = {
   nmbrSeasons?: number;
   idShow: string;
@@ -14,8 +16,8 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
       {nmbrSeasons &&
         Array.from({ length: nmbrSeasons }, (value, key) => {
           return (
-            <div>
-              Season {key + 1}
+            <div className="season">
+              <h2>Season {key + 1}</h2>
               <ShowEpisodes season={key + 1} idShow={idShow} />
             </div>
           );
