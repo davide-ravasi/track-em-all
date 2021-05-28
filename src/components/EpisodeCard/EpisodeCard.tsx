@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import VoteBox from "../VoteBox/VoteBox";
 
@@ -10,13 +11,13 @@ type EpisodeCardProps = {
 };
 
 export default function EpisodeCard(props: EpisodeCardProps) {
-  const { name, vote_average, still_path, episode_number, air_date } =
+  const { id, name, vote_average, still_path, episode_number, air_date } =
     props.episode;
   const baseThumbUrl = process.env.REACT_APP_BASE_IMG_URL;
   const baseThumbW = process.env.REACT_APP_BASE_THUMB_WIDTH;
 
   return (
-    <a className="list__box" href="http://google.com">
+    <Link className="list__box" to={`/episode/${id}`}>
       <div className="list__box-image">
         <img alt={name} src={`${baseThumbUrl}/${baseThumbW}/${still_path}`} />
       </div>
@@ -24,6 +25,6 @@ export default function EpisodeCard(props: EpisodeCardProps) {
       <VoteBox vote={vote_average} />
       <p className="list__box-detail">Episode {episode_number}</p>
       <p className="list__box-detail">Air date: {air_date}</p>
-    </a>
+    </Link>
   );
 }
