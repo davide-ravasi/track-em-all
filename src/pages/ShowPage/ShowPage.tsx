@@ -4,10 +4,12 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 
 import useApiCall from "../../hooks/UseApiCall";
+import { getUrlImages } from "../../utils";
 
 import VoteBox from "../../components/VoteBox/VoteBox";
 import Loader from "../../components/Loader/Loader";
 import ShowSeasons from "../../components/ShowSeasons/ShowSeasons";
+import ShowVideo from "../../components/ShowVideo/ShowVideo";
 
 import { Show, ShowPageType } from "../../typescript/types";
 
@@ -16,7 +18,6 @@ import "./ShowPage.scss";
 export default function ShowPage(props: ShowPageType) {
   const { id } = useParams<ShowPageType>();
   const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}`;
-  const baseBigImgUrl = `${process.env.REACT_APP_BASE_IMG_URL}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}`;
 
   const [showData, setShowData] = useState<Show | null>();
   const { response, error, loading } = useApiCall(url);
@@ -42,7 +43,7 @@ export default function ShowPage(props: ShowPageType) {
               </button>
               <img
                 alt={showData.name}
-                src={`${baseBigImgUrl}${showData.backdrop_path}`}
+                src={getUrlImages("big", showData.backdrop_path)}
               />
             </div>
             <div className="show__content-wrapper">
@@ -97,6 +98,8 @@ export default function ShowPage(props: ShowPageType) {
         {showData && (
           <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
         )}
+
+        {showData && <ShowVideo idShow={id} />}
       </div>
     </div>
   );
