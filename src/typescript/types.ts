@@ -42,6 +42,7 @@ type ShowPageType = {
 type ShowSeasonProps = {
   season: number;
   idShow: string;
+  setLoading: (isComponentLoading: boolean) => void;
 };
 
 type Season = {
@@ -58,6 +59,11 @@ type Episode = {
   air_date: number;
 };
 
+type ShowVideoProps = {
+  idShow: string;
+  setLoading: (isComponentLoading: boolean) => void;
+};
+
 export type {
   Show,
   ShowListProps,
@@ -66,4 +72,5 @@ export type {
   ShowSeasonProps,
   Season,
   Episode,
+  ShowVideoProps,
 };

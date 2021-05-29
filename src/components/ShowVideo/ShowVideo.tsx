@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 
+import { ShowVideoProps } from "../../typescript/types";
+
 import useApiCall from "../../hooks/UseApiCall";
+import LoadingStateHOC from "../../hoc/LoadingStateHOC";
 
-import Loader from "../Loader/Loader";
-
-type ShowVideoProps = {
-  idShow: string;
-};
-
-export default function ShowVideo(props: ShowVideoProps) {
-  const { idShow } = props;
+export const ShowVideo = (props: ShowVideoProps) => {
+  const { idShow, setLoading } = props;
   const [trailerUrl, setTrailerUrl] = useState<string | undefined>("");
 
   const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${idShow}/videos?api_key=${process.env.REACT_APP_API_KEY}`;
@@ -27,18 +24,14 @@ export default function ShowVideo(props: ShowVideoProps) {
     if (response) {
       const url = getTrailerUrl(response);
       setTrailerUrl(url);
+      setLoading(loading);
     }
-  }, [response, error, loading]);
+  }, [response, error, loading, setLoading]);
 
   return (
     <div>
       <h2>Trailer</h2>
       {error && <div className="loading-error">{error}</div>}
-      {loading && (
-        <div className="loader">
-          <Loader />
-        </div>
-      )}
       {trailerUrl && (
         <iframe
           width="560"
@@ -49,7 +42,6 @@ export default function ShowVideo(props: ShowVideoProps) {
       )}
     </div>
   );
-}
+};
 
-// env var per url videos
-// external function in utils
+export default LoadingStateHOC(ShowVideo);
