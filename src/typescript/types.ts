@@ -59,6 +59,18 @@ type Episode = {
   air_date: number;
 };
 
+type VideoApiResponse = {
+  id: number;
+  results: Video[];
+};
+
+type Video = {
+  id: number;
+  name: string;
+  key: number;
+  type: string;
+};
+
 type ShowVideoProps = {
   idShow: string;
   setLoading: (isComponentLoading: boolean) => void;
@@ -73,4 +85,6 @@ export type {
   Season,
   Episode,
   ShowVideoProps,
+  VideoApiResponse,
+  Video,
 };

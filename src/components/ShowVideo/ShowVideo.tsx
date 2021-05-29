@@ -4,6 +4,9 @@ import { ShowVideoProps } from "../../typescript/types";
 
 import useApiCall from "../../hooks/UseApiCall";
 import LoadingStateHOC from "../../hoc/LoadingStateHOC";
+import { getTrailerUrl } from "../../utils";
+
+import "./ShowVideo.scss";
 
 export const ShowVideo = (props: ShowVideoProps) => {
   const { idShow, setLoading } = props;
@@ -11,14 +14,6 @@ export const ShowVideo = (props: ShowVideoProps) => {
 
   const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${idShow}/videos?api_key=${process.env.REACT_APP_API_KEY}`;
   const { response, error, loading } = useApiCall(url);
-
-  const getTrailerUrl = (response: any) => {
-    if (response) {
-      const { results } = response;
-      const { key } = results.find((video: any) => video.type === "Trailer");
-      return `//www.youtube.com/embed/${key}?rel=0`;
-    }
-  };
 
   useEffect(() => {
     if (response) {
@@ -29,7 +24,7 @@ export const ShowVideo = (props: ShowVideoProps) => {
   }, [response, error, loading, setLoading]);
 
   return (
-    <div>
+    <div className="video">
       <h2>Trailer</h2>
       {error && <div className="loading-error">{error}</div>}
       {trailerUrl && (
@@ -37,6 +32,7 @@ export const ShowVideo = (props: ShowVideoProps) => {
           width="560"
           height="315"
           title="trailer"
+          className="video__iframe"
           src={trailerUrl}
         ></iframe>
       )}
