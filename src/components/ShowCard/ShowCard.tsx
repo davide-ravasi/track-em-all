@@ -1,6 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+
+import { getUrlImages } from "../../utils";
+
+import VoteBox from "../VoteBox/VoteBox";
 
 import { Show } from "../../typescript/types";
 
@@ -11,14 +16,11 @@ type ShowProps = {
 };
 
 export default function ShowCard(props: ShowProps) {
-  const { name, vote_average, poster_path } = props.show;
-
+  const { id, name, vote_average, poster_path } = props.show;
   const addToWatching = () => {};
-  const baseThumbUrl = process.env.REACT_APP_BASE_IMG_URL;
-  const baseThumbW = process.env.REACT_APP_BASE_THUMB_WIDTH;
 
   return (
-    <div className="show__card">
+    <Link className="show__card" to={`/show/${id}`}>
       <div className="show__card-image">
         <button
           type="button"
@@ -27,10 +29,10 @@ export default function ShowCard(props: ShowProps) {
         >
           <FontAwesomeIcon icon={faHeart} />
         </button>
-        <img alt={name} src={`${baseThumbUrl}/${baseThumbW}/${poster_path}`} />
-        <span className="show__card-vote">{vote_average}</span>
+        <img alt={name} src={getUrlImages("thumb", poster_path)} />
+        <VoteBox vote={vote_average} />
       </div>
       <p className="show__card-name">{name}</p>
-    </div>
+    </Link>
   );
 }
