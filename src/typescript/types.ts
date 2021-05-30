@@ -10,9 +10,17 @@ type ShowListProps = {
   shows: Show[];
 };
 
+type SearchProps = {
+  shows: Show[];
+};
+
+
+
 type GlobalContext = {
   searchTerm: string;
   searchResults: Show[];
+  getSearchData: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export type { Show, ShowListProps, GlobalContext };
+export type { Show, ShowListProps, GlobalContext, SearchProps };
