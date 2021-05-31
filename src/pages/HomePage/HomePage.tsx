@@ -4,7 +4,6 @@ import { populars } from "../../mock/popular-tv-show";
 
 export default function HomePage() {
   const shows = populars.results;
-
   return (
     <div className="page">
       <div className="page__content-wrapper">

@@ -2,10 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
+import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SignUp from "./components/Signup/Signup";
 import SignIn from "./components/SignIn/SignIn";
+
 import ExampleFirestoreUsage from "./components/ExampleFirestoreUsage/ExampleFirestoreUsage";
 
 import { AuthProvider } from "./contexts/AuthContext";
@@ -23,6 +25,7 @@ function App() {
             <Route path="/about" exact component={AboutPage} />
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
+            <Route path="/favorites" exact component={FavoritesPage} />
             <Route
               path="/ExampleFirestoreUsage"
               exact
