@@ -13,7 +13,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Show[]>([]);
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
-  // const [searchError, setSearchError] = useState('');
+  const [searchError, setSearchError] = useState('');
 
   const shows = populars.results;
 
@@ -81,6 +81,7 @@ export default function HomePage() {
               <Search shows={searchResults} />
             </>
           )}
+          {searchError && <div>{searchError}</div>}
         </div>
       </div>
     </Context.Provider>
