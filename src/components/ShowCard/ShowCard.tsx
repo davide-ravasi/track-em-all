@@ -84,7 +84,9 @@ export default function ShowCard(props: ShowProps) {
           className="show__card-add"
           onClick={() => addToWatching()}
         >
-          {!loading && !favorited ? (
+          {!currentUser || loading ? (
+            <div></div>
+          ) : !favorited ? (
             <FontAwesomeIcon
               icon={faHeart}
               onClick={() => {
