@@ -15,9 +15,7 @@ export default function ShowList(props: ShowListProps) {
       <div className="shows__list">
         {shows &&
           shows.slice(0, cardAmount).map((show) => {
-            return (
-              <ShowCard key={show.id.toString()} show={show} id={show.id} />
-            );
+            return <ShowCard key={show.id.toString()} show={show} />;
           })}
       </div>
     </div>
