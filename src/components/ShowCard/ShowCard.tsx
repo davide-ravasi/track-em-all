@@ -51,29 +51,35 @@ export default function ShowCard(props: ShowProps) {
   };
 
   const handleWasFavorited = async (id: Number) => {
-    await ref
-      .where("id", "==", id)
-      .limit(1)
-      .get()
-      .then(function (querySnapshot) {
-        if (querySnapshot.size > 0) {
-          setFavorited(true);
-          setLoading(false);
-        } else {
-          setFavorited(false);
-          setLoading(false);
-        }
-      });
+    if (currentUser) {
+      await ref
+        .where("user", "==", currentUser.uid)
+        .where("id", "==", id)
+        .limit(1)
+        .get()
+        .then(function (querySnapshot) {
+          if (querySnapshot.size > 0) {
+            setFavorited(true);
+            setLoading(false);
+          } else {
+            setFavorited(false);
+            setLoading(false);
+          }
+        });
+    }
   };
 
   const handleUnfavorite = (id: Number) => {
-    ref
-      .where("id", "==", id)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.docs[0].ref.delete();
-        setFavorited(false);
-      });
+    if (currentUser) {
+      ref
+        .where("user", "==", currentUser.uid)
+        .where("id", "==", id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.docs[0].ref.delete();
+          setFavorited(false);
+        });
+    }
   };
 
   return (
