@@ -22,6 +22,21 @@ a {
   outline: none;
 }
 
+h2 {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: #bacceb;
+  font-weight: 300;
+  margin-bottom: 0.6rem;
+}
+
+.list {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
 .page {
     width: 100%;
     max-width: $max-page-width;
@@ -43,3 +58,5 @@ a {
       margin-bottom: 0.5rem;
     }
   }
+
+

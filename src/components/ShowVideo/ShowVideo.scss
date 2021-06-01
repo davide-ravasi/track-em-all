@@ -1,0 +1,16 @@
+@import "../../styles/variables";
+
+.video {
+  margin-top: 3rem;
+  &__iframe {
+    width: 90vw;
+    height: 50.625vw;
+  }
+
+  @media (min-width: $bp-min-desktop) {
+    &__iframe {
+      width: 560px;
+      height: 315px;
+    }
+  }
+}
