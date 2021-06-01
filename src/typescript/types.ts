@@ -88,6 +88,7 @@ type ShowVideoProps = {
 export type {
   Show,
   ShowListProps,
+  SearchProps,
   ShowPageType,
   GlobalContext,
   ShowSeasonProps,
