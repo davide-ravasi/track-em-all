@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
+import EpisodePage from "./pages/EpisodePage/EpisodePage";
+import ShowPage from "./pages/ShowPage/ShowPage";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SignUp from "./components/Signup/Signup";
@@ -26,6 +28,8 @@ function App() {
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
             <Route path="/favorites" exact component={FavoritesPage} />
+            <Route path="/show/:id" exact component={ShowPage} />
+            <Route path="/episode/:id" exact component={EpisodePage} />
             <Route
               path="/ExampleFirestoreUsage"
               exact
