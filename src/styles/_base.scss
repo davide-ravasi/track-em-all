@@ -42,7 +42,7 @@ h2 {
     max-width: $max-page-width;
     color: $color-primary;
     background-color: $color-page-bg;
-    min-height: 100vh;
+    min-height: calc(100vh - #{$header-h} - #{$footer-h});
   
     &__title {
       text-align: center;
