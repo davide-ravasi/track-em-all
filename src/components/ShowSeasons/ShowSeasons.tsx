@@ -37,10 +37,11 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
         <div>
           {nmbrSeasons &&
             Array.from({ length: nmbrSeasons }, (value, key) => {
+              const nmbrSeason = key + 1;
               return (
-                <div className="season">
-                  <h2>Season {key + 1}</h2>
-                  <ShowEpisodes season={key + 1} idShow={idShow} />
+                <div className="season" key={"season" + nmbrSeason}>
+                  <h2>Season {nmbrSeason}</h2>
+                  <ShowEpisodes season={nmbrSeason} idShow={idShow} />
                 </div>
               );
             })}

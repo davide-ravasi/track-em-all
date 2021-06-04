@@ -24,19 +24,22 @@ export const ShowVideo = (props: ShowVideoProps) => {
   }, [response, error, loading, setLoading]);
 
   return (
-    <div className="video">
-      <h2>Trailer</h2>
+    <>
       {error && <div className="loading-error">{error}</div>}
       {trailerUrl && (
-        <iframe
-          width="560"
-          height="315"
-          title="trailer"
-          className="video__iframe"
-          src={trailerUrl}
-        ></iframe>
+        <div className="video">
+          <h2>Trailer</h2>(
+          <iframe
+            width="560"
+            height="315"
+            title="trailer"
+            className="video__iframe"
+            src={trailerUrl}
+          ></iframe>
+          )
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
