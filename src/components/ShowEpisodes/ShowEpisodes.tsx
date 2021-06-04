@@ -28,7 +28,7 @@ export const ShowEpisodes = (props: ShowSeasonProps) => {
       )}
       {seasonData &&
         seasonData.episodes.map((episode) => {
-          return <EpisodeCard episode={episode} />;
+          return <EpisodeCard key={episode.id} episode={episode} />;
         })}
     </div>
   );
