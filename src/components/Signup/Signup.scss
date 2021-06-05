@@ -1,0 +1,44 @@
+@import '../../styles/variables';
+
+.page {
+    color: $color-primary;
+    background-color: $color-page-bg;
+    min-height: 100vh - $header-h - $footer-h;
+}
+
+.signup {
+
+    &__form-container {
+        margin-top: 10rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__input-container {
+        margin-bottom: 1rem;
+    }
+
+    &__input {
+        font-family: inherit;
+        background: none;
+        border: none;
+        border-bottom: 1px solid white;
+    }
+
+    &__button {
+        margin-top: 1rem;
+        background-color: $color-main;
+        color: white;
+        border: none;
+        font-family: inherit;
+        padding: .5rem;
+        border-radius: 20px;
+        padding: 10px 42px;
+    }
+
+    &__button:hover {
+        cursor: pointer;
+    }
+
+}
