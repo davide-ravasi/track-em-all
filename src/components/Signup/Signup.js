@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { auth } from '../../firebase/firebase';
 
-import './Signup.scss';
+import "./Signup.scss";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -60,7 +59,9 @@ export default function Signup() {
           ></input>
         </div>
         <div className="signup__input-container">
-          <label htmlFor="password" type="text">Password:</label>
+          <label htmlFor="password" type="text">
+            Password:
+          </label>
           <input
             type="password"
             name="password"
@@ -70,13 +71,15 @@ export default function Signup() {
             {...bindPassword}
           ></input>
         </div>
-          <button
-            type="submit"
-            className="signup__button"
-            title="Sign Up"
-            value="Sign Up"
-            onClick={handleSubmit}
-          >Sign Up</button>
+        <button
+          type="submit"
+          className="signup__button"
+          title="Sign Up"
+          value="Sign Up"
+          onClick={handleSubmit}
+        >
+          Sign Up
+        </button>
       </form>
     </div>
   );
