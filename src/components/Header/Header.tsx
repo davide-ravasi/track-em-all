@@ -23,11 +23,11 @@ export default function Header() {
             </Link>
             {currentUser ? (
               <React.Fragment>
+                <Link to="/" className="navbar__menuItem">
+                  Favorites
+                </Link>
                 <Link onClick={logout} to="#" className="navbar__menuItem">
                   Logout
-                </Link>
-                <Link to="/signup" className="navbar__menuItem">
-                  Account
                 </Link>
               </React.Fragment>
             ) : (
@@ -35,9 +35,9 @@ export default function Header() {
                 <Link to="/signin" className="navbar__menuItem">
                   SignIn
                 </Link>
-                <Link to="/signup" className="navbar__menuItem">
+                {/* <Link to="/signup" className="navbar__menuItem">
                   SignUp
-                </Link>
+                </Link> */}
               </React.Fragment>
             )}
           </div>
