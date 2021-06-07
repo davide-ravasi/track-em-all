@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import "./SignIn.scss";
+import { useAuth } from "../../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -24,45 +28,64 @@ export default function Signin() {
     reset: resetPassword,
   } = useInput("");
 */
-  function handleSubmit(e) {
+  const { login } = useAuth();
+  const history = useHistory();
+
+  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  const {
+    value: password,
+    bind: bindPassword,
+    reset: resetPassword,
+  } = useInput("");
+
+  async function handleSubmit(e) {
     e.preventDefault();
     //alert(`email: ${email} password ${password} `);
     //resetEmail();
     //resetPassword();
+    try {
+      await login(email, password);
+      history.push("/");
+      resetEmail();
+      resetPassword();
+    } catch {
+      alert("Failed to sign in");
+    }
   }
 
   return (
-    <div>
-      <h1>Sign In</h1>
-      <form>
-        <div>
-          <label for="email"></label>
+    <div className="page">
+      <form className="login__form-container">
+        <div className="login__input-container">
+          <label htmlFor="username">Email: </label>
           <input
+            className="login__input"
             type="email"
-            name="email"
+            id="username"
+            name="username"
             required="required"
-            placeholder="Email Address"
-            /*{...bindEmail} */
+            {...bindEmail}
           ></input>
         </div>
-        <div>
-          <label for="password" type="text"></label>
+        <div className="login__input-container">
+          <label htmlFor="password">Password: </label>
           <input
+            className="login__input"
             type="password"
+            id="password"
             name="password"
             required="required"
-            placeholder="Password"
-            /*{...bindPassword}*/
+            {...bindPassword}
           ></input>
         </div>
-        <div>
-          <input
-            type="submit"
-            class="button"
-            title="Sign In"
-            value="Sign In"
-            onClick={handleSubmit}
-          ></input>
+        <button type="submit" className="login__button" onClick={handleSubmit}>
+          Sign In
+        </button>
+        <div className="login__singup-text">
+          <span>Don't have account?</span>
+          <Link to="/signup">
+            <span className="login__singup-text__link">Sign Up</span>
+          </Link>
         </div>
       </form>
     </div>

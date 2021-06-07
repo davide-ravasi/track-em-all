@@ -1,76 +1,44 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 
 .navbar {
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: $max-page-width;
+  text-align: center;
+  background-color: $color-aside;
+  color: $color-main;
+  height: $header-h;
+  position: sticky;
+
+  &__links {
     display: flex;
-    text-align: center;
-    justify-content: space-between;
     width: 100%;
-    max-width: $max-page-width;
-    text-align: center;
-    background-color: $color-aside;
-    color: $color-main;
-    height: 80%;
-    position: sticky;
+    justify-content: space-between;
+  }
 
-    .logo {
-        font-size: 1.5rem;
-        margin: 1rem;
-        padding: 0rem 0.5rem;
-    }
+  &__links:hover {
+    cursor: pointer;
+  }
 
-    &__links {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
+  &-container {
+    &--left {
+      display: flex;
+      align-items: center;
+      display: block;
+      padding: 1rem;
     }
 
-    &__links:hover {
-        cursor: pointer;
+    &--right {
+      display: flex;
+      align-items: center;
+      display: block;
+      padding: 1rem;
     }
-
-    &-container {
-        &--left {
-        align-items: center;
-        }
-
-        &--right {
-        display: flex;
-        align-items: center;
-        display: block;
-        padding: 1rem;
-        }
-    }
-    &__menuItem {
-        box-sizing: initial;
-        padding: 0 0.5rem;
-    }
-
-    &__Item {
-        display: flex;
-        text-align: center;
-        justify-content: space-between;
-        text-decoration: none;
-    }
-    &__Item li{
-        display: flex;
-    }
-    
+  }
+  &__menuItem {
+    box-sizing: initial;
+    padding: 0 0.5rem;
+  }
 }
-
-.search {
-    background-color: transparent;
-    border: 1px solid $color-main;
-    border-radius: 30px;
-    font-family: inherit;
-    font-size: 1.2rem;
-    padding: 0rem 0.5rem;
-    color: white;
-  }
-  
-  .search:focus {
-    outline: none;
-  }
-  
-  .search::placeholder {
-    color: white;
-  }
