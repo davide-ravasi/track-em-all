@@ -1,0 +1,45 @@
+@import '../../styles/variables';
+
+.page__search {
+
+    &__form {
+      margin: auto;
+      max-width: 400px;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      padding-bottom: 3rem;
+    }
+  
+    &__input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+        border-radius: 15px 0px 0px 15px;
+      }
+  
+    &__button {
+      float: left;
+      width: 20%;
+      padding: 10px;
+      background: $color-main;
+      color: white;
+      font-size: 17px;
+      border: 1px solid grey;
+      border-left: none;
+      cursor: pointer;
+      border-radius: 0px 15px 15px 0px;
+    }
+    
+    &__button:hover {
+      background: #0b7dda;
+    }
+    
+    &__button::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+  }

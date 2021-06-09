@@ -41,10 +41,13 @@ export default function ShowPage(props: ShowPageType) {
               <button type="button" className="show__card-add">
                 <FontAwesomeIcon icon={faHeart} />
               </button>
-              <img
-                alt={showData.name}
-                src={getUrlImages("big", showData.backdrop_path)}
-              />
+
+              {showData.backdrop_path && (
+                <img
+                  alt={showData.name}
+                  src={getUrlImages("big", showData.backdrop_path)}
+                />
+              )}
             </div>
             <div className="show__content-wrapper">
               <div className="show__language">
@@ -52,7 +55,7 @@ export default function ShowPage(props: ShowPageType) {
                 {showData.languages &&
                   showData.languages.map((lang, i, arr) => {
                     return (
-                      <span>
+                      <span key={`language-${i}`}>
                         {lang}
                         {arr.length - 1 !== i && " / "}
                       </span>
@@ -67,7 +70,7 @@ export default function ShowPage(props: ShowPageType) {
                 {showData.genres &&
                   showData.genres.map((genre, i, arr) => {
                     return (
-                      <span>
+                      <span key={`genre-${i}`}>
                         {genre.name}
                         {arr.length - 1 !== i && " / "}
                       </span>
@@ -80,7 +83,7 @@ export default function ShowPage(props: ShowPageType) {
                 {showData.created_by &&
                   showData.created_by.map((creator, i, arr) => {
                     return (
-                      <span>
+                      <span key={`creator-${i}`}>
                         {creator.name}
                         {arr.length - 1 !== i && ", "}
                       </span>

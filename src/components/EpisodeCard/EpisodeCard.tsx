@@ -19,7 +19,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   return (
     <Link className="list__box" to={`/episode/${id}`}>
       <div className="list__box-image">
-        <img alt={name} src={getUrlImages("thumb", still_path)} />
+        <img alt={name} src={getUrlImages("thumb", still_path, "landscape")} />
       </div>
       <p className="list__box-name">{name}</p>
       <VoteBox vote={vote_average} />
