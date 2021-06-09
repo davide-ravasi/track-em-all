@@ -24,8 +24,6 @@ export default function EpisodeCard(props: EpisodeCardProps) {
     overview,
   } = props.episode;
 
-  console.log("PROPS: ", props);
-
   return (
     <Link
       className="list__box"
