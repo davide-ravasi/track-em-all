@@ -13,11 +13,34 @@ type EpisodeCardProps = {
 };
 
 export default function EpisodeCard(props: EpisodeCardProps) {
-  const { id, name, vote_average, still_path, episode_number, air_date } =
-    props.episode;
+  const {
+    id,
+    name,
+    vote_average,
+    still_path,
+    episode_number,
+    air_date,
+    season_number,
+    overview,
+  } = props.episode;
+
+  console.log("PROPS: ", props);
 
   return (
-    <Link className="list__box" to={`/episode/${id}`}>
+    <Link
+      className="list__box"
+      to={{
+        pathname: `/episode/${id}`,
+        state: {
+          season_number,
+          episode_number,
+          overview,
+          air_date,
+          still_path,
+          name,
+        },
+      }}
+    >
       <div className="list__box-image">
         <img alt={name} src={getUrlImages("thumb", still_path, "landscape")} />
       </div>

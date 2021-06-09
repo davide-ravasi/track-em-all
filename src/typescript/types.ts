@@ -34,7 +34,14 @@ type SearchProps = {
   shows: Show[];
 };
 
-
+type EpisodeProps = {
+  season_number: number;
+  episode_number: number;
+  overview: string;
+  air_date: string;
+  still_path: string;
+  name: string;
+}
 
 type GlobalContext = {
   searchTerm: string;
@@ -66,6 +73,8 @@ type Episode = {
   name: string;
   still_path: string;
   air_date: number;
+  season_number: number;
+  overview: string;
 };
 
 type VideoApiResponse = {
@@ -94,6 +103,7 @@ export type {
   ShowSeasonProps,
   Season,
   Episode,
+  EpisodeProps,
   ShowVideoProps,
   VideoApiResponse,
   Video,
