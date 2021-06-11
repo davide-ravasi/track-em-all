@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { getUrlImages } from "../../utils";
 import { EpisodeProps, CastData, ImagesData } from "../../typescript/types";
 import Loader from "../../components/Loader/Loader";
+import ActorCard from "../../components/ActorCard/ActorCard";
 import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
 
@@ -33,8 +34,6 @@ export default function EpisodePage(props: any) {
   const [actorData, setActorData] = useState<CastData | null>();
   const [imagesData, setImagesData] = useState<ImagesData | null>();
 
-  console.log("IMAGES: ", imagesData);
-
   useEffect(() => {
     setActorData(castResponse);
     setImagesData(imagesResponse);
@@ -61,34 +60,38 @@ export default function EpisodePage(props: any) {
         <h3 className="episode_number">
           S{season_number}E{episode_number}
         </h3>
-        <h4 className="episode_airdate">{air_date}</h4>
+        <h4 className="episode_airdate">Air date: {air_date}</h4>
         <p className="episode_overview">{overview}</p>
-        <h3>CAST</h3>
+
+        <h3 className="page__h2">CAST</h3>
         <div className="cast_container">
           {actorData &&
             actorData.cast &&
             actorData.cast.map((actor) => (
-              <div key={actor.name}>
-                <img
-                  alt={actor.character}
-                  src={getUrlImages("thumb", actor.profile_path)}
-                />
-                {actor.name} {actor.character}
-                <br />
-              </div>
+              <ActorCard
+                name={actor.name}
+                character={actor.character}
+                profile_path={actor.profile_path}
+              />
             ))}
         </div>
 
-        <h3>PHOTOS</h3>
+        <h3 className="page__h2">PHOTOS</h3>
         <div className="photos_container">
           {imagesData &&
             imagesData.stills &&
             imagesData.stills.map((photo) => (
-              <img
-                key={photo.file_path}
-                alt={photo.file_path}
-                src={getUrlImages("thumb", photo.file_path)}
-              />
+              <a
+                href={getUrlImages("big", photo.file_path)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  key={photo.file_path}
+                  alt={photo.file_path}
+                  src={getUrlImages("thumb", photo.file_path)}
+                />
+              </a>
             ))}
         </div>
       </div>

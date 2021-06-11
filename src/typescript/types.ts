@@ -133,6 +133,7 @@ export type {
   ShowVideoProps,
   VideoApiResponse,
   Video,
+  Actor,
   CastData,
   ImagesData
 };
