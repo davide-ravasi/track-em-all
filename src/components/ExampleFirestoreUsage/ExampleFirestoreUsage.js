@@ -1,12 +1,14 @@
 import React, { useState, useEffect, Fragment } from "react";
 import firebase from "../../firebase/firebase";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../../contexts/AuthContext";
 
 function ExampleFirestoreUsage() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [boxOffice, setboxOffice] = useState("");
+  const { currentUser } = useAuth();
 
   const ref = firebase.firestore().collection("Movies");
 
@@ -75,7 +77,16 @@ function ExampleFirestoreUsage() {
           onChange={(e) => setboxOffice(e.target.value)}
         />
         <br />
-        <button onClick={() => addMovie({ title, boxOffice, id: uuidv4() })}>
+        <button
+          onClick={() =>
+            addMovie({
+              title,
+              boxOffice,
+              user: currentUser.uid,
+              id: uuidv4(),
+            })
+          }
+        >
           Submit
         </button>
       </div>
