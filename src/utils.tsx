@@ -52,4 +52,7 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   }
 };
 
-export { getUrlImages, getTrailerUrl };
+const padNumber = (numberToPad: number) =>
+  numberToPad > 9 ? String(numberToPad) : "0" + numberToPad;
+
+export { getUrlImages, getTrailerUrl, padNumber };

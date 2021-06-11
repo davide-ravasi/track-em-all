@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getUrlImages } from "../../utils";
+import { getUrlImages, padNumber } from "../../utils";
 import { EpisodeProps, CastData, ImagesData } from "../../typescript/types";
 import Loader from "../../components/Loader/Loader";
 import ActorCard from "../../components/ActorCard/ActorCard";
@@ -56,9 +56,9 @@ export default function EpisodePage(props: any) {
           </div>
         )}
         <h2 className="page__h2">{name}</h2>
-        <img alt={name} src={getUrlImages("big", still_path)} />
+        <img alt={name} src={getUrlImages("big", still_path)} width="100%" />
         <h3 className="episode_number">
-          S{season_number}E{episode_number}
+          S{padNumber(season_number)}E{padNumber(episode_number)}
         </h3>
         <h4 className="episode_airdate">Air date: {air_date}</h4>
         <p className="episode_overview">{overview}</p>
