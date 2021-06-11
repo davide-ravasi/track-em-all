@@ -1,12 +1,12 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import { getUrlImages } from "../../utils";
 import { EpisodeProps } from "../../typescript/types";
+import Loader from "../../components/Loader/Loader";
+import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
 
-export default function EpisodePage() {
+export default function EpisodePage(props: any) {
   const location = useLocation<EpisodeProps>();
   const {
     season_number,
@@ -15,11 +15,23 @@ export default function EpisodePage() {
     air_date,
     still_path,
     name,
+    showId,
   } = location.state;
+
+  const castUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}${showId}/season/${season_number}/episode/${episode_number}/credits?api_key=${process.env.REACT_APP_API_KEY}`;
+  const { response, error, loading } = useApiCall(castUrl);
+
+  console.log("CAST: ", response);
 
   return (
     <div className="page">
       <div className="page__content-wrapper">
+        {error && <div className="loading-error">{error}</div>}
+        {loading && (
+          <div className="loader">
+            <Loader />
+          </div>
+        )}
         <h2 className="page__h2">{name}</h2>
         <img alt={name} src={getUrlImages("big", still_path)} />
         <h3 className="episode_number">

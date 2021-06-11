@@ -26,8 +26,6 @@ export default function ShowPage(props: ShowPageType) {
     setShowData(response);
   }, [response, error, loading]);
 
-  console.log("RESPONSE: ", response);
-
   return (
     <div className="page">
       <div className="page__content-wrapper">

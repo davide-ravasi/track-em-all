@@ -10,6 +10,7 @@ import "./EpisodeCard.scss";
 
 type EpisodeCardProps = {
   episode: Episode;
+  showId: string;
 };
 
 export default function EpisodeCard(props: EpisodeCardProps) {
@@ -36,6 +37,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
           air_date,
           still_path,
           name,
+          showId: props.showId,
         },
       }}
     >

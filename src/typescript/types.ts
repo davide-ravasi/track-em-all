@@ -41,6 +41,7 @@ type EpisodeProps = {
   air_date: string;
   still_path: string;
   name: string;
+  showId: string;
 }
 
 type GlobalContext = {
