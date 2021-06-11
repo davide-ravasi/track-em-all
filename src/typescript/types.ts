@@ -91,6 +91,18 @@ type CastData = {
   id: number;
 }
 
+type Image = {
+  aspect_radio: number;
+  file_path: string;
+  height: number;
+  width: number;
+}
+
+type ImagesData = {
+  id: number;
+  stills: Image[];
+}
+
 type VideoApiResponse = {
   id: number;
   results: Video[];
@@ -121,5 +133,6 @@ export type {
   ShowVideoProps,
   VideoApiResponse,
   Video,
-  CastData
+  CastData,
+  ImagesData
 };
