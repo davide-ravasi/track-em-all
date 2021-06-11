@@ -78,6 +78,19 @@ type Episode = {
   overview: string;
 };
 
+type Actor = {
+  name: string;
+  character: string;
+  profile_path: string;
+}
+
+type CastData = {
+  cast: Actor[];
+  crew: Actor[];
+  guest_stars: Actor[];
+  id: number;
+}
+
 type VideoApiResponse = {
   id: number;
   results: Video[];
@@ -108,4 +121,5 @@ export type {
   ShowVideoProps,
   VideoApiResponse,
   Video,
+  CastData
 };

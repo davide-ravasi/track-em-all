@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { getUrlImages } from "../../utils";
-import { EpisodeProps } from "../../typescript/types";
+import { EpisodeProps, CastData } from "../../typescript/types";
 import Loader from "../../components/Loader/Loader";
 import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
@@ -20,8 +20,13 @@ export default function EpisodePage(props: any) {
 
   const castUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}${showId}/season/${season_number}/episode/${episode_number}/credits?api_key=${process.env.REACT_APP_API_KEY}`;
   const { response, error, loading } = useApiCall(castUrl);
+  const [actorData, setActorData] = useState<CastData | null>();
 
   console.log("CAST: ", response);
+
+  useEffect(() => {
+    setActorData(response);
+  }, [response, error, loading]);
 
   return (
     <div className="page">
@@ -40,6 +45,14 @@ export default function EpisodePage(props: any) {
         <h4 className="episode_airdate">{air_date}</h4>
         <p className="episode_overview">{overview}</p>
         <h3>CAST</h3>
+        {actorData &&
+          actorData.cast &&
+          actorData.cast.map((actor) => (
+            <div key={actor.name}>
+              {actor.name} {actor.character} {actor.profile_path}
+              <br />
+            </div>
+          ))}
         <h3>PHOTOS</h3>
       </div>
     </div>
