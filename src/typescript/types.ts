@@ -85,6 +85,11 @@ type ShowVideoProps = {
   setLoading: (isComponentLoading: boolean) => void;
 };
 
+type ShowResponse = {
+  page: number;
+  results: Show[];
+}
+
 export type {
   Show,
   ShowListProps,
@@ -97,4 +102,5 @@ export type {
   ShowVideoProps,
   VideoApiResponse,
   Video,
+  ShowResponse
 };
