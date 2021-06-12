@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faList, faUser } from "@fortawesome/free-solid-svg-icons";
 import "./Header.scss";
 import { useAuth } from "../../contexts/AuthContext";
+import trackEmAllLogo from "../../assets/track-em-all.svg";
 
 export default function Header() {
   const { currentUser, logout } = useAuth();
@@ -14,7 +13,11 @@ export default function Header() {
         <div className="navbar__links">
           <div className="navbar-container--left">
             <Link to="/" className="navbar_menuItem">
-              Tracker
+              <img
+                src={trackEmAllLogo}
+                alt="Track'em all logo"
+                className="navbar__logo"
+              />
             </Link>
           </div>
           <div className="navbar-container--right">

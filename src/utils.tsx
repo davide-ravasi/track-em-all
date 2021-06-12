@@ -25,10 +25,10 @@ const getUrlImages = (
   // if image get one by type
   switch (type) {
     case "thumb":
-      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_THUMB_WIDTH}/${imgName}`;
+      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_THUMB_WIDTH}${imgName}`;
       break;
     case "big":
-      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}/${imgName}`;
+      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}${imgName}`;
       break;
     default:
       return "";
