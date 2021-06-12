@@ -5,7 +5,6 @@ import ShowList from "../../components/ShowList/ShowList";
 import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import useApiCall from "../../hooks/UseApiCall";
-import { populars } from "../../mock/popular-tv-show";
 
 import "../../components/Search/Search.scss";
 
