@@ -31,7 +31,7 @@ export default function Header() {
             </Link>
             {currentUser ? (
               <React.Fragment>
-                <Link to="/" className="navbar__menuItem">
+                <Link to="/favorites" className="navbar__menuItem">
                   Favorites
                 </Link>
                 <Link onClick={logout} to="#" className="navbar__menuItem">

@@ -3,13 +3,15 @@ import ShowList from "../../components/ShowList/ShowList";
 //import { populars } from "../../mock/popular-tv-show";
 import firebase from "firebase";
 //import app from "../../firebase/firebase";
-//import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 //import { QuerySnapshot } from "@firebase/firestore-types";
 //import { ShowListProps } from "../../typescript/types";
 
+import "./FavoritesPage.scss";
+
 export default function FavoritesPage() {
   //const [error, setError] = useState("");
-  //const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const [favorites, setFavorites] = useState([] as any);
 
   //const [loading, setLoading] = useState(false);
@@ -26,23 +28,22 @@ export default function FavoritesPage() {
   //ONE TIME GET FUNCTION
   function getFavorites() {
     //setLoading(true);
+    if (currentUser) {
+      ref.where("user", "==", currentUser.uid).onSnapshot((querySnapshot) => {
+        //const items = [];
+        const items = [] as any;
+        //const results = [] as any;
 
-    ref.onSnapshot((querySnapshot) => {
-      //const items = [];
-      const items = [] as any;
-      //const results = [] as any;
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push(data);
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        items.push(data);
+          setFavorites({ ...favorites, items });
+        });
 
-        setFavorites({ ...favorites, items });
-
-        console.log("ITEMS: " + JSON.stringify(items));
+        //setLoading(false);
       });
-
-      //setLoading(false);
-    });
+    }
   }
 
   useEffect(() => {

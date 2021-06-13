@@ -1,28 +1,28 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 
 .shows {
-    h1 {
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        color: $color-secondary;
-        font-weight: 300;
-    }
-    &__list {
-        margin-top: 0.6rem;
-        display: flex;
-        justify-content: space-between;
-        word-wrap: wrap;
+  h1 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: $color-secondary;
+    font-weight: 300;
+  }
+  &__list {
+    margin-top: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    word-wrap: wrap;
 
-        .show__card:nth-child(5),
-        .show__card:last-child {
-            display: none;
-        }
-                       
-        @media (min-width: $bp-min-desktop) {
-            .show__card:nth-child(5),
-            .show__card:last-child {
-                display: block;
-            }
-        }
+    .show__card:nth-child(5),
+    .show__card:last-child {
+      display: none;
     }
+
+    @media (min-width: $bp-min-desktop) {
+      .show__card:nth-child(5),
+      .show__card:last-child {
+        display: block;
+      }
+    }
+  }
 }

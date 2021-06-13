@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 
 import useApiCall from "../../hooks/UseApiCall";
@@ -10,20 +10,76 @@ import VoteBox from "../../components/VoteBox/VoteBox";
 import Loader from "../../components/Loader/Loader";
 import ShowSeasons from "../../components/ShowSeasons/ShowSeasons";
 import ShowVideo from "../../components/ShowVideo/ShowVideo";
+import { useAuth } from "../../contexts/AuthContext";
 
 import { Show, ShowPageType } from "../../typescript/types";
+
+import firebase from "../../firebase/firebase";
 
 import "./ShowPage.scss";
 
 export default function ShowPage(props: ShowPageType) {
   const { id } = useParams<ShowPageType>();
+  const { currentUser } = useAuth();
   const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}`;
+  const ref = firebase.firestore().collection("Favorites");
 
   const [showData, setShowData] = useState<Show | null>();
   const { response, error, loading } = useApiCall(url);
 
+  const [favorited, setFavorited] = useState(false);
+
+  const [favorites, setFavorites] = useState([]);
+
+  const handleFavorite = (favorite: any) => {
+    console.log("favorites: " + favorites);
+    //.doc() use if for some reason you want that firestore generates the id
+    ref
+      .doc()
+      .set(favorite)
+      .then(() => {
+        setFavorites((prev) => [...prev]);
+        setFavorited(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleWasFavorited = async (id: Number) => {
+    if (currentUser) {
+      await ref
+        .where("user", "==", currentUser.uid)
+        .where("id", "==", id)
+        .limit(1)
+        .get()
+        .then(function (querySnapshot) {
+          if (querySnapshot.size > 0) {
+            setFavorited(true);
+          } else {
+            setFavorited(false);
+          }
+        });
+    }
+  };
+
+  const handleUnfavorite = (id: Number) => {
+    if (currentUser) {
+      ref
+        .where("user", "==", currentUser.uid)
+        .where("id", "==", id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.docs[0].ref.delete();
+          setFavorited(false);
+        });
+    }
+  };
+
   useEffect(() => {
     setShowData(response);
+    handleWasFavorited(parseInt(id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response, error, loading]);
 
   return (
@@ -39,7 +95,29 @@ export default function ShowPage(props: ShowPageType) {
           <div className="show">
             <div className="show__media-wrapper">
               <button type="button" className="show__card-add">
-                <FontAwesomeIcon icon={faHeart} />
+                {!currentUser || loading ? (
+                  <div></div>
+                ) : !favorited ? (
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    onClick={() => {
+                      handleFavorite({
+                        poster_path: showData.poster_path,
+                        vote_average: showData.vote_average,
+                        name: showData.name,
+                        id: parseInt(id),
+                        user: currentUser.uid,
+                      });
+                    }}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    onClick={() => {
+                      handleUnfavorite(parseInt(id));
+                    }}
+                  />
+                )}
               </button>
 
               {showData.backdrop_path && (
