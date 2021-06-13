@@ -22,7 +22,6 @@ export default function Header() {
                 alt="Track'em all logo"
                 className="navbar__logo"
               />
-              Tracker
             </Link>
           </div>
           <div className="navbar-container--right">

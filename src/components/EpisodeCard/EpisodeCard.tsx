@@ -5,7 +5,7 @@ import VoteBox from "../VoteBox/VoteBox";
 
 import { Episode } from "../../typescript/types";
 import { getUrlImages } from "../../utils";
-import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import firebase from "../../firebase/firebase";
@@ -30,12 +30,14 @@ export default function EpisodeCard(props: EpisodeCardProps) {
 
   const handleWatched = (watched: any) => {
     console.log("watched: " + allwatched);
+    setLoading(true);
     //.doc() use if for some reason you want that firestore generates the id
     ref
       .doc()
       .set(watched)
       .then(() => {
         setAllwatched((prev) => [...prev]);
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
@@ -62,7 +64,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   };
 
   const handleUnwatch = (id: Number) => {
-    //setLoading(true);
+    setLoading(true);
     if (currentUser) {
       ref
         .where("user", "==", currentUser.uid)
@@ -71,7 +73,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
         .then((querySnapshot) => {
           querySnapshot.docs[0].ref.delete();
           setWatched(false);
-          //setLoading(false);
+          setLoading(false);
         });
     }
   };
@@ -87,10 +89,10 @@ export default function EpisodeCard(props: EpisodeCardProps) {
           <img alt={name} src={getUrlImages("thumb", still_path)} />
         </Link>
         {!currentUser || loading ? (
-          <div></div>
+          <FontAwesomeIcon icon={faSquare} />
         ) : !watched ? (
           <FontAwesomeIcon
-            icon={faHeart}
+            icon={faSquare}
             onClick={() => {
               handleWatched({
                 id,
@@ -100,7 +102,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
           />
         ) : (
           <FontAwesomeIcon
-            icon={faTrash}
+            icon={faCheckSquare}
             onClick={() => {
               handleUnwatch(id);
             }}
