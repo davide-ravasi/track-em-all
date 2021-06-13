@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import "./Header.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
+
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faList, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   const { currentUser, logout } = useAuth();
@@ -18,6 +22,7 @@ export default function Header() {
                 alt="Track'em all logo"
                 className="navbar__logo"
               />
+              Tracker
             </Link>
           </div>
           <div className="navbar-container--right">
@@ -38,9 +43,9 @@ export default function Header() {
                 <Link to="/signin" className="navbar__menuItem">
                   SignIn
                 </Link>
-                {/* <Link to="/signup" className="navbar__menuItem">
+                <Link to="/signup" className="navbar__menuItem">
                   SignUp
-                </Link> */}
+                </Link>
               </React.Fragment>
             )}
           </div>
