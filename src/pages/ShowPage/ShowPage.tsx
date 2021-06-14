@@ -82,6 +82,8 @@ export default function ShowPage(props: ShowPageType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response, error, loading]);
 
+  console.log("show data response: ", response);
+
   return (
     <div className="page">
       <div className="page__content-wrapper">
