@@ -93,51 +93,49 @@ export default function EpisodeCard(props: EpisodeCardProps) {
 
   return (
     <div className="list__box">
-      <Link
-        className="list__box"
-        to={{
-          pathname: `/episode/${id}`,
-          state: {
-            season_number,
-            episode_number,
-            overview,
-            air_date,
-            still_path,
-            name,
-            showId: props.showId,
-          },
-        }}
-      >
-        <div className="list__box-image">
-          <Link to={`/episode/${id}`}>
-            <img alt={name} src={getUrlImages("thumb", still_path)} />
-          </Link>
-          {!currentUser || loading ? (
-            <FontAwesomeIcon icon={faSquare} />
-          ) : !watched ? (
-            <FontAwesomeIcon
-              icon={faSquare}
-              onClick={() => {
-                handleWatched({
-                  id,
-                  user: currentUser.uid,
-                });
-              }}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon={faCheckSquare}
-              onClick={() => {
-                handleUnwatch(id);
-              }}
-            />
-          )}
-        </div>
-        <p className="list__box-name">{name}</p>
-        <VoteBox vote={vote_average} />
-        <p className="list__box-detail">Episode {episode_number}</p>
-        <p className="list__box-detail">Air date: {air_date}</p>
-      </Link>
+      <div className="list__box-image">
+        <Link
+          className="list__box"
+          to={{
+            pathname: `/episode/${id}`,
+            state: {
+              season_number,
+              episode_number,
+              overview,
+              air_date,
+              still_path,
+              name,
+              showId: props.showId,
+            },
+          }}
+        >
+          <img alt={name} src={getUrlImages("thumb", still_path)} />
+        </Link>
+        {!currentUser || loading ? (
+          <FontAwesomeIcon icon={faSquare} />
+        ) : !watched ? (
+          <FontAwesomeIcon
+            icon={faSquare}
+            onClick={() => {
+              handleWatched({
+                id,
+                user: currentUser.uid,
+              });
+            }}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faCheckSquare}
+            onClick={() => {
+              handleUnwatch(id);
+            }}
+          />
+        )}
+      </div>
+      <p className="list__box-name">{name}</p>
+      <VoteBox vote={vote_average} />
+      <p className="list__box-detail">Episode {episode_number}</p>
+      <p className="list__box-detail">Air date: {air_date}</p>
     </div>
   );
 }
