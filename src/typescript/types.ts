@@ -140,6 +140,6 @@ export type {
   Video,
   Actor,
   CastData,
-  ImagesData
+  ImagesData,
   ShowResponse
 };
