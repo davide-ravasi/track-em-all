@@ -34,7 +34,15 @@ type SearchProps = {
   shows: Show[];
 };
 
-
+type EpisodeProps = {
+  season_number: number;
+  episode_number: number;
+  overview: string;
+  air_date: string;
+  still_path: string;
+  name: string;
+  showId: string;
+}
 
 type GlobalContext = {
   searchTerm: string;
@@ -66,7 +74,34 @@ type Episode = {
   name: string;
   still_path: string;
   air_date: number;
+  season_number: number;
+  overview: string;
 };
+
+type Actor = {
+  name: string;
+  character: string;
+  profile_path: string;
+}
+
+type CastData = {
+  cast: Actor[];
+  crew: Actor[];
+  guest_stars: Actor[];
+  id: number;
+}
+
+type Image = {
+  aspect_radio: number;
+  file_path: string;
+  height: number;
+  width: number;
+}
+
+type ImagesData = {
+  id: number;
+  stills: Image[];
+}
 
 type VideoApiResponse = {
   id: number;
@@ -99,8 +134,12 @@ export type {
   ShowSeasonProps,
   Season,
   Episode,
+  EpisodeProps,
   ShowVideoProps,
   VideoApiResponse,
   Video,
+  Actor,
+  CastData,
+  ImagesData
   ShowResponse
 };
