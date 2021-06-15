@@ -30,9 +30,6 @@ export default function HomePage() {
   const [popularData, setPopularData] = useState<ShowResponse | null>();
   const [topData, setTopData] = useState<ShowResponse | null>();
 
-  console.log("popular shows: ", popularResponse);
-  console.log("top shows: ", topResponse);
-
   useEffect(() => {
     setPopularData(popularResponse);
     setTopData(topResponse);
@@ -61,23 +58,18 @@ export default function HomePage() {
           const res = await fetch(url);
           const data = await res.json();
           setSearchResults(data.results);
-          console.log(data.results);
         } catch (error) {
           setSearchResults([]);
           setSearchTerm("");
         } finally {
           setHideHomepageContents(true);
         }
-      } else {
-        console.log("please enter tv shows name");
       }
     } catch (error) {
       setSearchError(error.toString());
     }
 
-    // setSearchResults([]);
-    // // hide the default homepage contants after the user has submitted the search form
-    // setHideHomepageContents(true);
+    // hide the default homepage contants after the user has submitted the search form
   };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

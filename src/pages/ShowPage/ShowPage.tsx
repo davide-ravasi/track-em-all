@@ -32,7 +32,6 @@ export default function ShowPage(props: ShowPageType) {
   const [favorites, setFavorites] = useState([]);
 
   const handleFavorite = (favorite: any) => {
-    console.log("favorites: " + favorites);
     //.doc() use if for some reason you want that firestore generates the id
     ref
       .doc()
@@ -81,8 +80,6 @@ export default function ShowPage(props: ShowPageType) {
     handleWasFavorited(parseInt(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response, error, loading]);
-
-  console.log("show data response: ", response);
 
   return (
     <div className="page">
