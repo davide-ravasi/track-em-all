@@ -10,8 +10,6 @@ import Footer from "./components/Footer/Footer";
 import SignUp from "./components/Signup/Signup";
 import SignIn from "./components/SignIn/SignIn";
 
-import ExampleFirestoreUsage from "./components/ExampleFirestoreUsage/ExampleFirestoreUsage";
-
 import { AuthProvider } from "./contexts/AuthContext";
 
 import "./App.scss";
@@ -30,11 +28,6 @@ function App() {
             <Route path="/favorites" exact component={FavoritesPage} />
             <Route path="/show/:id" exact component={ShowPage} />
             <Route path="/episode/:id" exact component={EpisodePage} />
-            <Route
-              path="/ExampleFirestoreUsage"
-              exact
-              component={ExampleFirestoreUsage}
-            />
           </Switch>
           <Footer />
         </AuthProvider>

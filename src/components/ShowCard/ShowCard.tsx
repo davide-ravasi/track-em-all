@@ -19,12 +19,19 @@ type ShowProps = {
   show: Show;
 };
 
+type Favorite = {
+  poster_path: string;
+  vote_average: Number;
+  name: string;
+  id: Number;
+  user: string;
+};
+
 export default function ShowCard(props: ShowProps) {
   const { id, name, vote_average, poster_path } = props.show;
 
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState([]);
   const { currentUser } = useAuth();
 
   const addToWatching = () => {};
@@ -36,14 +43,13 @@ export default function ShowCard(props: ShowProps) {
     handleWasFavorited(id);
   });
 
-  const handleFavorite = (favorite: any) => {
-    console.log("favorites: " + favorites);
+  const handleFavorite = (favorite: Favorite) => {
     //.doc() use if for some reason you want that firestore generates the id
     ref
       .doc()
       .set(favorite)
       .then(() => {
-        setFavorites((prev) => [...prev]);
+        setFavorited(true);
       })
       .catch((err) => {
         console.error(err);

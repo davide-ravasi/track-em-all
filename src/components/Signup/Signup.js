@@ -40,7 +40,9 @@ export default function Signup() {
       resetEmail();
       resetPassword();
     } catch {
-      alert("Failed to create an account");
+      alert(
+        "Failed to create an account. Please make sure to use a valid email and password(recommended minimum of 6 characters)"
+      );
     }
   }
 
@@ -53,8 +55,6 @@ export default function Signup() {
             type="email"
             name="email"
             className="signup__input"
-            //required="required"
-            // placeholder="Email Address"
             {...bindEmail}
           ></input>
         </div>
@@ -66,8 +66,6 @@ export default function Signup() {
             type="password"
             name="password"
             className="signup__input"
-            //required="required"
-            // placeholder="Password"
             {...bindPassword}
           ></input>
         </div>

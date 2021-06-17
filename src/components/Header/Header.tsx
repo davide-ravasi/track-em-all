@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import "./Header.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
@@ -26,7 +27,7 @@ export default function Header() {
             </Link>
             {currentUser ? (
               <React.Fragment>
-                <Link to="/" className="navbar__menuItem">
+                <Link to="/favorites" className="navbar__menuItem">
                   Favorites
                 </Link>
                 <Link onClick={logout} to="#" className="navbar__menuItem">
@@ -38,9 +39,9 @@ export default function Header() {
                 <Link to="/signin" className="navbar__menuItem">
                   SignIn
                 </Link>
-                {/* <Link to="/signup" className="navbar__menuItem">
+                <Link to="/signup" className="navbar__menuItem">
                   SignUp
-                </Link> */}
+                </Link>
               </React.Fragment>
             )}
           </div>

@@ -6,17 +6,27 @@ import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import useApiCall from "../../hooks/UseApiCall";
 
+import firebase from "../../firebase/firebase";
+
+import { useAuth } from "../../contexts/AuthContext";
+
 import "../../components/Search/Search.scss";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Show[]>([]);
+  const [recommendedId, setRecommendedId] = useState(Number);
+  const [recommendedName, setRecommendedName] = useState(String);
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const [searchError, setSearchError] = useState("");
+  const { currentUser } = useAuth();
+  const ref = firebase.firestore().collection("Favorites");
 
   const popularUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}popular?api_key=${process.env.REACT_APP_API_KEY}`;
   const latestUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}top_rated?api_key=${process.env.REACT_APP_API_KEY}`;
+  const recommendedUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}/${recommendedId}/recommendations?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`;
+
   const {
     response: popularResponse,
     error: popularError,
@@ -27,22 +37,57 @@ export default function HomePage() {
     error: topError,
     loading: topLoading,
   } = useApiCall(latestUrl);
+
+  const {
+    response: recommendedResponse,
+    error: recommendedError,
+    loading: recommendedLoading,
+  } = useApiCall(recommendedUrl);
+
   const [popularData, setPopularData] = useState<ShowResponse | null>();
   const [topData, setTopData] = useState<ShowResponse | null>();
-
-  console.log("popular shows: ", popularResponse);
-  console.log("top shows: ", topResponse);
+  const [recommendedData, setRecommendedData] = useState<ShowResponse | null>();
 
   useEffect(() => {
+    if (!recommendedId) {
+      const fetchData = async () => {
+        if (currentUser) {
+          await ref
+            .where("user", "==", currentUser.uid)
+            .get()
+            .then(function (querySnapshot) {
+              if (querySnapshot.size > 0) {
+                const random =
+                  Math.floor(
+                    Math.random() * (1 + (querySnapshot.size - 1) - 0)
+                  ) + 0;
+                const result = querySnapshot.docs[random].data();
+                setRecommendedId(result.id);
+                setRecommendedName(result.name);
+                setRecommendedData(recommendedResponse);
+              }
+            });
+        }
+      };
+
+      fetchData();
+    }
     setPopularData(popularResponse);
     setTopData(topResponse);
+    setRecommendedData(recommendedResponse);
   }, [
+    recommendedId,
+    currentUser,
+    ref,
     popularResponse,
     topResponse,
+    recommendedResponse,
     topError,
     popularError,
+    recommendedError,
     topLoading,
     popularLoading,
+    recommendedLoading,
   ]);
 
   const api_key = process.env.REACT_APP_API_KEY;
@@ -61,23 +106,18 @@ export default function HomePage() {
           const res = await fetch(url);
           const data = await res.json();
           setSearchResults(data.results);
-          console.log(data.results);
         } catch (error) {
           setSearchResults([]);
           setSearchTerm("");
         } finally {
           setHideHomepageContents(true);
         }
-      } else {
-        console.log("please enter tv shows name");
       }
     } catch (error) {
       setSearchError(error.toString());
     }
 
-    // setSearchResults([]);
-    // // hide the default homepage contants after the user has submitted the search form
-    // setHideHomepageContents(true);
+    // hide the default homepage contants after the user has submitted the search form
   };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -104,6 +144,14 @@ export default function HomePage() {
               {topData && (
                 <ShowList title="top rated" shows={topData.results} />
               )}
+              {recommendedData &&
+                recommendedData.results &&
+                recommendedData.results.length > 0 && (
+                  <ShowList
+                    title={`because you liked:  ${recommendedName}`}
+                    shows={recommendedData.results}
+                  />
+                )}
             </>
           ) : (
             <>

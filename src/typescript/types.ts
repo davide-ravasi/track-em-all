@@ -42,7 +42,7 @@ type EpisodeProps = {
   still_path: string;
   name: string;
   showId: string;
-}
+};
 
 type GlobalContext = {
   searchTerm: string;
@@ -50,7 +50,6 @@ type GlobalContext = {
   getSearchData: (e: React.FormEvent<HTMLFormElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
-
 
 type ShowPageType = {
   id: string;
@@ -82,26 +81,26 @@ type Actor = {
   name: string;
   character: string;
   profile_path: string;
-}
+};
 
 type CastData = {
   cast: Actor[];
   crew: Actor[];
   guest_stars: Actor[];
   id: number;
-}
+};
 
 type Image = {
   aspect_radio: number;
   file_path: string;
   height: number;
   width: number;
-}
+};
 
 type ImagesData = {
   id: number;
   stills: Image[];
-}
+};
 
 type VideoApiResponse = {
   id: number;
@@ -123,7 +122,7 @@ type ShowVideoProps = {
 type ShowResponse = {
   page: number;
   results: Show[];
-}
+};
 
 export type {
   Show,
@@ -140,6 +139,6 @@ export type {
   Video,
   Actor,
   CastData,
-  ImagesData
-  ShowResponse
+  ImagesData,
+  ShowResponse,
 };
