@@ -33,19 +33,17 @@ export default function EpisodeCard(props: EpisodeCardProps) {
 
   const [watched, setWatched] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [allwatched, setAllwatched] = useState([]);
   const { currentUser } = useAuth();
   const ref = firebase.firestore().collection("Episodes");
 
   const handleWatched = (watched: any) => {
-    console.log("watched: " + allwatched);
     setLoading(true);
     //.doc() use if for some reason you want that firestore generates the id
     ref
       .doc()
       .set(watched)
       .then(() => {
-        setAllwatched((prev) => [...prev]);
+        setWatched(true);
         setLoading(false);
       })
       .catch((err) => {

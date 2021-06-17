@@ -1,16 +1,16 @@
 @import "../../styles/variables";
 
-.search {
+.favorite {
   margin-top: 3rem;
-
+  margin-left: 3rem;
   &__list {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
   }
 }
 
-.page__search {
+.page__favorite {
   &__form {
     margin: auto;
     max-width: 400px;
