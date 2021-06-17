@@ -40,7 +40,9 @@ export default function Signup() {
       resetEmail();
       resetPassword();
     } catch {
-      alert("Failed to create an account");
+      alert(
+        "Failed to create an account. Please make sure to use a valid email and password(recommended minimum of 6 characters)"
+      );
     }
   }
 

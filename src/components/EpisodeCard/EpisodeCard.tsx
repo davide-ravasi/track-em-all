@@ -33,7 +33,6 @@ export default function EpisodeCard(props: EpisodeCardProps) {
 
   const [watched, setWatched] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [allwatched, setAllwatched] = useState([]);
   const { currentUser } = useAuth();
   const ref = firebase.firestore().collection("Episodes");
 
@@ -44,7 +43,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
       .doc()
       .set(watched)
       .then(() => {
-        setAllwatched((prev) => [...prev]);
+        setWatched(true);
         setLoading(false);
       })
       .catch((err) => {
@@ -109,28 +108,27 @@ export default function EpisodeCard(props: EpisodeCardProps) {
           }}
         >
           <img alt={name} src={getUrlImages("thumb", still_path)} />
-
-          {!currentUser || loading ? (
-            <FontAwesomeIcon icon={faSquare} />
-          ) : !watched ? (
-            <FontAwesomeIcon
-              icon={faSquare}
-              onClick={() => {
-                handleWatched({
-                  id,
-                  user: currentUser.uid,
-                });
-              }}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon={faCheckSquare}
-              onClick={() => {
-                handleUnwatch(id);
-              }}
-            />
-          )}
         </Link>
+        {!currentUser || loading ? (
+          <FontAwesomeIcon icon={faSquare} />
+        ) : !watched ? (
+          <FontAwesomeIcon
+            icon={faSquare}
+            onClick={() => {
+              handleWatched({
+                id,
+                user: currentUser.uid,
+              });
+            }}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faCheckSquare}
+            onClick={() => {
+              handleUnwatch(id);
+            }}
+          />
+        )}
       </div>
       <p className="list__box-name">{name}</p>
       <VoteBox vote={vote_average} />

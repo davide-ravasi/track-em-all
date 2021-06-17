@@ -40,7 +40,7 @@ export default function Signin() {
       resetEmail();
       resetPassword();
     } catch {
-      alert("Failed to sign in");
+      alert("Invalid Credentials");
     }
   }
 
