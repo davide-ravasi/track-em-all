@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ShowList from "../../components/ShowList/ShowList";
+import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
 //import { populars } from "../../mock/popular-tv-show";
 import firebase from "firebase";
 //import app from "../../firebase/firebase";
@@ -55,7 +55,10 @@ export default function FavoritesPage() {
     <div className="page">
       <div className="page__content-wrapper">
         {favorites && favorites.items && favorites.items.length > 0 && (
-          <ShowList title="Your Favorite Shows" shows={favorites.items} />
+          <ShowFavoriteList
+            title="Your Favorite Shows"
+            shows={favorites.items}
+          />
         )}
       </div>
     </div>

@@ -1,0 +1,28 @@
+@import "../../styles/variables";
+
+.favorites {
+  h1 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: $color-secondary;
+    font-weight: 300;
+  }
+  &__list {
+    margin-top: 2rem;
+    display: block;
+    justify-content: space-between;
+    word-wrap: wrap;
+
+    .favorite__card:nth-child(5),
+    .favorite__card:last-child {
+      display: none;
+    }
+
+    @media (min-width: $bp-min-desktop) {
+      .favorite__card:nth-child(5),
+      .favorite__card:last-child {
+        display: block;
+      }
+    }
+  }
+}

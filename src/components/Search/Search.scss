@@ -1,4 +1,4 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 
 .search {
   margin-top: 3rem;
@@ -11,7 +11,6 @@
 }
 
 .page__search {
-
   &__form {
     margin: auto;
     max-width: 400px;
@@ -20,15 +19,15 @@
     padding-bottom: 3rem;
   }
 
-  &__input[type=text] {
-      padding: 10px;
-      font-size: 17px;
-      border: 1px solid grey;
-      float: left;
-      width: 80%;
-      background: #f1f1f1;
-      border-radius: 15px 0px 0px 15px;
-    }
+  &__input[type="text"] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+    border-radius: 15px 0px 0px 15px;
+  }
 
   &__button {
     float: left;
@@ -42,11 +41,11 @@
     cursor: pointer;
     border-radius: 0px 15px 15px 0px;
   }
-  
+
   &__button:hover {
     background: #0b7dda;
   }
-  
+
   &__button::after {
     content: "";
     clear: both;

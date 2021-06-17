@@ -87,27 +87,28 @@ export default function EpisodeCard(props: EpisodeCardProps) {
       <div className="list__box-image">
         <Link to={`/episode/${id}`}>
           <img alt={name} src={getUrlImages("thumb", still_path)} />
+
+          {!currentUser || loading ? (
+            <FontAwesomeIcon icon={faSquare} />
+          ) : !watched ? (
+            <FontAwesomeIcon
+              icon={faSquare}
+              onClick={() => {
+                handleWatched({
+                  id,
+                  user: currentUser.uid,
+                });
+              }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faCheckSquare}
+              onClick={() => {
+                handleUnwatch(id);
+              }}
+            />
+          )}
         </Link>
-        {!currentUser || loading ? (
-          <FontAwesomeIcon icon={faSquare} />
-        ) : !watched ? (
-          <FontAwesomeIcon
-            icon={faSquare}
-            onClick={() => {
-              handleWatched({
-                id,
-                user: currentUser.uid,
-              });
-            }}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faCheckSquare}
-            onClick={() => {
-              handleUnwatch(id);
-            }}
-          />
-        )}
       </div>
       <p className="list__box-name">{name}</p>
       <VoteBox vote={vote_average} />
