@@ -21,13 +21,6 @@ export const useInput = (initialValue) => {
 };
 
 export default function Signin() {
-  //const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-  /*const {
-    value: password,
-    bind: bindPassword,
-    reset: resetPassword,
-  } = useInput("");
-*/
   const { login } = useAuth();
   const history = useHistory();
 
@@ -40,9 +33,7 @@ export default function Signin() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    //alert(`email: ${email} password ${password} `);
-    //resetEmail();
-    //resetPassword();
+
     try {
       await login(email, password);
       history.push("/");

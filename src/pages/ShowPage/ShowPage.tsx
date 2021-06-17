@@ -32,7 +32,6 @@ export default function ShowPage(props: ShowPageType) {
   const [favorites, setFavorites] = useState([]);
 
   const handleFavorite = (favorite: any) => {
-    console.log("favorites: " + favorites);
     //.doc() use if for some reason you want that firestore generates the id
     ref
       .doc()

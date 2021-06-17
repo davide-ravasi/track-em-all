@@ -5,9 +5,6 @@ import "./Header.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
 
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faList, faUser } from "@fortawesome/free-solid-svg-icons";
-
 export default function Header() {
   const { currentUser, logout } = useAuth();
 

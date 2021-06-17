@@ -53,8 +53,6 @@ export default function Signup() {
             type="email"
             name="email"
             className="signup__input"
-            //required="required"
-            // placeholder="Email Address"
             {...bindEmail}
           ></input>
         </div>
@@ -66,8 +64,6 @@ export default function Signup() {
             type="password"
             name="password"
             className="signup__input"
-            //required="required"
-            // placeholder="Password"
             {...bindPassword}
           ></input>
         </div>
