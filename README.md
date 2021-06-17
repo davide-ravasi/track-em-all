@@ -1,46 +1,77 @@
-# Getting Started with Create React App
+# Track'em all
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Track'em all is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).
 
-## Available Scripts
+Stack: React, Typescript, Sass, Firestore
 
-In the project directory, you can run:
+## Setup instructions
 
-### `npm start`
+Clone the repository to your local machine:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`git clone https://github.com/chingu-voyages/v30-bears-team-06.git`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Install the dependencies locally:
 
-### `npm test`
+`cd v30-bears-team-06/ && npm i`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To use this project you must have a Firestore database and an API KEY for the TMDB API ([TMDB api docs](https://developers.themoviedb.org/3/getting-started/introduction)).
 
-### `npm run build`
+## Firestore database
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In the firebase console go to your firestore database and click on:
+project settings -> general (first tab).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You will find a configuration code like this one:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+var firebaseConfig = {
+  apiKey: "API_KEY",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://PROJECT_ID.firebaseio.com",
+  projectId: "PROJECT_ID",
+  storageBucket: "PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID",
+};
+```
 
-### `npm run eject`
+Add it in the .env file (see the .env_sample file in the root folder as a reference).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Your code must be like this:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+REACT_APP_FIREBASE_APIKEY="API_KEY"
+REACT_APP_FIREBASE_AUTHDOMAIN="PROJECT_ID.firebaseapp.com"
+REACT_APP_FIREBASE_DATABASEURL="https://PROJECT_ID.firebaseio.com"
+REACT_APP_FIREBASE_PROJECTID="PROJECT_ID"
+REACT_APP_FIREBASE_STORAGEBUCKET="PROJECT_ID.appspot.com"
+REACT_APP_FIREBASE_MESSAGINGSENDERID="SENDER_ID"
+REACT_APP_FIREBASE_APPID="APP_ID"
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Refs: [firebase docs](https://firebase.google.com/docs/web/setup)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## TMDB Api
 
-## Learn More
+The Movie Database (TMDB) is a community built movie and TV database.
+To use the API endpoints you have to:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Create an account (is free): https://www.themoviedb.org/signup
+- Copy the API KEY from this link https://www.themoviedb.org/settings/api in your .env file (see the .env_sample file as a reference)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Refs: [TMDB api docs](https://developers.themoviedb.org/3/getting-started/introduction)
+
+## Running the app
+
+Run the command `npm start` to start the app.
+
+## Deployments
+
+- https://trackemall.netlify.app/ - production build of main branch
+- https://trackemalldev.netlify.app/ - production build of the develop branch
+
+## Contributing
+
+Track'em all was developed by [@DanielLopezCS](https://github.com/DanielLopezCS), [@ljgpok](https://github.com/ljgpok), [@theborgh](https://github.com/theborgh) and [@davide-ravasi](https://github.com/davide-ravasi).
+
+If you like the app, feel free to fork this repository or open a pull request
