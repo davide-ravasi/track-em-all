@@ -1,0 +1,65 @@
+@import "../../styles/variables";
+
+.show {
+  &__media-wrapper {
+    position: relative;
+    margin-bottom: 0.2rem;
+    min-height: 3rem;
+    img {
+      width: 100%;
+      padding-bottom: 0.5rem;
+    }
+  }
+  &__card-add {
+    top: 10px;
+    right: 10px;
+
+    .fa-heart {
+      @media (min-width: $bp-min-desktop) {
+        font-size: 1.8rem;
+      }
+    }
+  }
+  &__content-wrapper {
+    position: relative;
+  }
+  &_language,
+  & &__language {
+    position: absolute;
+    right: 0;
+    top: 4px;
+  }
+  &__title {
+    color: $color-main;
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+
+    .vote-box {
+      margin-left: 8px;
+    }
+  }
+  &__genres,
+  &__creators,
+  &__details,
+  &__language,
+  &__description {
+    font-size: 0.85rem;
+    @media (min-width: $bp-min-desktop) {
+      font-size: 1rem;
+      line-height: 1.3rem;
+    }
+  }
+  &__genres,
+  &__creators,
+  &__details,
+  &__language {
+    color: $color-dark-grey;
+  }
+  &__genres,
+  &__creators {
+    margin-bottom: 0.3rem;
+  }
+  &__description {
+    margin-bottom: 0.8rem;
+  }
+}

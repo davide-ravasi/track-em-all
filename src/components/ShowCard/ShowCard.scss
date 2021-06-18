@@ -1,0 +1,106 @@
+@import "../../styles/variables";
+
+.show__card {
+  flex: 1 0 calc(25% - 0.8rem);
+  max-width: calc(25% - 0.8rem);
+  font-size: 0.9rem;
+
+  @media (min-width: $bp-min-desktop) {
+    flex: 1 0 calc(16.5% - 1.5rem);
+    max-width: calc(16.5% - 1.5rem);
+  }
+
+  &-image {
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
+  .vote-box {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    z-index: 0;
+    margin-left: -22px;
+  }
+  &-name {
+    text-align: center;
+    color: #fff;
+    margin-top: 4px;
+  }
+  &-add {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+
+    @media (min-width: $bp-min-desktop) {
+      top: 10px;
+      right: 10px;
+    }
+
+    svg {
+      font-size: 1.3rem;
+      color: $color-secondary;
+      transition: all 0.2s ease-in-out;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+    }
+
+    &:hover {
+      svg {
+        color: $color-warning;
+      }
+    }
+  }
+}
+
+.list__box {
+  flex: 1 0 calc(25% - 0.8rem);
+  max-width: calc(25% - 0.8rem);
+  font-size: 0.9rem;
+  margin-right: 0.8rem;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  padding: 2px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border: 1px solid $color-dark-grey;
+    background-color: lighten($color-page-bg, 5%);
+  }
+
+  @media (min-width: $bp-min-desktop) {
+    flex: 1 0 calc(16.5% - 1.5rem);
+    max-width: calc(16.5% - 1.5rem);
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  &-image {
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
+  .vote-box {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    @media (min-width: $bp-min-desktop) {
+      font-size: 0.9rem;
+    }
+  }
+  &-name {
+    text-align: center;
+    color: #fff;
+    margin-top: 4px;
+  }
+  &-detail {
+    font-size: 0.8rem;
+    color: $color-dark-grey;
+    margin-top: 0.2rem;
+  }
+}

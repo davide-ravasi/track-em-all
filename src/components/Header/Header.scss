@@ -1,0 +1,48 @@
+@import "../../styles/variables";
+
+.navbar {
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: $max-page-width;
+  text-align: center;
+  background-color: $color-aside;
+  color: $color-main;
+  height: $header-h;
+  position: sticky;
+
+  &__links {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &__links:hover {
+    cursor: pointer;
+  }
+
+  &-container {
+    &--left {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    &--right {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+    }
+  }
+  &__menuItem {
+    box-sizing: initial;
+    padding: 0 0.5rem;
+  }
+  &__logo {
+    max-height: 26px;
+    @media (min-width: $bp-min-desktop) {
+      max-height: 40px;
+    }
+  }
+}
