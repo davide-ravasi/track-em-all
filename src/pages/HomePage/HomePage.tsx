@@ -17,8 +17,8 @@ export default function HomePage() {
   const [textInput, setTextInput] = useState("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Show[]>([]);
-  const [recommendedId, setRecommendedId] = useState(Number);
-  const [recommendedName, setRecommendedName] = useState(String);
+  const [recommendedId, setRecommendedId] = useState<number>();
+  const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const [searchError, setSearchError] = useState("");
   const { currentUser } = useAuth();
@@ -27,9 +27,6 @@ export default function HomePage() {
   const popularUrl = getApiUrl("popular");
   const latestUrl = getApiUrl("top_rated");
   const recommendedUrl = getApiUrl("recommendations", recommendedId);
-  const latest2Url = getApiUrl("latest");
-
-  console.log(latest2Url);
 
   const {
     response: popularResponse,

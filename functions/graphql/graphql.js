@@ -1,4 +1,7 @@
-const { ApolloServer, gql } = require("apollo-server-lambda");
+const {
+  ApolloServer,
+  gql,
+} = require("../../node_modules/apollo-server-lambda");
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
