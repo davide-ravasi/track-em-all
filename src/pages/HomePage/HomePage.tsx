@@ -11,6 +11,7 @@ import firebase from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 
 import "../../components/Search/Search.scss";
+import { getApiUrl } from "../../utils";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
@@ -23,9 +24,12 @@ export default function HomePage() {
   const { currentUser } = useAuth();
   const ref = firebase.firestore().collection("Favorites");
 
-  const popularUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}popular?api_key=${process.env.REACT_APP_API_KEY}`;
-  const latestUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}top_rated?api_key=${process.env.REACT_APP_API_KEY}`;
-  const recommendedUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}/${recommendedId}/recommendations?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`;
+  const popularUrl = getApiUrl("popular");
+  const latestUrl = getApiUrl("top_rated");
+  const recommendedUrl = getApiUrl("recommendations", recommendedId);
+  const latest2Url = getApiUrl("latest");
+
+  console.log(latest2Url);
 
   const {
     response: popularResponse,
@@ -37,7 +41,6 @@ export default function HomePage() {
     error: topError,
     loading: topLoading,
   } = useApiCall(latestUrl);
-
   const {
     response: recommendedResponse,
     error: recommendedError,
@@ -62,6 +65,7 @@ export default function HomePage() {
                     Math.random() * (1 + (querySnapshot.size - 1) - 0)
                   ) + 0;
                 const result = querySnapshot.docs[random].data();
+                console.log(result);
                 setRecommendedId(result.id);
                 setRecommendedName(result.name);
                 setRecommendedData(recommendedResponse);

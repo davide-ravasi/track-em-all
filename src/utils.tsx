@@ -52,7 +52,13 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   }
 };
 
+const getApiUrl = (type: string, id?: number) => {
+  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${id ? `${id}/` : ''}${type}?api_key=${
+    process.env.REACT_APP_API_KEY
+  }${id ? `&language=en-US&page=1` : ''}`;
+};
+
 const padNumber = (numberToPad: number) =>
   numberToPad > 9 ? String(numberToPad) : "0" + numberToPad;
 
-export { getUrlImages, getTrailerUrl, padNumber };
+export { getUrlImages, getTrailerUrl, padNumber, getApiUrl };
