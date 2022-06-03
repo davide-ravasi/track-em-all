@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("./node_modules/apollo-server-lambda");
+import { ApolloServer, gql } from "node_modules/apollo-server-lambda";
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
@@ -27,4 +27,4 @@ const server = new ApolloServer({
   introspection: true,
 });
 
-exports.handler = server.createHandler();
+export const handler = server.createHandler();
