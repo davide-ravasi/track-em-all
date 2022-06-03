@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from "node_modules/apollo-server-lambda";
+import { ApolloServer, gql } from "./node_modules/apollo-server-lambda";
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
