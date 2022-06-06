@@ -15,7 +15,7 @@ const server = new ApolloServer({
   context: async () => {
     if (!db) {
       try {
-        const dbClient = await mongoose.connect(process.env.MONGODB_URI, {
+        const dbClient = await mongoose.connect(process.env.REACT_MONGODB_URI, {
           useNewUrlParser: true,
         });
       } catch (e) {
