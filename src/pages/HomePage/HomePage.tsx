@@ -12,6 +12,8 @@ import { useAuth } from "../../contexts/AuthContext";
 
 import "../../components/Search/Search.scss";
 import { getApiUrl } from "../../utils";
+import { useQuery } from "@apollo/client";
+import { gql } from "apollo-server-lambda";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
@@ -27,6 +29,16 @@ export default function HomePage() {
   const popularUrl = getApiUrl("popular");
   const latestUrl = getApiUrl("top_rated");
   const recommendedUrl = getApiUrl("recommendations", recommendedId);
+
+  const HELLO = gql`
+    query Query {
+      hello
+    }
+  `;
+
+  const { loading, error, data } = useQuery(HELLO);
+
+  console.log(loading, error, data);
 
   const {
     response: popularResponse,
