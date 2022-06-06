@@ -7,22 +7,21 @@ const typeDefs = gql`
   }
 `;
 
-let db;
+const uri = process.env.REACT_APP_MONGODB_URI;
+const main = async () => {
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
+
+main()
+  .then(console.log("🎉 connected to database successfully"))
+  .catch((error) => console.error(error));
 
 const server = new ApolloServer({
   typeDefs,
   csrfPrevention: true, // see below for more about this
-  context: async () => {
-    if (!db) {
-      try {
-        const dbClient = await mongoose.connect(process.env.REACT_MONGODB_URI, {
-          useNewUrlParser: true,
-        });
-      } catch (e) {
-        console.log("--->error while connecting with graphql context (db)", e);
-      }
-    }
-  },
   cors: {
     origin: ["http://localhost:3000"],
   },
