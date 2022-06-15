@@ -1,3 +1,12 @@
+export enum Categories {
+  Popular = "popular",
+  TopRated = "top_rated",
+  Recommended = "recommendations",
+  Upcoming = "upcoming",
+  NowPlaying = "now_playing",
+  Search = "search",
+}
+
 type Show = {
   id: number;
   name: string;
@@ -27,7 +36,8 @@ type Creator = {
 
 type ShowListProps = {
   title: string;
-  shows: Show[];
+  category: Categories;
+  urlParameter?: number;
 };
 
 type SearchProps = {

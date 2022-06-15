@@ -1,11 +1,16 @@
 import React from "react";
-import { ShowListProps } from "../../typescript/types";
+import { Show } from "../../typescript/types";
 
 import "./ShowFavoritesList.scss";
 
 import ShowCard from "../ShowCard/ShowCard";
 
-export default function ShowFavoriteList(props: ShowListProps) {
+interface ShowFavoritesProps {
+  title: string;
+  shows: Show[];
+}
+
+export default function ShowFavoriteList(props: ShowFavoritesProps) {
   const { title, shows } = props;
 
   return (
@@ -13,7 +18,7 @@ export default function ShowFavoriteList(props: ShowListProps) {
       <h1>{title}</h1>
       <div className="favorite__list">
         {shows &&
-          shows.map((show) => {
+          shows.map((show: Show) => {
             return <ShowCard key={show.id.toString()} show={show} />;
           })}
       </div>
