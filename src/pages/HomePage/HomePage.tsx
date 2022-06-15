@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Context } from "../../context/GlobalContext";
-import { Show, ShowResponse } from "../../typescript/types";
+import { Show } from "../../typescript/types";
 import ShowList from "../../components/ShowList/ShowList";
 import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import useApiCall from "../../hooks/UseApiCall";
+import { Categories } from "../../typescript/types";
 
 import firebase from "../../firebase/firebase";
 
 import { useAuth } from "../../contexts/AuthContext";
 
 import "../../components/Search/Search.scss";
-import { getApiUrl } from "../../utils";
 import { useQuery } from "@apollo/client";
 import { gql } from "apollo-server-lambda";
 
@@ -26,10 +25,6 @@ export default function HomePage() {
   const { currentUser } = useAuth();
   const ref = firebase.firestore().collection("Favorites");
 
-  const popularUrl = getApiUrl("popular");
-  const latestUrl = getApiUrl("top_rated");
-  const recommendedUrl = getApiUrl("recommendations", recommendedId);
-
   const HELLO = gql`
     query Query {
       hello
@@ -39,26 +34,6 @@ export default function HomePage() {
   const { loading, error, data } = useQuery(HELLO);
 
   console.log(loading, error, data);
-
-  const {
-    response: popularResponse,
-    error: popularError,
-    loading: popularLoading,
-  } = useApiCall(popularUrl);
-  const {
-    response: topResponse,
-    error: topError,
-    loading: topLoading,
-  } = useApiCall(latestUrl);
-  const {
-    response: recommendedResponse,
-    error: recommendedError,
-    loading: recommendedLoading,
-  } = useApiCall(recommendedUrl);
-
-  const [popularData, setPopularData] = useState<ShowResponse | null>();
-  const [topData, setTopData] = useState<ShowResponse | null>();
-  const [recommendedData, setRecommendedData] = useState<ShowResponse | null>();
 
   useEffect(() => {
     if (!recommendedId) {
@@ -77,7 +52,6 @@ export default function HomePage() {
                 console.log(result);
                 setRecommendedId(result.id);
                 setRecommendedName(result.name);
-                setRecommendedData(recommendedResponse);
               }
             });
         }
@@ -85,22 +59,10 @@ export default function HomePage() {
 
       fetchData();
     }
-    setPopularData(popularResponse);
-    setTopData(topResponse);
-    setRecommendedData(recommendedResponse);
   }, [
     recommendedId,
     currentUser,
     ref,
-    popularResponse,
-    topResponse,
-    recommendedResponse,
-    topError,
-    popularError,
-    recommendedError,
-    topLoading,
-    popularLoading,
-    recommendedLoading,
   ]);
 
   const api_key = process.env.REACT_APP_API_KEY;
@@ -129,8 +91,6 @@ export default function HomePage() {
     } catch (error) {
       setSearchError(error.toString());
     }
-
-    // hide the default homepage contants after the user has submitted the search form
   };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -151,20 +111,17 @@ export default function HomePage() {
           <SearchBar textInput={textInput} />
           {!hideHomepageContents ? (
             <>
-              {popularData && (
-                <ShowList title="popular shows" shows={popularData?.results} />
+              <ShowList title="popular shows" category={Categories.Popular} />
+
+              <ShowList title="top rated" category={Categories.TopRated} />
+
+              {recommendedId && (
+                <ShowList
+                  title={`because you liked:  ${recommendedName}`}
+                  category={Categories.Recommended}
+                  urlParameter={recommendedId}
+                />
               )}
-              {topData && (
-                <ShowList title="top rated" shows={topData.results} />
-              )}
-              {recommendedData &&
-                recommendedData.results &&
-                recommendedData.results.length > 0 && (
-                  <ShowList
-                    title={`because you liked:  ${recommendedName}`}
-                    shows={recommendedData.results}
-                  />
-                )}
             </>
           ) : (
             <>
