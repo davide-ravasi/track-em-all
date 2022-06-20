@@ -58,7 +58,6 @@ type GlobalContext = {
   searchTerm: string;
   searchResults: Show[];
   getSearchData: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 type ShowPageType = {
