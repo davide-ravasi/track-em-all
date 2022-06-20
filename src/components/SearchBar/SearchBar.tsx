@@ -7,12 +7,17 @@ import { Context } from "../../context/GlobalContext";
 
 type SearchBarProps = {
   textInput: string;
+  setTextInput: (textInput: string) => void;
 };
 
 export default function SearchBar(props: SearchBarProps) {
-  const { textInput } = props;
+  const { textInput, setTextInput } = props;
 
-  const { getSearchData, handleChange } = useContext(Context);
+  const { getSearchData } = useContext(Context);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextInput(e.target.value);
+  };
 
   return (
     <div className="search">

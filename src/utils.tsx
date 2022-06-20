@@ -53,12 +53,18 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
 };
 
 const getApiUrl = (type: string, id?: number) => {
-  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${id ? `${id}/` : ''}${type}?api_key=${
-    process.env.REACT_APP_API_KEY
-  }${id ? `&language=en-US&page=1` : ''}`;
+  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${
+    id ? `${id}/` : ""
+  }${type}?api_key=${process.env.REACT_APP_API_KEY}${
+    id ? `&language=en-US&page=1` : ""
+  }`;
+};
+
+const getSearchUrl = (query: string, page: number = 1) => {
+  return `${process.env.REACT_APP_BASE_SEARCH_URL}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${query}&page=${page}&include_adult=false`;
 };
 
 const padNumber = (numberToPad: number) =>
   numberToPad > 9 ? String(numberToPad) : "0" + numberToPad;
 
-export { getUrlImages, getTrailerUrl, padNumber, getApiUrl };
+export { getUrlImages, getTrailerUrl, padNumber, getApiUrl, getSearchUrl };

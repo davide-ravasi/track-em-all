@@ -13,6 +13,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import "../../components/Search/Search.scss";
 import { useQuery } from "@apollo/client";
 import { gql } from "apollo-server-lambda";
+import { getSearchUrl } from "../../utils";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
@@ -59,26 +60,17 @@ export default function HomePage() {
 
       fetchData();
     }
-  }, [
-    recommendedId,
-    currentUser,
-    ref,
-  ]);
-
-  const api_key = process.env.REACT_APP_API_KEY;
+  }, [recommendedId, currentUser, ref]);
 
   const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // call the TMDB API and set the search results to the resulting data
-    const url = `https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=en-US&query=${textInput}&page=1&include_adult=false`;
 
     try {
       setSearchTerm(textInput);
 
       if (textInput) {
         try {
-          const res = await fetch(url);
+          const res = await fetch(getSearchUrl(textInput));
           const data = await res.json();
           setSearchResults(data.results);
         } catch (error) {
@@ -93,22 +85,17 @@ export default function HomePage() {
     }
   };
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setTextInput(e.target.value);
-  }
-
   return (
     <Context.Provider
       value={{
         searchTerm,
         searchResults,
         getSearchData,
-        handleChange,
       }}
     >
       <div className="page">
         <div className="page__content-wrapper">
-          <SearchBar textInput={textInput} />
+          <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
               <ShowList title="popular shows" category={Categories.Popular} />
