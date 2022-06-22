@@ -16,7 +16,7 @@ export default function ShowFavoriteList(props: ShowFavoritesProps) {
   return (
     <div className="favorite">
       <h1>{title}</h1>
-      <div className="favorite__list">
+      <div className="shows__list">
         {shows &&
           shows.map((show: Show) => {
             return <ShowCard key={show.id.toString()} show={show} />;

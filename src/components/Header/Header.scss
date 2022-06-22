@@ -32,7 +32,10 @@
     &--right {
       display: flex;
       align-items: center;
-      padding: 1rem;
+      
+      @media (min-width: $bp-min-desktop) {
+        padding: 1rem;
+      }
     }
   }
   &__menuItem {
