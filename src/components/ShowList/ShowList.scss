@@ -9,11 +9,6 @@
     margin-top: 20px;
   }
   &__list {
-    margin-top: 0.6rem;
-    display: flex;
-    justify-content: space-between;
-    word-wrap: wrap;
-
     .show__card:nth-child(5),
     .show__card:last-child {
       display: none;
