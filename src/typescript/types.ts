@@ -35,9 +35,10 @@ type Creator = {
 };
 
 type ShowListProps = {
-  title: string;
+  title?: string;
   category: Categories;
   urlParameter?: number;
+  cardAmount?: number;
 };
 
 type SearchProps = {

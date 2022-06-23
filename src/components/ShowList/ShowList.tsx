@@ -6,12 +6,14 @@ import "./ShowList.scss";
 
 import ShowCard from "../ShowCard/ShowCard";
 import { getApiUrl } from "../../utils";
+import { en } from "../../trads/en";
 
 export default function ShowList(props: ShowListProps) {
   const [shows, setShows] = useState<{ results: Show[] } | null>();
-  const { title, category, urlParameter } = props;
+  const defaultCardAmount = 6;
+  const { title, category, urlParameter, cardAmount = defaultCardAmount } = props;
+  const showShowMore = cardAmount === defaultCardAmount;
   const url = getApiUrl(category, urlParameter);
-  const cardAmount = 6;
 
   const { response, error, loading } = useApiCall(url);
 
@@ -30,7 +32,12 @@ export default function ShowList(props: ShowListProps) {
 
   return (
     <div className="shows">
-      {shows && shows?.results.length && <h1>{title}</h1>}
+      {shows && shows?.results.length && (
+        <h1>
+          {title ? title : en.categories[category].title }{" "}
+          {showShowMore && <a  className="shows__show-more" href={`/list/${category}`}>{"show more >"}</a>}
+        </h1>
+      )}
       <div className="shows__list">
         {shows &&
           shows?.results.slice(0, cardAmount).map((show: Show) => {

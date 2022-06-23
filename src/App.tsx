@@ -13,6 +13,7 @@ import SignIn from "./components/SignIn/SignIn";
 import { AuthProvider } from "./contexts/AuthContext";
 
 import "./App.scss";
+import ListingPage from "./pages/ListingPage/ListingPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/about" exact component={AboutPage} />
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
+            <Route path="/list/:category" exact component={ListingPage} />
             <Route path="/favorites" exact component={FavoritesPage} />
             <Route path="/show/:id" exact component={ShowPage} />
             <Route path="/episode/:id" exact component={EpisodePage} />

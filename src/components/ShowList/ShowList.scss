@@ -21,4 +21,15 @@
       }
     }
   }
+
+  &__show-more {
+    font-size: $font-size-small;
+    margin-left: 0.8rem; 
+    color: $color-main;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
 }

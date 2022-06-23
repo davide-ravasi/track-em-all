@@ -98,9 +98,9 @@ export default function HomePage() {
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
-              <ShowList title="popular shows" category={Categories.Popular} />
+              <ShowList category={Categories.Popular} />
 
-              <ShowList title="top rated" category={Categories.TopRated} />
+              <ShowList category={Categories.TopRated} />
 
               {recommendedId && (
                 <ShowList
