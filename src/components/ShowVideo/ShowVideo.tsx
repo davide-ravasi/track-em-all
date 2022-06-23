@@ -28,7 +28,7 @@ export const ShowVideo = (props: ShowVideoProps) => {
       {error && <div className="loading-error">{error}</div>}
       {trailerUrl && (
         <div className="video">
-          <h2>Trailer</h2>(
+          <h2>Trailer</h2>
           <iframe
             width="560"
             height="315"
@@ -36,7 +36,6 @@ export const ShowVideo = (props: ShowVideoProps) => {
             className="video__iframe"
             src={trailerUrl}
           ></iframe>
-          )
         </div>
       )}
     </>

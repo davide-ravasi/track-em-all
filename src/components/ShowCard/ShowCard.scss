@@ -13,6 +13,7 @@ $mrCardDesktop: 1.5rem;
 .show__card {
   @include cardBasicStyles('26%', $mrCardMobile);
   font-size: 0.9rem;
+  margin-bottom: 1.6rem;
 
   &:nth-child(4) {
     margin-right: 0;
@@ -21,6 +22,12 @@ $mrCardDesktop: 1.5rem;
   @media (min-width: $bp-min-desktop) {
     @include cardBasicStyles('17%', $mrCardDesktop);
 
+    &:nth-child(4) {
+      margin-right: $mrCardDesktop;
+    }
+
+
+    &:nth-child(6n),
     &:last-child {
       margin-right: 0;
     }
