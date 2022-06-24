@@ -22,6 +22,14 @@ a {
   outline: none;
 }
 
+h1 {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: $color-secondary;
+  font-weight: 300;
+  margin-top: 20px;
+}
+
 h2 {
   font-size: 1.1rem;
   text-transform: uppercase;
