@@ -98,17 +98,18 @@ export default function HomePage() {
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
-              <ShowList category={Categories.Popular} />
+              <ShowList category={Categories.Popular} cardAmount={6} />
 
-              <ShowList category={Categories.TopRated} />
+              <ShowList category={Categories.TopRated} cardAmount={6} />
 
-              {recommendedId && (
+              {/* {recommendedId && (
                 <ShowList
                   title={`because you liked:  ${recommendedName}`}
                   category={Categories.Recommended}
                   urlParameter={recommendedId}
+                  cardAmount={6}
                 />
-              )}
+              )} */}
             </>
           ) : (
             <>

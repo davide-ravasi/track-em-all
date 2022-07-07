@@ -23,17 +23,23 @@ import { en } from "../../trads/en";
   @todo - remove results near map and add it when fetching data
 */
 
+interface ShowProps {
+  page: number, 
+  results: Show[], 
+  total_pages: number, 
+  total_results: number
+}
+
 export default function ShowList(props: ShowListProps) {
-  const [shows, setShows] = useState<{ results: Show[] } | null>();
+  const [shows, setShows] = useState<ShowProps | null >();
   const [pageNumber, setPageNumber] = useState(2);
-  const defaultCardAmount = 6;
   const {
     title,
     category,
     urlParameter,
-    cardAmount = defaultCardAmount,
+    cardAmount,
   } = props;
-  const showShowMore = cardAmount === defaultCardAmount;
+
   const url = getApiUrl(category, urlParameter);
 
   const { response, error, loading } = useApiCall(url);
@@ -58,15 +64,17 @@ export default function ShowList(props: ShowListProps) {
 
     try {
       const url = getApiUrl(category, urlParameter, pageNumber);
-      setPageNumber(pageNumber + 1);
-
-      console.log(url);
-
       const response = await fetch(url);
-
       const showsMore = await response.json();
+      console.log(showsMore);
+      const actualPage = showsMore.page + 1;
 
-      setShows({ ...shows, ...showsMore.results });
+      setPageNumber(actualPage);
+
+      if(shows?.results) {
+        setShows({ ...shows, page: actualPage ,  results: [...shows.results, ...showsMore.results] });
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +89,7 @@ export default function ShowList(props: ShowListProps) {
       {shows && shows?.results.length && (
         <h1>
           {title ? title : en.categories[category].title}{" "}
-          {showShowMore && (
+          {cardAmount && (
             <a className="shows__show-more" href={`/list/${category}`}>
               {"show more >"}
             </a>
@@ -90,13 +98,13 @@ export default function ShowList(props: ShowListProps) {
       )}
       <div className="shows__list">
         {shows &&
-          shows?.results.slice(0, cardAmount).map((show: Show) => {
+          shows?.results.slice(0, cardAmount ?? undefined).map((show: Show) => {
             return <ShowCard key={show.id.toString()} show={show} />;
           })}
       </div>
       {/* todo  add paging */}
       <div className="shows__show-more-elements">
-        {
+        {!cardAmount &&
           <button type="button" onClick={(e) => handleAddCards(e)}>
             Show more
           </button>

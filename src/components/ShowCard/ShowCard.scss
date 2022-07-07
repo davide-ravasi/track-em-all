@@ -15,14 +15,14 @@ $mrCardDesktop: 1.5rem;
   font-size: 0.9rem;
   margin-bottom: 1.6rem;
 
-  &:nth-child(4) {
+  &:nth-child(6n) {
     margin-right: 0;
   }
 
   @media (min-width: $bp-min-desktop) {
     @include cardBasicStyles('17%', $mrCardDesktop);
 
-    &:nth-child(4) {
+    &:nth-child(4n) {
       margin-right: $mrCardDesktop;
     }
 
