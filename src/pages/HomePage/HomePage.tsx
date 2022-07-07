@@ -102,14 +102,14 @@ export default function HomePage() {
 
               <ShowList category={Categories.TopRated} cardAmount={6} />
 
-              {/* {recommendedId && (
+              {recommendedId && (
                 <ShowList
                   title={`because you liked:  ${recommendedName}`}
                   category={Categories.Recommended}
                   urlParameter={recommendedId}
                   cardAmount={6}
                 />
-              )} */}
+              )}
             </>
           ) : (
             <>
