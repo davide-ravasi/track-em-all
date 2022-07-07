@@ -1,19 +1,19 @@
 @import "../../styles/variables";
 
 .shows {
-  &__list {
-    .show__card:nth-child(5),
-    .show__card:last-child {
-      display: none;
-    }
+  // &__list {
+  //   .show__card:nth-child(5),
+  //   .show__card:last-child {
+  //     display: none;
+  //   }
 
-    @media (min-width: $bp-min-desktop) {
-      .show__card:nth-child(5),
-      .show__card:last-child {
-        display: block;
-      }
-    }
-  }
+  //   @media (min-width: $bp-min-desktop) {
+  //     .show__card:nth-child(5),
+  //     .show__card:last-child {
+  //       display: block;
+  //     }
+  //   }
+  // }
 
   &__show-more {
     font-size: $font-size-small;
@@ -23,6 +23,25 @@
 
     &:hover {
       color: $color-primary;
+    }
+  }
+
+  &__show-more-elements {
+    text-align: center;
+
+    button {
+      border: 0;
+      cursor: pointer;
+      text-transform: uppercase;
+      color: white;
+      border-radius: $border-radius-medium;
+      background-color: $color-main;
+      padding: 0.6rem 0.4rem;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background-color: black;
+      }
     }
   }
 }

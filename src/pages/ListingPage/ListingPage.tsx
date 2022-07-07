@@ -13,7 +13,7 @@ export default function ListingPage() {
     <div className="page">
       <div className="page__content-wrapper">
         {true && (
-          <ShowList title="Your Favorite Shows" category={params.category} cardAmount={24} />
+          <ShowList title="Your Favorite Shows" category={params.category} />
         )}
       </div>
     </div>

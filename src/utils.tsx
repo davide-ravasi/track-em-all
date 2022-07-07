@@ -52,11 +52,11 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   }
 };
 
-const getApiUrl = (type: string, id?: number) => {
+const getApiUrl = (type: string, id?: number, pageNumber?: number) => {
   return `${process.env.REACT_APP_BASE_TVSHOW_URL}${
     id ? `${id}/` : ""
   }${type}?api_key=${process.env.REACT_APP_API_KEY}${
-    id ? `&language=en-US&page=1` : ""
+    id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
   }`;
 };
 
