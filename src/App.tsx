@@ -14,6 +14,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 
 import "./App.scss";
 import ListingPage from "./pages/ListingPage/ListingPage";
+import PersonPage from "./pages/PersonPage/PersonPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/favorites" exact component={FavoritesPage} />
             <Route path="/show/:id" exact component={ShowPage} />
             <Route path="/episode/:id" exact component={EpisodePage} />
+            <Route path="/person/:id" exact component={PersonPage} />
           </Switch>
           <Footer />
         </AuthProvider>

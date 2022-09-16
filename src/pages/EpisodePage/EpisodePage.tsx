@@ -69,6 +69,7 @@ export default function EpisodePage(props: any) {
             actorData.cast &&
             actorData.cast.map((actor) => (
               <ActorCard
+                id={actor.id}
                 name={actor.name}
                 character={actor.character}
                 profile_path={actor.profile_path}
