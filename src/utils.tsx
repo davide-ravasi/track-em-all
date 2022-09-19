@@ -27,6 +27,9 @@ const getUrlImages = (
     case "thumb":
       finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_THUMB_WIDTH}${imgName}`;
       break;
+    case "medium":
+      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_MEDIUM_IMG_WIDTH}${imgName}`;
+      break;
     case "big":
       finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}${imgName}`;
       break;
@@ -53,11 +56,9 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
 };
 
 const getApiUrl = (type: string, id?: number, pageNumber?: number) => {
-  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${
-    id ? `${id}/` : ""
-  }${type}?api_key=${process.env.REACT_APP_API_KEY}${
-    id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
-  }`;
+  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${id ? `${id}/` : ""
+    }${type}?api_key=${process.env.REACT_APP_API_KEY}${id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
+    }`;
 };
 
 const getSearchUrl = (query: string, page: number = 1) => {
