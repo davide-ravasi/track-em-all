@@ -1,0 +1,12 @@
+/*
+.element{
+    @include flex(center, center, wrap, row);
+}
+*/
+@mixin flex($justify, $align, $wrap: nowrap, $direction: row) {
+  display: flex;
+  flex-wrap: $wrap;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
