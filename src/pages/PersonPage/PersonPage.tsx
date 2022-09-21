@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import useApiCall from "../../hooks/UseApiCall";
+import { Person } from "../../typescript/types";
 import { getUrlImages } from "../../utils";
-
 
 export default function PersonPage() {
   const { id }: { id: string } = useParams();
-  const [personData, setPersonData] = useState<any>();
+  const [personData, setPersonData] = useState<Person | null>();
   // @TODO create and external function for this url
   const personUrl = `${process.env.REACT_APP_BASE_PERSON_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`;
 
@@ -20,7 +20,6 @@ export default function PersonPage() {
 
   useEffect(() => {
     if (personResponse !== null) {
-      console.log(personResponse);
       setPersonData(personResponse);
     }
   }, [personResponse]);
@@ -49,7 +48,7 @@ export default function PersonPage() {
                 <div className="page__details">
                   <p>Birthday: {personData.birthday} - {personData.place_of_birth}</p>
                   <p>Roles: {personData.known_for_department}</p>
-                  {personData.homepage && <p>Website: {personData.homepage}</p>}
+                  {personData.homepage && <p>Website: <a href={personData.homepage} target="_blank" rel="noopener noreferrer">{personData.homepage}</a></p>}
                 </div>
               </div>
             </div>

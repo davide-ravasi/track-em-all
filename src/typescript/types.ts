@@ -94,6 +94,19 @@ type Actor = {
   profile_path: string;
 };
 
+interface Person {
+  id: number;
+  name: string;
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  gender: number;
+  homepage: string;
+  known_for_department: string;
+  profile_path: string;
+  place_of_birth: string;
+}
+
 type CastData = {
   cast: Actor[];
   crew: Actor[];
@@ -149,6 +162,7 @@ export type {
   VideoApiResponse,
   Video,
   Actor,
+  Person,
   CastData,
   ImagesData,
   ShowResponse,
