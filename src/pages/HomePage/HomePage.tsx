@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Context } from "../../context/GlobalContext";
-import { Show } from "../../typescript/types";
+import { Sections, Show } from "../../typescript/types";
 import ShowList from "../../components/ShowList/ShowList";
 import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -98,13 +98,14 @@ export default function HomePage() {
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
-              <ShowList category={Categories.Popular} cardAmount={6} />
+              <ShowList section={Sections.Tv} category={Categories.Popular} cardAmount={6} />
 
-              <ShowList category={Categories.TopRated} cardAmount={6} />
+              <ShowList section={Sections.Tv} category={Categories.TopRated} cardAmount={6} />
 
               {recommendedId && (
                 <ShowList
                   title={`because you liked:  ${recommendedName}`}
+                  section={Sections.Tv}
                   category={Categories.Recommended}
                   urlParameter={recommendedId}
                   cardAmount={6}

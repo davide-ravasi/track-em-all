@@ -15,7 +15,7 @@ import { en } from "../../trads/en";
  * @constructor
  * @memberof ShowList
  * @example
- * <ShowList title="Your Favorite Shows" category="favorites" cardAmount={24} />
+ * <ShowList title="Your Favorite Shows" section="tv" category="favorites" cardAmount={24} />
  */
 
 /*
@@ -24,14 +24,14 @@ import { en } from "../../trads/en";
 */
 
 interface ShowProps {
-  page: number, 
-  results: Show[], 
-  total_pages: number, 
+  page: number,
+  results: Show[],
+  total_pages: number,
   total_results: number
 }
 
 export default function ShowList(props: ShowListProps) {
-  const [shows, setShows] = useState<ShowProps | null >();
+  const [shows, setShows] = useState<ShowProps | null>();
   const [pageNumber, setPageNumber] = useState(2);
   const {
     title,
@@ -40,7 +40,7 @@ export default function ShowList(props: ShowListProps) {
     cardAmount,
   } = props;
 
-  const url = getApiUrl(category, urlParameter);
+  const url = getApiUrl('tv', category, urlParameter);
 
   const { response, error, loading } = useApiCall(url);
 
@@ -63,7 +63,7 @@ export default function ShowList(props: ShowListProps) {
     e.preventDefault();
 
     try {
-      const url = getApiUrl(category, urlParameter, pageNumber);
+      const url = getApiUrl('tv', category, urlParameter, pageNumber);
       const response = await fetch(url);
       const showsMore = await response.json();
       console.log(showsMore);
@@ -71,10 +71,10 @@ export default function ShowList(props: ShowListProps) {
 
       setPageNumber(actualPage);
 
-      if(shows?.results) {
-        setShows({ ...shows, page: actualPage ,  results: [...shows.results, ...showsMore.results] });
+      if (shows?.results) {
+        setShows({ ...shows, page: actualPage, results: [...shows.results, ...showsMore.results] });
       }
-      
+
     } catch (error) {
       console.log(error);
     }

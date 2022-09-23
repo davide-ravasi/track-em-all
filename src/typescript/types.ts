@@ -1,3 +1,11 @@
+import { SelectionSetNode } from "graphql";
+
+export enum Sections {
+  Tv = "tv",
+  Movies = "movies",
+  Person = "person"
+}
+
 export enum Categories {
   Popular = "popular",
   TopRated = "top_rated",
@@ -36,6 +44,7 @@ type Creator = {
 
 type ShowListProps = {
   title?: string;
+  section: Sections;
   category: Categories;
   urlParameter?: number;
   cardAmount?: number;
