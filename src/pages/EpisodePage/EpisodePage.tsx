@@ -3,9 +3,9 @@ import { useLocation } from "react-router-dom";
 import { getUrlImages, padNumber } from "../../utils";
 import { EpisodeProps, CastData, ImagesData } from "../../typescript/types";
 import Loader from "../../components/Loader/Loader";
-import ActorCard from "../../components/ActorCard/ActorCard";
 import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
+import PersonCard from "../../components/PersonCard/PersonCard";
 
 export default function EpisodePage(props: any) {
   const location = useLocation<EpisodeProps>();
@@ -68,12 +68,7 @@ export default function EpisodePage(props: any) {
           {actorData &&
             actorData.cast &&
             actorData.cast.map((actor) => (
-              <ActorCard
-                id={actor.id}
-                name={actor.name}
-                character={actor.character}
-                profile_path={actor.profile_path}
-              />
+              <PersonCard person={actor} />
             ))}
         </div>
 

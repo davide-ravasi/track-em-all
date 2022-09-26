@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Show, ShowListProps } from "../../typescript/types";
+import { Person, Show, ShowListProps } from "../../typescript/types";
 import useApiCall from "../../hooks/UseApiCall";
 
 import "./ShowList.scss";
@@ -7,6 +7,7 @@ import "./ShowList.scss";
 import ShowCard from "../ShowCard/ShowCard";
 import { getApiUrl } from "../../utils";
 import { en } from "../../trads/en";
+import PersonCard from "../PersonCard/PersonCard";
 
 /*
  * ShowList component
@@ -35,12 +36,14 @@ export default function ShowList(props: ShowListProps) {
   const [pageNumber, setPageNumber] = useState(2);
   const {
     title,
+    section,
+    linkMore = true,
     category,
     urlParameter,
     cardAmount,
   } = props;
 
-  const url = getApiUrl('tv', category, urlParameter);
+  const url = getApiUrl(section, category, urlParameter);
 
   const { response, error, loading } = useApiCall(url);
 
@@ -63,7 +66,7 @@ export default function ShowList(props: ShowListProps) {
     e.preventDefault();
 
     try {
-      const url = getApiUrl('tv', category, urlParameter, pageNumber);
+      const url = getApiUrl(section, category, urlParameter, pageNumber);
       const response = await fetch(url);
       const showsMore = await response.json();
       console.log(showsMore);
@@ -86,10 +89,10 @@ export default function ShowList(props: ShowListProps) {
 
   return (
     <div className="shows">
-      {shows && shows?.results.length && (
+      {shows && shows.results && shows?.results.length && (
         <h1>
           {title ? title : en.categories[category].title}{" "}
-          {cardAmount && (
+          {cardAmount && linkMore && (
             <a className="shows__show-more" href={`/list/${category}`}>
               {"show more >"}
             </a>
@@ -97,9 +100,13 @@ export default function ShowList(props: ShowListProps) {
         </h1>
       )}
       <div className="shows__list">
-        {shows &&
-          shows?.results.slice(0, cardAmount ?? undefined).map((show: Show) => {
-            return <ShowCard key={show.id.toString()} show={show} />;
+        {shows && shows.results &&
+          shows?.results.slice(0, cardAmount ?? undefined).map((show: Show | Person) => {
+            return (
+              section !== 'person' ?
+                <ShowCard key={show.id.toString()} show={show as Show} />
+                :
+                <PersonCard person={show as Person} />)
           })}
       </div>
       {/* todo  add paging */}

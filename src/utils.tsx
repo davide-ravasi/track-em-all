@@ -4,7 +4,7 @@ import placeholderHoriz from "./assets/thumb-horiz-placeholder.png";
 
 const getUrlImages = (
   type: string,
-  imgName: string,
+  imgName?: string,
   imgOrientation?: string
 ) => {
   const baseImgUrl = `${process.env.REACT_APP_BASE_IMG_URL}`;
