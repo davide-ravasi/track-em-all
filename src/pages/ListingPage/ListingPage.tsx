@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import ShowList from "../../components/ShowList/ShowList";
-import { Categories } from "../../typescript/types";
+import { Categories, Sections } from "../../typescript/types";
 
 import "./ListingPage.scss";
 
@@ -13,7 +13,7 @@ export default function ListingPage() {
     <div className="page">
       <div className="page__content-wrapper">
         {true && (
-          <ShowList title="Your Favorite Shows" category={params.category} />
+          <ShowList section={Sections.Tv} title="Your Favorite Shows" category={params.category} />
         )}
       </div>
     </div>

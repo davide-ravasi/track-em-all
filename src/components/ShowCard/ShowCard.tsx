@@ -34,7 +34,7 @@ export default function ShowCard(props: ShowProps) {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
 
-  const addToWatching = () => {};
+  const addToWatching = () => { };
 
   const ref = firebase.firestore().collection("Favorites");
 
@@ -122,7 +122,7 @@ export default function ShowCard(props: ShowProps) {
         </button>
         <Link to={`/show/${id}`}>
           <img alt={name} src={getUrlImages("thumb", poster_path)} />
-          <VoteBox vote={vote_average} />
+          {vote_average && <VoteBox vote={vote_average} />}
         </Link>
       </div>
       <p className="show__card-name">{name}</p>

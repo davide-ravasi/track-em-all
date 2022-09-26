@@ -4,7 +4,7 @@ import placeholderHoriz from "./assets/thumb-horiz-placeholder.png";
 
 const getUrlImages = (
   type: string,
-  imgName: string,
+  imgName?: string,
   imgOrientation?: string
 ) => {
   const baseImgUrl = `${process.env.REACT_APP_BASE_IMG_URL}`;
@@ -55,8 +55,8 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   }
 };
 
-const getApiUrl = (type: string, id?: number, pageNumber?: number) => {
-  return `${process.env.REACT_APP_BASE_TVSHOW_URL}${id ? `${id}/` : ""
+const getApiUrl = (section: string, type: string, id?: number, pageNumber?: number) => {
+  return `${process.env.REACT_APP_BASE_URL}${section}/${id ? `${id}/` : ""
     }${type}?api_key=${process.env.REACT_APP_API_KEY}${id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
     }`;
 };

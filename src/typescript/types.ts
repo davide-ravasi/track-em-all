@@ -1,3 +1,9 @@
+export enum Sections {
+  Tv = "tv",
+  Movies = "movies",
+  Person = "person",
+}
+
 export enum Categories {
   Popular = "popular",
   TopRated = "top_rated",
@@ -21,6 +27,13 @@ type Show = {
   number_of_seasons?: number;
 };
 
+type Person = {
+  id: number;
+  name: string;
+  character?: string;
+  profile_path?: string;
+};
+
 type Genre = {
   id: number;
   name: string;
@@ -36,6 +49,8 @@ type Creator = {
 
 type ShowListProps = {
   title?: string;
+  section: Sections;
+  linkMore?: boolean;
   category: Categories;
   urlParameter?: number;
   cardAmount?: number;
@@ -90,7 +105,7 @@ type Episode = {
 type Actor = {
   id: number;
   name: string;
-  character: string;
+  character?: string;
   profile_path: string;
 };
 
@@ -138,6 +153,7 @@ type ShowResponse = {
 export type {
   Show,
   ShowListProps,
+  Person,
   SearchProps,
   ShowPageType,
   GlobalContext,
