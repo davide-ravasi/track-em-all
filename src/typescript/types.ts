@@ -1,5 +1,3 @@
-import { SelectionSetNode } from "graphql";
-
 export enum Sections {
   Tv = "tv",
   Movies = "movies",
