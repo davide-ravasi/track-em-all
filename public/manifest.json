@@ -1,25 +1,25 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "Track'em all - Movies and Tv series Tracker",
+  "short_name": "Track'em all",
+
+  "dir": "ltr",
+
+  "lang": "en-US",
+
+  "orientation": "portrait",
+  "start_url": "/",
+  "background_color": "#2e2d3f",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "description": "Track'em all is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "/path-to-pwa-icon-size-192x192.png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
+      "src": "/path-to-pwa-icon-size-512x512.png",
       "sizes": "512x512"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  ]
 }
