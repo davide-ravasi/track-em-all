@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
+import PhotoList from "../../components/PhotoList/PhotoList";
 import useApiCall from "../../hooks/UseApiCall";
 import { getUrlImages } from "../../utils";
 
@@ -8,8 +9,10 @@ import { getUrlImages } from "../../utils";
 export default function PersonPage() {
   const { id }: { id: string } = useParams();
   const [personData, setPersonData] = useState<any>();
+  const [imagesData, setImagesData] = useState<any>();
   // @TODO create and external function for this url
   const personUrl = `${process.env.REACT_APP_BASE_PERSON_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`;
+  const photosUrl = `${process.env.REACT_APP_BASE_PERSON_URL}${id}/images?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`;
 
 
   const {
@@ -18,12 +21,25 @@ export default function PersonPage() {
     loading: personLoading,
   } = useApiCall(personUrl);
 
+  const {
+    response: photosResponse,
+    error: photosError,
+    loading: photosLoading,
+  } = useApiCall(photosUrl);
+
   useEffect(() => {
     if (personResponse !== null) {
       console.log(personResponse);
       setPersonData(personResponse);
     }
   }, [personResponse]);
+
+  useEffect(() => {
+    if (photosResponse !== null) {
+      console.log(photosResponse);
+      setImagesData(photosResponse);
+    }
+  }, [photosResponse]);
 
 
   return (
@@ -54,8 +70,20 @@ export default function PersonPage() {
               </div>
             </div>
 
-            <div className="page__photos"></div>
-            <div className="page__related">last movies</div>
+            <div className="page__photos">
+              {photosError && <div className="loading-error">{photosError}</div>}
+              {(photosLoading) && (
+                <div className="loader">
+                  <Loader />
+                </div>
+              )}
+
+              {imagesData && <PhotoList imagesData={imagesData.profiles} />}
+
+            </div>
+            <div className="page__related">
+
+            </div>
 
           </>
         )}

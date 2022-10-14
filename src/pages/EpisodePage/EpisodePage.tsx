@@ -6,6 +6,7 @@ import Loader from "../../components/Loader/Loader";
 import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
 import PersonCard from "../../components/PersonCard/PersonCard";
+import PhotoList from "../../components/PhotoList/PhotoList";
 
 export default function EpisodePage(props: any) {
   const location = useLocation<EpisodeProps>();
@@ -72,7 +73,9 @@ export default function EpisodePage(props: any) {
             ))}
         </div>
 
-        <h3 className="page__h2">PHOTOS</h3>
+        {imagesData && <PhotoList imagesData={imagesData.stills} />}
+
+        {/* <h3 className="page__h2">PHOTOS</h3>
         <div className="photos_container">
           {imagesData &&
             imagesData.stills &&
@@ -89,7 +92,7 @@ export default function EpisodePage(props: any) {
                 />
               </a>
             ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
