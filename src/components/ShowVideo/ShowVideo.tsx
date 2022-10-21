@@ -18,14 +18,16 @@ export const ShowVideo = (props: ShowVideoProps) => {
   useEffect(() => {
     if (response) {
       const url = getTrailerUrl(response);
+
       setTrailerUrl(url);
       setLoading(loading);
+    } else {
+      setLoading(false);
     }
   }, [response, error, loading, setLoading]);
 
   return (
     <>
-      {error && <div className="loading-error">{error}</div>}
       {trailerUrl && (
         <div className="video">
           <h2>Trailer</h2>
