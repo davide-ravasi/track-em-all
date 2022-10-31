@@ -23,7 +23,7 @@ const server = new ApolloServer({
   typeDefs,
   csrfPrevention: true, // see below for more about this
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: "*",
   },
   mocks: true,
   introspection: true,
