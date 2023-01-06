@@ -11,8 +11,8 @@ import firebase from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 
 import "../../components/Search/Search.scss";
-import { useQuery } from "@apollo/client";
-import { gql } from "apollo-server-lambda";
+//import { useQuery } from "@apollo/client";
+//import { gql } from "apollo-server-lambda";
 import { getSearchUrl } from "../../utils";
 import { en } from "../../trads/en";
 
@@ -27,15 +27,15 @@ export default function HomePage() {
   const { currentUser } = useAuth();
   const ref = firebase.firestore().collection("Favorites");
 
-  const HELLO = gql`
-    query Query {
-      hello
-    }
-  `;
+  // const HELLO = gql`
+  //   query Query {
+  //     hello
+  //   }
+  // `;
 
-  const { loading, error, data } = useQuery(HELLO);
+  // const { loading, error, data } = useQuery(HELLO);
 
-  console.log(loading, error, data);
+  // console.log(loading, error, data);
 
   useEffect(() => {
     if (!recommendedId) {
