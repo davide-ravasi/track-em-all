@@ -63,6 +63,19 @@ export default function HomePage() {
     }
   }, [recommendedId, currentUser, ref]);
 
+  useEffect(() => { // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu81.gitpod.io/.netlify/functions/express/another
+    fetch('https://trackem-all.netlify.app/.netlify/functions/express/another')
+      //fetch('https://8888-davideravasi-trackemall-mclb840f9og.ws-eu81.gitpod.io/.netlify/functions/express/another')
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(users => {
+        console.log(users);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
   const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
