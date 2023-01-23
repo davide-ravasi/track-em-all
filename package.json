@@ -23,7 +23,7 @@
     "express": "^4.17.1",
     "firebase": "^8.6.1",
     "graphql": "^15.8.0",
-    "mongoose": "^6.3.5",
+    "mongoose": "^6.8.4",
     "netlify-lambda": "^1.6.3",
     "node-sass": "^6.0.0",
     "nodemon": "^1.19.2",

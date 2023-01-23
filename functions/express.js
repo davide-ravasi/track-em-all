@@ -5,15 +5,51 @@ const cors = require('cors')
 const app = express();
 const bodyParser = require('body-parser');
 
-const router = express.Router();
-router.get('/', (req, res) => {
-  console.log("porcodio");
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<h1>Hello from Express.js!</h1>');
-  res.end();
+// connect express server to mongodb database
+const mongoose = require('mongoose');
+
+const mongoDB = process.env.REACT_APP_MONGODB_URI;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// end of mongodb connection
+
+// import models
+//const Favorite = require('./models/favorite');
+// end of import models
+
+const Schema = mongoose.Schema;
+
+const FavoriteSchema = new Schema({
+  name: String,
+  poster_path: String,
+  user: Schema.Types.ObjectId,
+  vote_average: Number,
 });
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.post('/', (req, res) => res.json({ postBody: req.body }));
+
+// Compile model from schema
+const Favorite = mongoose.model("Favorite", FavoriteSchema);
+
+
+const router = express.Router();
+
+// const getFavorites = (async (req, res) => {
+//   await Favorite.find({}, (err, favorites) => {
+//     console.log(favorites);
+//     res.json(favorites)
+//   });
+// })
+
+
+router.get('/favorites', async (req, res) => {
+  await Favorite.find({}).then((err, favorites) => {
+    console.log(favorites);
+    res.json(favorites)
+  });
+});
+// router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+// router.post('/', (req, res) => res.json({ postBody: req.body }));
 
 app.use(cors());
 app.use(bodyParser.json());
