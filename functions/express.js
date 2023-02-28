@@ -15,10 +15,6 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // end of mongodb connection
 
-// import models
-//const Favorite = require('./models/favorite');
-// end of import models
-
 const Schema = mongoose.Schema;
 
 const FavoriteSchema = new Schema({
@@ -28,9 +24,15 @@ const FavoriteSchema = new Schema({
   vote_average: Number,
 });
 
+const UserSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  favorites: [FavoriteSchema],
+}, { timestamps: true });
+
 // Compile model from schema
 const Favorite = mongoose.model("Favorite", FavoriteSchema);
-
 
 const router = express.Router();
 
@@ -41,6 +43,33 @@ const router = express.Router();
 //   });
 // })
 
+
+router.post('user/register', (req, res) => {
+  const { name, email, password } = req.body;
+
+  // find if email exists in collection
+  user.find({email: email}, (err, user) => {
+    if (err) {
+      res.status(500).json({ message: { msgBody: "Error has occured", msgError: true } });
+    } else if (user) {
+      res.status(400).json({ message: { msgBody: "Email is already in use", msgError: true } });
+    }
+  });
+  
+  const user = new User({
+    name,
+    email,
+    password
+  });
+
+  user.save((err, user) => {
+    if (err) {
+      res.status(500).json({ message: { msgBody: "Error has occured", msgError: true } });
+    } else {
+      res.status(201).json({ message: { msgBody: "Account successfully created", msgError: false } });
+    }
+  })
+});
 
 router.get('/favorites', async (req, res) => {
   await Favorite.find({}).then((err, favorites) => {
