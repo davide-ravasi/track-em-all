@@ -18,7 +18,11 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  favorites: [{
+    type: Schema.Types.ObjectId,
+    ref: "Favorite"
+  }]
 }, {
   timestamps: true // set createdAt and updatedAt
 });

@@ -46,12 +46,12 @@ const setUser = (async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-
     const user = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: hashedPassword
+      password: hashedPassword,
+      favorites: req.body.favorites,
     });
     const savedUser = await user.save();
     res.status(201).json(savedUser);
@@ -60,10 +60,20 @@ const setUser = (async (req, res) => {
   }
 })
 
+const getUser = (async (req, res) => {
+  const user = await User.findById(req.params.id).populate('favorites');
+  if(user) {
+    res.json(user)
+  } else {
+    res.status(404).json({ message: 'User not found' })
+  }
+})
+
 router.get('/favorites', getFavorites);
 router.post('/user/register', setUser);
-// add route to login
-// add route to get user by id
+router.get('/user/:id', getUser);
+
+// add route to login user
 
 app.use('/.netlify/functions/express', router);  // path must route to lambda
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));

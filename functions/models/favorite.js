@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const FavoriteSchema = new Schema({
   name: String,
   poster_path: String,
-  user: Schema.Types.ObjectId,
   vote_average: Number,
 });
 
