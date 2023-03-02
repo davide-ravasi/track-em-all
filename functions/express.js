@@ -4,7 +4,10 @@ const serverless = require('serverless-http');
 const cors = require('cors')
 const app = express();
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+const saltRounds = 10;
 // connect express server to mongodb database
 const mongoose = require('mongoose');
 
@@ -34,14 +37,21 @@ const getFavorites = ((req, res) => {
 });
 
 const setUser = (async (req, res) => {
-  // add check if email exists
-  // add pw encryption
+  const existingUser = await User.findOne({ email: req.body.email });
+
+  if (existingUser) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+
   try {
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+
     const user = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: req.body.password
+      password: hashedPassword
     });
     const savedUser = await user.save();
     res.status(201).json(savedUser);
