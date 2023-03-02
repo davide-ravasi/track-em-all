@@ -16,8 +16,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // end of mongodb connection
 
 // import models
+const { User } = require('./models/user');
 const { Favorite } = require('./models/favorite');
 // end of import models
+
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const router = express.Router();
 
@@ -29,12 +33,28 @@ const getFavorites = ((req, res) => {
   });
 });
 
-router.get('/favorites', getFavorites);
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-// router.post('/', (req, res) => res.json({ postBody: req.body }));
+const setUser = (async (req, res) => {
+  // add check if email exists
+  // add pw encryption
+  try {
+    const user = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    });
+    const savedUser = await user.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+})
 
-app.use(cors());
-app.use(bodyParser.json());
+router.get('/favorites', getFavorites);
+router.post('/user/register', setUser);
+// add route to login
+// add route to get user by id
+
 app.use('/.netlify/functions/express', router);  // path must route to lambda
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 
