@@ -28,6 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const router = express.Router();
 
+// better object with real data from api
+// to check if exists in db if not
+// retrieve from api endpoint
 const getFavorites = ((req, res) => {
   Favorite.find({}, (err, favorites) => {
     if (err) return res.status(500).send(err);
@@ -36,7 +39,7 @@ const getFavorites = ((req, res) => {
   });
 });
 
-const setUser = (async (req, res) => {
+const registerUser = (async (req, res) => {
   const existingUser = await User.findOne({ email: req.body.email });
 
   if (existingUser) {
@@ -60,9 +63,19 @@ const setUser = (async (req, res) => {
   }
 })
 
+// login endpoint
+const loginUser = (async (req, res) => {
+  const { email, password } = req.body;
+
+  // check if user exists if not 404
+
+  // check password with bcrypt if not 400
+  // if yes return json res
+})
+
 const getUser = (async (req, res) => {
   const user = await User.findById(req.params.id).populate('favorites');
-  if(user) {
+  if (user) {
     res.json(user)
   } else {
     res.status(404).json({ message: 'User not found' })
@@ -70,7 +83,8 @@ const getUser = (async (req, res) => {
 })
 
 router.get('/favorites', getFavorites);
-router.post('/user/register', setUser);
+router.post('/user/register', registerUser);
+router.post('/user/login', loginUser);
 router.get('/user/:id', getUser);
 
 // add route to login user
