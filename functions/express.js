@@ -54,7 +54,7 @@ const registerUser = (async (req, res) => {
       lastName: req.body.lastName,
       email: req.body.email,
       password: hashedPassword,
-      favorites: req.body.favorites,
+      favorites: [],
     });
     const savedUser = await user.save();
     res.status(201).json(savedUser);
