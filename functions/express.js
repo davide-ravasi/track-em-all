@@ -63,14 +63,22 @@ const registerUser = (async (req, res) => {
   }
 })
 
-// login endpoint
 const loginUser = (async (req, res) => {
   const { email, password } = req.body;
 
-  // check if user exists if not 404
+  const user = await User.findOne({ email });
 
-  // check password with bcrypt if not 400
-  // if yes return json res
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+
+  const validPassword = await bcrypt.compare(password, user.password);
+
+  if (!validPassword) {
+    return res.status(400).json({ message: 'Invalid credentials' });
+  }
+
+  res.status(201).json(user);
 })
 
 const getUser = (async (req, res) => {
