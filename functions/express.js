@@ -28,6 +28,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const router = express.Router();
 
+const generateAccessToken = (id) => {
+  return jwt.sign(id, process.env.REACT_APP_JWT_SECRET, { expiresIn: '1800s' });
+}
+
 // better object with real data from api
 // to check if exists in db if not
 // retrieve from api endpoint
@@ -56,8 +60,17 @@ const registerUser = (async (req, res) => {
       password: hashedPassword,
       favorites: req.body.favorites,
     });
-    const savedUser = await user.save();
-    res.status(201).json(savedUser);
+    const savedUser  = await user.save();
+    if(savedUser) {
+      res.status(201).json({
+        id: savedUser._id,
+        firstName: savedUser.firstName,
+        lastName: savedUser.lastName,
+        email: savedUser.email,
+        favorites: savedUser.favorites,
+        token: generateAccessToken({ id: savedUser._id }),
+      });
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -78,7 +91,17 @@ const loginUser = (async (req, res) => {
     return res.status(400).json({ message: 'Invalid credentials' });
   }
 
-  res.status(201).json(user);
+  if(user) {
+    res.status(201).json({
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      favorites: user.favorites,
+      token: generateAccessToken({ id: user._id }),
+    });
+
+  }
 })
 
 const getUser = (async (req, res) => {
