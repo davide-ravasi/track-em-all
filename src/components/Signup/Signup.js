@@ -21,7 +21,6 @@ export const useInput = (initialValue) => {
 };
 
 export default function Signup() {
-    // const { login } = useAuth();
     const history = useHistory();
 
     const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
@@ -51,10 +50,6 @@ export default function Signup() {
             password: password,
           }),
         })
-        //.then((res) => res.json())
-        //.then((data) => console.log(data));
-  
-        //await signup(email, password);
       } catch(error) {
         // catch only network error
         console.log (
@@ -68,16 +63,16 @@ export default function Signup() {
         console.log('Use the response here!');
         console.log(response);
         
-        // history.push("/");
-        //resetFirstName();
-        //resetLastName();
-        //resetEmail();
-        //resetPassword();
+        resetFirstName();
+        resetLastName();
+        resetEmail();
+        resetPassword();
+        history.push("/");
       } else {
-        // namage if user exists from 400 response
+        // manaage errors from response code 400 
         const res = await response.json();
         console.log(await res.message)
-        // console.log(`HTTP Response Code: ${response?.status}`)
+        console.log(`HTTP Response Code: ${response?.status}`)
       }
     }
 
