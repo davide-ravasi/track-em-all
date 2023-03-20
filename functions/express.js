@@ -33,6 +33,37 @@ const generateAccessToken = (user) => {
   return jwt.sign(user, jwtSecret, { expiresIn: '30d' });
 }
 
+// const protect = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   const token = authHeader && authHeader.split(' ')[1];
+
+//   if (!token) {
+//     return res.status(401).json({ message: 'Access token not found' });
+//   }
+
+//   jwt.verify(token, jwtSecret, (err, user) => {
+//     if (err) {
+//       return res.status(403).json({ message: 'Invalid token' });
+//     }
+    
+//     req.user = user;
+//     next();
+//   });
+// }
+
+const protect = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if(!authHeader) {
+    return res.status(401).json({ message: 'Access token not found' });
+  }
+  const token = authHeader.split(" ")[1];
+
+  // verify the token
+
+  // get user from token
+
+  next();
+}
 // better object with real data from api
 // to check if exists in db if not
 // retrieve from api endpoint
@@ -120,7 +151,7 @@ const getUser = (async (req, res) => {
 router.get('/favorites', getFavorites);
 router.post('/user/register', registerUser);
 router.post('/user/login', loginUser);
-router.get('/user/:id', getUser);
+router.get('/user/:id', protect, getUser);
 
 // add route to login user
 
