@@ -12,6 +12,7 @@ const saltRounds = 10;
 const mongoose = require('mongoose');
 
 const mongoDB = process.env.REACT_APP_MONGODB_URI;
+const jwtSecret = process.env.REACT_APP_JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -29,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const router = express.Router();
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.REACT_APP_JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign(user, jwtSecret, { expiresIn: '30d' });
 }
 
 // better object with real data from api
@@ -61,6 +62,7 @@ const registerUser = (async (req, res) => {
       password: hashedPassword,
       favorites: [],
     });
+    
     const savedUser = await user.save();
     res.status(201).json({
       id: savedUser._id,
