@@ -1,55 +1,78 @@
-const express = require('express');
-const path = require('path');
-const serverless = require('serverless-http');
-const cors = require('cors')
+const express = require("express");
+const path = require("path");
+const serverless = require("serverless-http");
+const cors = require("cors");
 const app = express();
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const saltRounds = 10;
 // connect express server to mongodb database
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const mongoDB = process.env.REACT_APP_MONGODB_URI;
 const jwtSecret = process.env.REACT_APP_JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
 // end of mongodb connection
 
 // import models
-const { User } = require('./models/user');
-const { Favorite } = require('./models/favorite');
+const { User } = require("./models/user");
+const { Favorite } = require("./models/favorite");
 // end of import models
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const router = express.Router();
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, jwtSecret, { expiresIn: '30d' });
-}
+  return jwt.sign(user, jwtSecret, { expiresIn: "30d" });
+};
 
+const protect = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader && authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Access token not found" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Access token not found" });
+  }
+
+  jwt.verify(token, jwtSecret, function (err, decoded) {
+    if (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    req.user = decoded;
+  });
+
+  next();
+};
 // better object with real data from api
 // to check if exists in db if not
 // retrieve from api endpoint
-const getFavorites = ((req, res) => {
+const getFavorites = (req, res) => {
   Favorite.find({}, (err, favorites) => {
     if (err) return res.status(500).send(err);
     console.log(favorites);
-    res.json(favorites)
+    res.json(favorites);
   });
-});
+};
 
-const registerUser = (async (req, res) => {
+const registerUser = async (req, res) => {
   const existingUser = await User.findOne({ email: req.body.email });
 
   if (existingUser) {
     // try with reponse text ?
-    return res.status(400).json({ message: 'User already exists' });
+    return res.status(400).json({ message: "User already exists" });
   }
 
   try {
@@ -62,7 +85,7 @@ const registerUser = (async (req, res) => {
       password: hashedPassword,
       favorites: [],
     });
-    
+
     const savedUser = await user.save();
     res.status(201).json({
       id: savedUser._id,
@@ -75,21 +98,21 @@ const registerUser = (async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-})
+};
 
-const loginUser = (async (req, res) => {
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(400).json({ message: 'User not found' });
+    return res.status(400).json({ message: "User not found" });
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
-    return res.status(400).json({ message: 'Invalid credentials' });
+    return res.status(400).json({ message: "Invalid credentials" });
   }
 
   res.status(201).json({
@@ -100,10 +123,10 @@ const loginUser = (async (req, res) => {
     favorites: user.favorites,
     token: generateAccessToken({ id: user._id }),
   });
-})
+};
 
-const getUser = (async (req, res) => {
-  const user = await User.findById(req.params.id).populate('favorites');
+const getUser = async (req, res) => {
+  const user = await User.findById(req.params.id).populate("favorites");
   if (user) {
     res.json({
       id: user._id,
@@ -111,21 +134,21 @@ const getUser = (async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       favorites: user.favorites,
-    })
+    });
   } else {
-    res.status(404).json({ message: 'User not found' })
+    res.status(404).json({ message: "User not found" });
   }
-})
+};
 
-router.get('/favorites', getFavorites);
-router.post('/user/register', registerUser);
-router.post('/user/login', loginUser);
-router.get('/user/:id', getUser);
+router.get("/favorites", getFavorites);
+router.post("/user/register", registerUser);
+router.post("/user/login", loginUser);
+router.get("/user/:id", protect, getUser);
 
 // add route to login user
 
-app.use('/.netlify/functions/express', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use("/.netlify/functions/express", router); // path must route to lambda
+app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
 module.exports = app;
 module.exports.handler = serverless(app);
