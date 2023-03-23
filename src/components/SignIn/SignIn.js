@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SignIn.scss";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
+  const auth = useSelector((state) => state.auth.value)
+  const dispatch = useDispatch()
 
   return {
     value,
@@ -35,7 +38,7 @@ export default function Signin() {
     let response;
 
     try {
-      response = await fetch("http://localhost:8888/.netlify/functions/express/user/login", {
+      response = await fetch("https://8888-davideravasi-trackemall-mclb840f9og.ws-eu92.gitpod.io/.netlify/functions/express/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -45,6 +48,8 @@ export default function Signin() {
           password: password,
         }),
       })
+
+      console.log(response);
 
     } catch (error) {
       // catch only network error

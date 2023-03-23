@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+// import { useSelector, useDispatch } from 'react-redux'
 
 import "./Signup.scss";
 
@@ -21,65 +22,65 @@ export const useInput = (initialValue) => {
 };
 
 export default function Signup() {
-    const history = useHistory();
+  const history = useHistory();
 
-    const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
-    const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
-    const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-    const {
-      value: password,
-      bind: bindPassword,
-      reset: resetPassword,
-    } = useInput("");
-  
-    async function handleSubmit(e) {
-      e.preventDefault();
-  
-      let response;
-  
-      try {
-        response = await fetch("http://localhost:8888/.netlify/functions/express/user/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: password,
-          }),
-        })
-      } catch(error) {
-        // catch only network error
-        console.log (
-          "Failed to create an account. Please retry later (or contact us if the problem persists)"
-        );
-        console.log(error);
-      }
-  
-      // catch if status code is not in range of 200--299
-      if (response?.ok) {
-        console.log('Use the response here!');
-        console.log(response);
-        
-        resetFirstName();
-        resetLastName();
-        resetEmail();
-        resetPassword();
-        history.push("/");
-      } else {
-        // manaage errors from response code 400 
-        const res = await response.json();
-        console.log(await res.message)
-        console.log(`HTTP Response Code: ${response?.status}`)
-      }
+  const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
+  const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
+  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  const {
+    value: password,
+    bind: bindPassword,
+    reset: resetPassword,
+  } = useInput("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    let response;
+
+    try {
+      response = await fetch("http://localhost:8888/.netlify/functions/express/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        }),
+      })
+    } catch (error) {
+      // catch only network error
+      console.log(
+        "Failed to create an account. Please retry later (or contact us if the problem persists)"
+      );
+      console.log(error);
     }
+
+    // catch if status code is not in range of 200--299
+    if (response?.ok) {
+      console.log('Use the response here!');
+      console.log(response);
+
+      resetFirstName();
+      resetLastName();
+      resetEmail();
+      resetPassword();
+      history.push("/");
+    } else {
+      // manaage errors from response code 400 
+      const res = await response.json();
+      console.log(await res.message)
+      console.log(`HTTP Response Code: ${response?.status}`)
+    }
+  }
 
   return (
     <div className="page">
       <form className="signup__form-container">
-      <div className="login__input-container">
+        <div className="login__input-container">
           <label htmlFor="firstname">First Name: </label>
           <input
             className="login__input"
