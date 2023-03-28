@@ -1,4 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const register = createAsyncThunk("auth/register", async (data, thunkAPI) => {
+    try {
+        return await fetch("http://localhost:8888/.netlify/functions/express/user/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                password: data.password,
+            }),
+        });
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+
+        return thunkAPI.rejectWithValue(message);
+    }
+});
 
 export const authSlice = createSlice({
     name: "auth",
