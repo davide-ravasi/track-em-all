@@ -67,7 +67,13 @@ const loginUser = async (req, res) => {
 // @route POST /user/register
 // @access Public
 const registerUser = async (req, res) => {
-  const existingUser = await User.findOne({ email: req.body.email });
+  const { firstName, lastName, email, password } = req.body;
+
+  if(!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ message: "Please fill all fields" });
+  }
+
+  const existingUser = await User.findOne({ email: email });
 
   // validate if one of the field is not present
 
@@ -77,12 +83,12 @@ const registerUser = async (req, res) => {
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
       password: hashedPassword,
       favorites: [],
     });
