@@ -1,3 +1,4 @@
+const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // const mongoDB = process.env.REACT_APP_MONGODB_URI;
@@ -16,7 +17,7 @@ const saltRounds = 10;
 // @desc get user informations
 // @route GET /user/:id
 // @access Authenticated
-const getUser = async (req, res) => {
+const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).populate("favorites");
   if (user) {
     res.json({
@@ -27,26 +28,29 @@ const getUser = async (req, res) => {
       favorites: user.favorites,
     });
   } else {
-    res.status(404).json({ message: "User not found" });
+    res.status(404);
+    throw new Error("User not found");
   }
-};
+});
 
 // @desc Authenticate a user
 // @route POST /user/login
 // @access Public
-const loginUser = async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(400).json({ message: "User not found" });
+    res.status(400)
+    throw new Error("User not found");
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
-    return res.status(400).json({ message: "Invalid credentials" });
+    res.status(400);
+    throw new Error("Invalid password");
   }
 
   res.status(201).json({
@@ -57,7 +61,7 @@ const loginUser = async (req, res) => {
     favorites: user.favorites,
     token: generateAccessToken({ id: user._id }),
   });
-};
+});
 
 // better object with real data from api
 // to check if exists in db if not
@@ -66,11 +70,12 @@ const loginUser = async (req, res) => {
 // @desc Register new user
 // @route POST /user/register
 // @access Public
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   if(!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ message: "Please fill all fields" });
+    res.status(400);
+    throw new Error("Please fill all the fields");
   }
 
   const existingUser = await User.findOne({ email: email });
@@ -79,7 +84,8 @@ const registerUser = async (req, res) => {
 
   if (existingUser) {
     // try with reponse text ?
-    return res.status(400).json({ message: "User already exists" });
+    res.status(400);
+    throw new Error("User already exists");
   }
 
   try {
@@ -103,9 +109,10 @@ const registerUser = async (req, res) => {
       token: generateAccessToken({ id: savedUser._id }),
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400);
+    throw new Error(err);
   }
-};
+});
 
 // route error handling
 // express-async-handler
