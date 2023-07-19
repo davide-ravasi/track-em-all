@@ -1,22 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const register = createAsyncThunk(
   "auth/register",
   async (data, thunkAPI) => {
     try {
-      return await fetch(
+      return await axios.post(
         "http://localhost:8888/.netlify/functions/express/user/register",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email, 
-            password: data.password,
-          }),
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email, 
+          password: data.password,
         }
       );
     } catch (error) {
@@ -32,18 +27,20 @@ export const register = createAsyncThunk(
   }
 );
 
+// add react toastify for notifications
+
+// create service for http requests like authService.js with localstorage
+
+// add function to check if user exists in local storage
+// if not, retrieve from api endpoint
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
     token: null,
   },
-  reducers: {
-    login: (state, action) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder.addCase(register.fulfilled, (state, action) => {
       state.user = action.payload.user;
