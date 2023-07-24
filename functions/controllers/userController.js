@@ -71,8 +71,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route POST /user/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-
+  const { firstName, lastName, email, password } = JSON.parse(req.body);
   if(!firstName || !lastName || !email || !password) {
     res.status(400);
     throw new Error("Please fill all the fields");
@@ -113,9 +112,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error(err);
   }
 });
-
-// route error handling
-// express-async-handler
 
 
 module.exports = {

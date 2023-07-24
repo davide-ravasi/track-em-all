@@ -3,19 +3,24 @@ import axios from "axios";
 
 
 // put url in variable
+// put proxy in package.json
+// put url in .env file
+// put url in .env.development file
+// put url in .env.production file
+// put url in .env.test file
+// it exists some kind of env variables for netlify?
+// put url in netlify.toml file
 
 export const register = createAsyncThunk(
   "auth/register",
   async (data, thunkAPI) => {
     try {
       return await axios.post(
-        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu102.gitpod.io/.netlify/functions/express/user/register",
-        {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          password: data.password,
-        }
+        "http://localhost:8888/.netlify/functions/express/user/register",
+        data,
+        {headers: {
+          'Content-Type': 'application/json'
+        }}
       );
     } catch (error) {
       const message =
@@ -25,7 +30,7 @@ export const register = createAsyncThunk(
         error.message ||
         error.toString();
 
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
     }
   }
 );
@@ -35,7 +40,13 @@ export const register = createAsyncThunk(
 // create service for http requests like authService.js with localstorage
 
 // add function to check if user exists in local storage
+// like this:
+// const user = JSON.parse(localStorage.getItem("user"));
+// user: user ? user : null,
 // if not, retrieve from api endpoint
+// like this:
+
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -46,9 +57,17 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(register.fulfilled, (state, action) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      state.user = {
+        id: action.payload.data.id,
+        firstName: action.payload.data.firstName,
+        lastName: action.payload.data.lastName,
+        email: action.payload.data.email,
+        favorites: action.payload.data.favorites,
+      };
+      state.token = action.payload.data.token;
     });
+    // add rejected case
+    // add pending case
   },
 });
 

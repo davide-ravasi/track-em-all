@@ -102,8 +102,8 @@ export default function Signup() {
           <input
             className="login__input"
             type="text"
-            id="firstname"
-            name="firstname"
+            id="firstName"
+            name="firstName"
             required="required"
             {...bindFirstName}
           ></input>
@@ -113,8 +113,8 @@ export default function Signup() {
           <input
             className="login__input"
             type="text"
-            id="lastname"
-            name="lastname"
+            id="lastName"
+            name="lastName"
             required="required"
             {...bindLastName}
           ></input>
