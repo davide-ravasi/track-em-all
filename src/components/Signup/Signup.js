@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 // import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-// import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { register } from "../../features/auth/authSlice";
 
 import "./Signup.scss";
 
@@ -23,6 +24,7 @@ export const useInput = (initialValue) => {
 
 export default function Signup() {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
   const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
@@ -33,53 +35,68 @@ export default function Signup() {
     reset: resetPassword,
   } = useInput("");
 
-  async function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    let response;
-
-    try {
-      response = await fetch("http://localhost:8888/.netlify/functions/express/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        }),
-      })
-    } catch (error) {
-      // catch only network error
-      console.log(
-        "Failed to create an account. Please retry later (or contact us if the problem persists)"
-      );
-      console.log(error);
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
     }
 
-    // catch if status code is not in range of 200--299
-    if (response?.ok) {
-      console.log('Use the response here!');
-      console.log(response);
+    dispatch(register(newUser))
+      .unwrap()
+      .then((originalPromiseResult) => {
+        console.log(originalPromiseResult);
+      }).catch((rejectedValueOrSerializedError) => {
+        console.log(rejectedValueOrSerializedError);
+      });
 
-      resetFirstName();
-      resetLastName();
-      resetEmail();
-      resetPassword();
-      history.push("/");
-    } else {
-      // manaage errors from response code 400 
-      const res = await response.json();
-      console.log(await res.message)
-      console.log(`HTTP Response Code: ${response?.status}`)
-    }
+    // let response;
+
+    // try {
+    //   response = await fetch("http://localhost:8888/.netlify/functions/express/user/register", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/x-www-form-urlencoded",
+    //     },
+    //     body: new URLSearchParams({
+    //       firstName: firstName,
+    //       lastName: lastName,
+    //       email: email,
+    //       password: password,
+    //     }),
+    //   })
+    // } catch (error) {
+    //   // catch only network error
+    //   console.log(
+    //     "Failed to create an account. Please retry later (or contact us if the problem persists)"
+    //   );
+    //   console.log(error);
+    // }
+
+    // // catch if status code is not in range of 200--299
+    // if (response?.ok) {
+    //   console.log('Use the response here!');
+    //   console.log(response);
+
+    //   resetFirstName();
+    //   resetLastName();
+    //   resetEmail();
+    //   resetPassword();
+    //   history.push("/");
+    // } else {
+    //   // manaage errors from response code 400 
+    //   const res = await response.json();
+    //   console.log(await res.message)
+    //   console.log(`HTTP Response Code: ${response?.status}`)
+    // }
   }
 
   return (
     <div className="page">
-      <form className="signup__form-container">
+      <form className="signup__form-container" onSubmit={handleSubmit}>
         <div className="login__input-container">
           <label htmlFor="firstname">First Name: </label>
           <input
@@ -127,7 +144,6 @@ export default function Signup() {
           className="signup__button"
           title="Sign Up"
           value="Sign Up"
-          onClick={handleSubmit}
         >
           Sign Up
         </button>

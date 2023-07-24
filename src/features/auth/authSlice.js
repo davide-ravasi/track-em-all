@@ -1,16 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+// put url in variable
+
 export const register = createAsyncThunk(
   "auth/register",
   async (data, thunkAPI) => {
     try {
       return await axios.post(
-        "http://localhost:8888/.netlify/functions/express/user/register",
+        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu102.gitpod.io/.netlify/functions/express/user/register",
         {
           firstName: data.firstName,
           lastName: data.lastName,
-          email: data.email, 
+          email: data.email,
           password: data.password,
         }
       );
@@ -41,7 +44,7 @@ export const authSlice = createSlice({
     token: null,
   },
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder.addCase(register.fulfilled, (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
