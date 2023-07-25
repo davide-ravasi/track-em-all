@@ -53,10 +53,16 @@ export const authSlice = createSlice({
   initialState: {
     user: null,
     token: null,
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+    message: "",
   },
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(register.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
       state.user = {
         id: action.payload.data.id,
         firstName: action.payload.data.firstName,
@@ -66,8 +72,16 @@ export const authSlice = createSlice({
       };
       state.token = action.payload.data.token;
     });
-    // add rejected case
-    // add pending case
+
+    builder.addCase(register.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    
+    builder.addCase(register.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
   },
 });
 

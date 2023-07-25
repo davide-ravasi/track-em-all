@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 // import { useAuth } from "../../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
+//import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { register } from "../../features/auth/authSlice";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import "./Signup.scss";
 
@@ -23,8 +25,10 @@ export const useInput = (initialValue) => {
 };
 
 export default function Signup() {
-  const history = useHistory();
+  //const history = useHistory();
   const dispatch = useDispatch();
+  const {isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const notify = () => toast("Wow so easy !");
 
   const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
   const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
@@ -48,7 +52,7 @@ export default function Signup() {
     dispatch(register(newUser))
       .unwrap()
       .then((originalPromiseResult) => {
-        console.log(originalPromiseResult);
+        notify();
       }).catch((rejectedValueOrSerializedError) => {
         console.log(rejectedValueOrSerializedError);
       });
