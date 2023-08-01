@@ -83,7 +83,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (existingUser) {
     // try with reponse text ?
-    res.status(400);
+    res.status(400).send("User already exists");
     throw new Error("User already exists");
   }
 

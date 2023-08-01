@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SignIn.scss";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
+//import { useSelector, useDispatch } from 'react-redux'
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
-  const auth = useSelector((state) => state.auth.value)
-  const dispatch = useDispatch()
+  //const auth = useSelector((state) => state.auth.value)
+  //const dispatch = useDispatch()
 
   return {
     value,

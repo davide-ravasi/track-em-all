@@ -23,6 +23,9 @@ export const register = createAsyncThunk(
         }}
       );
     } catch (error) {
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      console.log(error);
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
       const message =
         (error.response &&
           error.response.data &&
