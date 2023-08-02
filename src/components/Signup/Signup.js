@@ -73,6 +73,8 @@ export default function Signup() {
     dispatch(register(newUser));
   }
 
+  if (isLoading) return <div className="page">...is loading</div>;
+
   return (
     <div className="page">
       <form className="signup__form-container" onSubmit={handleSubmit}>
