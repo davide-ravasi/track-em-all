@@ -28,7 +28,7 @@ const getUser = asyncHandler(async (req, res) => {
       favorites: user.favorites,
     });
   } else {
-    res.status(404);
+    res.status(404).send("User not found");
     throw new Error("User not found");
   }
 });
@@ -42,14 +42,14 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    res.status(400)
+    res.status(400).send("User not found");
     throw new Error("User not found");
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
-    res.status(400);
+    res.status(400).send("Invalid password");
     throw new Error("Invalid password");
   }
 
@@ -72,8 +72,8 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = JSON.parse(req.body);
-  if(!firstName || !lastName || !email || !password) {
-    res.status(400);
+  if (!firstName || !lastName || !email || !password) {
+    res.status(400).send("Please fill all the fields");
     throw new Error("Please fill all the fields");
   }
 

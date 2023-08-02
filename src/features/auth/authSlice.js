@@ -16,29 +16,23 @@ export const register = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       return await axios.post(
-        "http://localhost:8888/.netlify/functions/express/user/register",
+        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu102.gitpod.io/.netlify/functions/express/user/register",
         data,
-        {headers: {
-          'Content-Type': 'application/json'
-        }}
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
     } catch (error) {
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       console.log(error);
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      const message = error.response.data;
       return thunkAPI.rejectWithValue(message); // we can handle this in the error case
     }
   }
 );
-
-// add react toastify for notifications
 
 // create service for http requests like authService.js with localstorage
 
@@ -79,7 +73,7 @@ export const authSlice = createSlice({
     builder.addCase(register.pending, (state, action) => {
       state.isLoading = true;
     });
-    
+
     builder.addCase(register.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;

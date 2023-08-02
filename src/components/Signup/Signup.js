@@ -28,7 +28,7 @@ export const useInput = (initialValue) => {
 export default function Signup() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const {user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
   const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
@@ -40,6 +40,7 @@ export default function Signup() {
   } = useInput("");
 
   useEffect(() => {
+    console.log(message);
     if (isError) {
       toast.error(message);
     }
