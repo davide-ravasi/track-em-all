@@ -11,6 +11,7 @@ import SignUp from "./components/Signup/Signup";
 import SignIn from "./components/SignIn/SignIn";
 
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastContainer } from 'react-toastify';
 
 import "./App.scss";
 import ListingPage from "./pages/ListingPage/ListingPage";
@@ -36,6 +37,7 @@ function App() {
           <Footer />
         </AuthProvider>
       </Router>
+      <ToastContainer />
     </div>
   );
 }
