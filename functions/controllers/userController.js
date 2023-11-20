@@ -37,7 +37,7 @@ const getUser = asyncHandler(async (req, res) => {
 // @route POST /user/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = JSON.parse(req.body);
 
   const user = await User.findOne({ email });
 
@@ -105,7 +105,6 @@ const registerUser = asyncHandler(async (req, res) => {
       lastName: savedUser.lastName,
       email: savedUser.email,
       favorites: savedUser.favorites,
-      token: generateAccessToken({ id: savedUser._id }),
     });
   } catch (err) {
     res.status(400);

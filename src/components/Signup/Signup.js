@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 
@@ -28,7 +28,7 @@ export const useInput = (initialValue) => {
 export default function Signup() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
   const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
@@ -39,38 +39,47 @@ export default function Signup() {
     reset: resetPassword,
   } = useInput("");
 
+  // const resetFields = useCallback(() => {
+  //   resetFirstName();
+  //   resetLastName();
+  //   resetEmail();
+  //   resetPassword();
+  // }, [resetFirstName, resetLastName, resetEmail, resetPassword])
+
+  // check if the problem in duplicating useEffect is resetFields
+
   useEffect(() => {
-    console.log(message);
-    if (isError) {
-      toast.error(message);
-    }
+    console.log("use effect");
+    console.log("is success ", isSuccess);
 
     if (isSuccess) {
       toast.success("You have successfully registered!");
-      resetFirstName();
-      resetLastName();
-      resetEmail();
-      resetPassword();
-    }
+      toast.info("We are redirecting you to the login page");
 
-    if (user) {
+      // redirect to the login page after registration
       setTimeout(() => {
-        history.push("/");
+        history.push("/signin");
       }, 2000);
     }
-  }, [user, isError, isSuccess, message, history, resetFirstName, resetLastName, resetEmail, resetPassword])
+  }, [isSuccess, history]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+  }, [isError, message])
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newUser = {
+    const registerUser = {
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
     }
 
-    dispatch(register(newUser));
+    dispatch(register(registerUser));
   }
 
   if (isLoading) return <div className="page">...is loading</div>;

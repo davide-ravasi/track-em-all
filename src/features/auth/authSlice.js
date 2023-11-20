@@ -16,7 +16,7 @@ export const register = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       return await axios.post(
-        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu102.gitpod.io/.netlify/functions/express/user/register",
+        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu106.gitpod.io/.netlify/functions/express/user/register",
         data,
         {
           headers: {
@@ -25,9 +25,28 @@ export const register = createAsyncThunk(
         }
       );
     } catch (error) {
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       console.log(error);
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      const message = error.response.data;
+      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+    }
+  }
+);
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (data, thunkAPI) => {
+    try {
+      return await axios.post(
+        "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu106.gitpod.io/.netlify/functions/express/user/login",
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
       const message = error.response.data;
       return thunkAPI.rejectWithValue(message); // we can handle this in the error case
     }
@@ -57,7 +76,10 @@ export const authSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
+    // register
     builder.addCase(register.fulfilled, (state, action) => {
+      // remove user data
+      // after register the user has to login
       state.isLoading = false;
       state.isSuccess = true;
       state.user = {
@@ -79,8 +101,32 @@ export const authSlice = createSlice({
       state.isError = true;
       state.message = action.payload;
     });
+
+    // login 
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user = {
+        id: action.payload.data.id,
+        firstName: action.payload.data.firstName,
+        lastName: action.payload.data.lastName,
+        email: action.payload.data.email,
+        favorites: action.payload.data.favorites,
+      };
+      state.token = action.payload.data.token;
+    });
+
+    builder.addCase(login.pending, (state, action) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(login.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    });
   },
 });
 
-export const { login } = authSlice.actions;
+// export const { login } = authSlice.actions;
 export default authSlice.reducer;
