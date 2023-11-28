@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { register } from "../../features/auth/authSlice";
+import { register, reset } from "../../features/auth/authSlice";
 
 import "./Signup.scss";
 
@@ -49,19 +49,17 @@ export default function Signup() {
   // check if the problem in duplicating useEffect is resetFields
 
   useEffect(() => {
-    console.log("use effect");
-    console.log("is success ", isSuccess);
-
     if (isSuccess) {
       toast.success("You have successfully registered!");
       toast.info("We are redirecting you to the login page");
 
       // redirect to the login page after registration
       setTimeout(() => {
+        dispatch(reset());
         history.push("/signin");
       }, 2000);
     }
-  }, [isSuccess, history]);
+  }, [isSuccess, history, dispatch]);
 
   useEffect(() => {
     if (isError) {
