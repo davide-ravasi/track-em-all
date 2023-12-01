@@ -39,12 +39,12 @@ export default function Signup() {
     reset: resetPassword,
   } = useInput("");
 
-  // const resetFields = useCallback(() => {
-  //   resetFirstName();
-  //   resetLastName();
-  //   resetEmail();
-  //   resetPassword();
-  // }, [resetFirstName, resetLastName, resetEmail, resetPassword])
+  const resetFields = useCallback(() => {
+    resetFirstName();
+    resetLastName();
+    resetEmail();
+    resetPassword();
+  }, [resetFirstName, resetLastName, resetEmail, resetPassword])
 
   // check if the problem in duplicating useEffect is resetFields
 

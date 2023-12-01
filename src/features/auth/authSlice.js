@@ -1,19 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const localhost = "http://localhost:8888/.netlify/functions/express";
-const gitpodhost =
-  "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu106.gitpod.io/.netlify/functions/express";
-const actualHost = gitpodhost;
+const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
 
 // put url in variable
 // put proxy in package.json
-// put url in .env file
-// put url in .env.development file
-// put url in .env.production file
-// put url in .env.test file
-// it exists some kind of env variables for netlify?
-// put url in netlify.toml file
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -66,7 +57,6 @@ export const authSlice = createSlice({
     message: "",
   },
   reducers: {
-    // create a reducer to reset the state
     reset: (state) => {
       state.user = null;
       state.token = null;
@@ -77,20 +67,11 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+
     // register
     builder.addCase(register.fulfilled, (state, action) => {
-      // remove user data
-      // after register the user has to login
       state.isLoading = false;
       state.isSuccess = true;
-      // state.user = {
-      //   id: action.payload.data.id,
-      //   firstName: action.payload.data.firstName,
-      //   lastName: action.payload.data.lastName,
-      //   email: action.payload.data.email,
-      //   favorites: action.payload.data.favorites,
-      // };
-      // state.token = action.payload.data.token;
     });
 
     builder.addCase(register.pending, (state, action) => {
