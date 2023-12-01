@@ -31,7 +31,8 @@ export const useInput = (initialValue) => {
 export default function Signin() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
   const {
@@ -40,17 +41,7 @@ export default function Signin() {
     reset: resetPassword,
   } = useInput("");
 
-  // const resetFields = useCallback(() => {
-  //   resetFirstName();
-  //   resetLastName();
-  //   resetEmail();
-  //   resetPassword();
-  // }, [resetFirstName, resetLastName, resetEmail, resetPassword])
-
   useEffect(() => {
-    console.log("use effect");
-    console.log("is success ", isSuccess);
-
     if (isSuccess) {
       toast.success("You have successfully login!");
       toast.info("We are redirecting you to the homepage");

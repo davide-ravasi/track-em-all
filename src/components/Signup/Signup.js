@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 
@@ -30,21 +30,20 @@ export default function Signup() {
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
 
-  const { value: firstName, bind: bindFirstName, reset: resetFirstName } = useInput("");
-  const { value: lastName, bind: bindLastName, reset: resetLastName } = useInput("");
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  const { value: firstName, bind: bindFirstName } = useInput("");
+  const { value: lastName, bind: bindLastName } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("");
   const {
     value: password,
     bind: bindPassword,
-    reset: resetPassword,
   } = useInput("");
 
-  const resetFields = useCallback(() => {
-    resetFirstName();
-    resetLastName();
-    resetEmail();
-    resetPassword();
-  }, [resetFirstName, resetLastName, resetEmail, resetPassword])
+  // const resetFields = useCallback(() => {
+  //   resetFirstName();
+  //   resetLastName();
+  //   resetEmail();
+  //   resetPassword();
+  // }, [resetFirstName, resetLastName, resetEmail, resetPassword])
 
   // check if the problem in duplicating useEffect is resetFields
 
