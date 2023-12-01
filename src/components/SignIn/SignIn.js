@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./SignIn.scss";
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
-//import { useSelector, useDispatch } from 'react-redux'
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { login } from "../../features/auth/authSlice";
+
+import "./SignIn.scss";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -24,6 +30,9 @@ export const useInput = (initialValue) => {
 
 export default function Signin() {
   const history = useHistory();
+  const dispatch = useDispatch();
+  //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+  const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
   const {
@@ -32,44 +41,34 @@ export default function Signin() {
     reset: resetPassword,
   } = useInput("");
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("You have successfully login!");
+      toast.info("We are redirecting you to the homepage");
+
+      // redirect to the login page after registration
+      setTimeout(() => {
+        history.push("/");
+      }, 2000);
+    }
+  }, [isSuccess, history]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message,
+        { onClose: () => { resetEmail(); resetPassword() } });
+    }
+  }, [isError, resetEmail, resetPassword, message])
+
   async function handleSubmit(e) {
     e.preventDefault();
 
-    let response;
-
-    try {
-      response = await fetch("https://8888-davideravasi-trackemall-mclb840f9og.ws-eu92.gitpod.io/.netlify/functions/express/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          email: email,
-          password: password,
-        }),
-      })
-
-      console.log(response);
-
-    } catch (error) {
-      // catch only network error
-      console.log(
-        "Failed to create an account. Please retry later (or contact us if the problem persists)"
-      );
-      console.log(error);
+    const loginUser = {
+      email,
+      password
     }
 
-    // catch if status code is not in range of 200--299
-    if (response?.ok) {
-      console.log('Use the response here!');
-      console.log(response);
-
-      history.push("/");
-      resetEmail();
-      resetPassword();
-    } else {
-      console.log(`HTTP Response Code: ${response?.status}`)
-    }
+    dispatch(login(loginUser));
   }
 
   return (

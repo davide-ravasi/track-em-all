@@ -12,8 +12,6 @@ const generateAccessToken = (user) => {
 
 const saltRounds = 10;
 
-
-
 // @desc get user informations
 // @route GET /user/:id
 // @access Authenticated
@@ -37,7 +35,7 @@ const getUser = asyncHandler(async (req, res) => {
 // @route POST /user/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = JSON.parse(req.body);
 
   const user = await User.findOne({ email });
 
@@ -79,8 +77,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const existingUser = await User.findOne({ email: email });
 
-  // validate if one of the field is not present
-
   if (existingUser) {
     // try with reponse text ?
     res.status(400).send("User already exists");
@@ -101,18 +97,12 @@ const registerUser = asyncHandler(async (req, res) => {
     const savedUser = await user.save();
     res.status(201).json({
       id: savedUser._id,
-      firstName: savedUser.firstName,
-      lastName: savedUser.lastName,
-      email: savedUser.email,
-      favorites: savedUser.favorites,
-      token: generateAccessToken({ id: savedUser._id }),
     });
   } catch (err) {
     res.status(400);
     throw new Error(err);
   }
 });
-
 
 module.exports = {
   getUser,
