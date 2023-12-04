@@ -2,11 +2,26 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "./Header.scss";
-import { useAuth } from "../../contexts/AuthContext";
+//import { useAuth } from "../../contexts/AuthContext";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
+interface RootState {
+  auth: {
+    user: {};
+  };
+}
 
 export default function Header() {
-  const { currentUser, logout } = useAuth();
+  // const { currentUser, logout } = useAuth();
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    toast.success("You have successfully logout!", { autoClose: 2000 });
+    dispatch(logout());
+  };
 
   return (
     <>
@@ -30,7 +45,11 @@ export default function Header() {
                 <Link to="/favorites" className="navbar__menuItem">
                   Favorites
                 </Link>
-                <Link onClick={logout} to="#" className="navbar__menuItem">
+                <Link
+                  onClick={handleLogout}
+                  to="#"
+                  className="navbar__menuItem"
+                >
                   Logout
                 </Link>
               </React.Fragment>

@@ -65,9 +65,16 @@ export const authSlice = createSlice({
       state.isError = false;
       state.message = null;
     },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = null;
+    },
   },
   extraReducers: (builder) => {
-
     // register
     builder.addCase(register.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -110,5 +117,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, logout } = authSlice.actions;
 export default authSlice.reducer;

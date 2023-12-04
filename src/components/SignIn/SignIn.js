@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { login } from "../../features/auth/authSlice";
 
@@ -31,6 +31,8 @@ export const useInput = (initialValue) => {
 export default function Signin() {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const timer = 2000;
   //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
   const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
@@ -43,30 +45,36 @@ export default function Signin() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You have successfully login!");
-      toast.info("We are redirecting you to the homepage");
+      toast.success("You have successfully login!", { autoClose: timer });
+      toast.info("We are redirecting you to the homepage", {
+        autoClose: timer,
+      });
 
       // redirect to the login page after registration
       setTimeout(() => {
         history.push("/");
-      }, 2000);
+      }, timer);
     }
   }, [isSuccess, history]);
 
   useEffect(() => {
     if (isError) {
-      toast.error(message,
-        { onClose: () => { resetEmail(); resetPassword() } });
+      toast.error(message, {
+        onClose: () => {
+          resetEmail();
+          resetPassword();
+        },
+      });
     }
-  }, [isError, resetEmail, resetPassword, message])
+  }, [isError, resetEmail, resetPassword, message]);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     const loginUser = {
       email,
-      password
-    }
+      password,
+    };
 
     dispatch(login(loginUser));
   }
