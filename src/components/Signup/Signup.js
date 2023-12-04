@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { register, reset } from "../../features/auth/authSlice";
 
@@ -28,15 +28,17 @@ export const useInput = (initialValue) => {
 export default function Signup() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+
+  const timer = 2000;
+
+  const { isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   const { value: firstName, bind: bindFirstName } = useInput("");
   const { value: lastName, bind: bindLastName } = useInput("");
   const { value: email, bind: bindEmail } = useInput("");
-  const {
-    value: password,
-    bind: bindPassword,
-  } = useInput("");
+  const { value: password, bind: bindPassword } = useInput("");
 
   // const resetFields = useCallback(() => {
   //   resetFirstName();
@@ -49,14 +51,16 @@ export default function Signup() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You have successfully registered!");
-      toast.info("We are redirecting you to the login page");
+      toast.success("You have successfully registered!", { autoClose: timer });
+      toast.info("We are redirecting you to the login page", {
+        autoClose: timer,
+      });
 
       // redirect to the login page after registration
       setTimeout(() => {
         dispatch(reset());
         history.push("/signin");
-      }, 2000);
+      }, timer);
     }
   }, [isSuccess, history, dispatch]);
 
@@ -64,7 +68,7 @@ export default function Signup() {
     if (isError) {
       toast.error(message);
     }
-  }, [isError, message])
+  }, [isError, message]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,10 +78,10 @@ export default function Signup() {
       lastName: lastName,
       email: email,
       password: password,
-    }
+    };
 
     dispatch(register(registerUser));
-  }
+  };
 
   if (isLoading) return <div className="page">...is loading</div>;
 
