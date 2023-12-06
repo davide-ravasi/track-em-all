@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
@@ -11,7 +12,7 @@ import SignUp from "./components/Signup/Signup";
 import SignIn from "./components/SignIn/SignIn";
 
 import { AuthProvider } from "./contexts/AuthContext";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 import "./App.scss";
 import ListingPage from "./pages/ListingPage/ListingPage";
