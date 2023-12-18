@@ -63,17 +63,18 @@ export default function HomePage() {
     }
   }, [recommendedId, currentUser, ref]);
 
-  useEffect(() => { // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu81.gitpod.io/.netlify/functions/express/another
-    fetch('https://trackem-all.netlify.app/.netlify/functions/express/another')
+  useEffect(() => {
+    // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu81.gitpod.io/.netlify/functions/express/another
+    fetch("https://trackem-all.netlify.app/.netlify/functions/express/another")
       //fetch('https://8888-davideravasi-trackemall-mclb840f9og.ws-eu81.gitpod.io/.netlify/functions/express/another')
-      .then(res => {
+      .then((res) => {
         console.log(res);
-        return res.json()
+        return res.json();
       })
-      .then(users => {
+      .then((users) => {
         console.log(users);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
 
   const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,7 +96,13 @@ export default function HomePage() {
         }
       }
     } catch (error) {
-      setSearchError(error.toString());
+      if (error instanceof Error) {
+        // Handle the error object
+        setSearchError(error.message);
+      } else {
+        // Handle any other exceptions
+        setSearchError("An unknown error occurred");
+      }
     }
   };
 
@@ -115,18 +122,22 @@ export default function HomePage() {
               <ShowList
                 section={Sections.Tv}
                 category={Categories.Popular}
-                cardAmount={6} />
+                cardAmount={6}
+              />
 
               <ShowList
                 section={Sections.Tv}
                 category={Categories.TopRated}
-                cardAmount={6} />
+                cardAmount={6}
+              />
 
-              <ShowList title={en.categories.personpopular.title}
+              <ShowList
+                title={en.categories.personpopular.title}
                 linkMore={false}
                 section={Sections.Person}
                 category={Categories.Popular}
-                cardAmount={6} />
+                cardAmount={6}
+              />
 
               {recommendedId && (
                 <ShowList
