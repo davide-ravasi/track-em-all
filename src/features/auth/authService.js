@@ -1,0 +1,35 @@
+import axios from "axios";
+
+const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
+
+const register = async (data) => {
+  if (data) {
+    return await axios.post(actualHost + "/user/register", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+};
+
+const login = async (data) => {
+  if (data) {
+    const response = await axios.post(actualHost + "/user/login", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.data) {
+      localStorage.setItem("tea-token", JSON.stringify(response.data.token));
+      return response;
+    }
+  }
+};
+
+const authService = {
+  register,
+  login,
+};
+
+export default authService;

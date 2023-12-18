@@ -14,7 +14,13 @@ const useApiCall = (url: string) => {
         setResponse(jsonData);
         setloading(false);
       } catch (error) {
-        setError(error);
+        if (error instanceof Error) {
+          // Handle the error object
+          setError(error.message);
+        } else {
+          // Handle any other exceptions
+          setError("An unknown error occurred");
+        }
       }
     };
     fetchData();
