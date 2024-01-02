@@ -3,6 +3,7 @@ import { Redirect, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // https://ui.dev/react-router-v5-protected-routes-authentication
+// need to add the token verification pn backend?
 
 interface IPrivateRouteProps {
   path: string,
