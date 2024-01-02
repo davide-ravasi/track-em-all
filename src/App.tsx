@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import "./App.scss";
 import ListingPage from "./pages/ListingPage/ListingPage";
 import PersonPage from "./pages/PersonPage/PersonPage";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -30,7 +31,10 @@ function App() {
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
             <Route path="/list/:category" exact component={ListingPage} />
-            <Route path="/favorites" exact component={FavoritesPage} />
+            <PrivateRoute path="/favorites">
+              <FavoritesPage />
+            </PrivateRoute>
+            {/* <Route path="/favorites" exact component={FavoritesPage} /> */}
             <Route path="/show/:id" exact component={ShowPage} />
             <Route path="/episode/:id" exact component={EpisodePage} />
             <Route path="/person/:id" exact component={PersonPage} />
