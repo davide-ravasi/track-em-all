@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "./Header.scss";
-//import { useAuth } from "../../contexts/AuthContext";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -10,7 +9,6 @@ import { toast } from "react-toastify";
 import { RootState } from "../../typescript/types";
 
 export default function Header() {
-  // const { currentUser, logout } = useAuth();
   const currentUser = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
 
