@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
-import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
+// import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
 //import firebase from "firebase";
 //import { useAuth } from "../../contexts/AuthContext";
 
