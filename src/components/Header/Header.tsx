@@ -7,11 +7,7 @@ import trackEmAllLogo from "../../assets/track-em-all.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
-interface RootState {
-  auth: {
-    user: {};
-  };
-}
+import { RootState } from "../../typescript/types";
 
 export default function Header() {
   // const { currentUser, logout } = useAuth();
