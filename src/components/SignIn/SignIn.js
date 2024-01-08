@@ -68,7 +68,7 @@ export default function Signin() {
     }
   }, [isError, resetEmail, resetPassword, message]);
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     const loginUser = {

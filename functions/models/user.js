@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const FavoriteSchema = new Schema({
+  name: String,
+  poster_path: String,
+  vote_average: Number,
+});
+
+
 const userSchema = new Schema({
   firstName: {
     type: String,
@@ -20,8 +27,7 @@ const userSchema = new Schema({
     required: true
   },
   favorites: [{
-    type: Schema.Types.ObjectId,
-    ref: "Favorite"
+    type: FavoriteSchema,
   }]
 }, {
   timestamps: true // set createdAt and updatedAt

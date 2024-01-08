@@ -14,14 +14,14 @@ export default function ShowFavoriteList(props: ShowFavoritesProps) {
   const { title, shows } = props;
 
   return (
-    <div className="favorite">
-      <h1>{title}</h1>
-      <div className="shows__list">
-        {shows &&
-          shows.map((show: Show) => {
-            return <ShowCard key={show.id.toString()} show={show} />;
-          })}
-      </div>
+    // <div className="favorite">
+    //   <h1>{title}</h1>
+    <div className="shows__list">
+      {shows &&
+        shows.map((show: Show) => {
+          return <ShowCard key={show.id.toString()} show={show} />;
+        })}
     </div>
+    // </div>
   );
 }
