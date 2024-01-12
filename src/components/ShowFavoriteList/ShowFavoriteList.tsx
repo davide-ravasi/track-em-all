@@ -6,22 +6,17 @@ import "./ShowFavoritesList.scss";
 import ShowCard from "../ShowCard/ShowCard";
 
 interface ShowFavoritesProps {
-  title: string;
-  shows: Show[];
+  favorites: Show[];
 }
 
 export default function ShowFavoriteList(props: ShowFavoritesProps) {
-  const { title, shows } = props;
+  const { favorites } = props;
 
   return (
-    // <div className="favorite">
-    //   <h1>{title}</h1>
     <div className="shows__list">
-      {shows &&
-        shows.map((show: Show) => {
-          return <ShowCard key={show.id.toString()} show={show} />;
-        })}
+      {favorites.map((show) => (
+        <ShowCard key={show.id} show={show} />
+      ))}
     </div>
-    // </div>
   );
 }

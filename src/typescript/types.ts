@@ -150,6 +150,17 @@ type ShowResponse = {
   results: Show[];
 };
 
+interface RootState {
+  auth: {
+    user: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      favorites: Show[];
+    };
+  };
+}
+
 export type {
   Show,
   ShowListProps,
@@ -169,4 +180,5 @@ export type {
   Image,
   ImagesData,
   ShowResponse,
+  RootState,
 };

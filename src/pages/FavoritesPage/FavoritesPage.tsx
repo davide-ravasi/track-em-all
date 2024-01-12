@@ -1,52 +1,22 @@
-import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-// import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
-//import firebase from "firebase";
-//import { useAuth } from "../../contexts/AuthContext";
+import { RootState } from "../../typescript/types";
+
+import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
 
 import "./FavoritesPage.scss";
 
 export default function FavoritesPage() {
-  //const { currentUser } = useAuth();
-  //const [favorites, setFavorites] = useState([] as any);
+  const { favorites } = useSelector((state: RootState) => state.auth.user);
 
-
-  //const ref = firebase.firestore().collection("Favorites");
-  //ONE TIME GET FUNCTION
-  function getFavorites() {
-    // if (currentUser) {
-    //   ref.where("user", "==", currentUser.uid).onSnapshot((querySnapshot) => {
-    //     const items = [] as any;
-
-    //     querySnapshot.forEach((doc) => {
-    //       const data = doc.data();
-    //       items.push(data);
-
-    //       setFavorites({ ...favorites, items });
-    //     });
-    //   });
-    // }
-
-    console.log("favorites");
-
-  }
-
-  useEffect(() => {
-    getFavorites();
-    // eslint-disable-next-line
-  }, []);
+  console.log(favorites);
 
   return (
     <div className="page">
       <div className="page__content-wrapper">
         <div className="favorite">
           <h1>Your Favorite Shows</h1>
-          {/* {favorites && favorites.items && favorites.items.length > 0 && (
-          <ShowFavoriteList
-            title="Your Favorite Shows"
-            shows={favorites.items}
-          />
-        )} */}
+          {favorites && <ShowFavoriteList favorites={favorites} />}
         </div>
       </div>
     </div>
