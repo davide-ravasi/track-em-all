@@ -18,10 +18,15 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 // end of mongodb connection
 
 // import models
-const { Favorite } = require("./models/favorite");
+//const { Favorite } = require("./models/favorite");
 // end of import models
 
-const { getUser, loginUser, registerUser } = require("./controllers/userController");
+const {
+  getUser,
+  loginUser,
+  registerUser,
+} = require("./controllers/userController");
+const { User } = require("./models/user");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,20 +59,77 @@ const protect = (req, res, next) => {
 // better object with real data from api
 // to check if exists in db if not
 // retrieve from api endpoint
-const getFavorites = (req, res) => {
-  Favorite.find({}, (err, favorites) => {
-    if (err) return res.status(500).send(err);
-    console.log(favorites);
-    res.json(favorites);
+// const getFavorites = (req, res) => {
+//   Favorite.find({}, (err, favorites) => {
+//     if (err) return res.status(500).send(err);
+//     console.log(favorites);
+//     res.json(favorites);
+//   });
+// };
+
+const addFavorite = async (req, res) => {
+  const { name, poster_path, vote_average, userId, showId } = JSON.parse(
+    req.body
+  );
+  console.log("userId: ", userId)
+  const user = await User.findById(userId);
+
+  console.log("user: ", user);
+  if (!user) {
+    res.status(400).send("User not found");
+  }
+
+  const favorite = {
+    showId,
+    name,
+    poster_path,
+    vote_average,
+  };
+
+  user.favorites.push(favorite);
+
+  const updatedUser = await user.save();
+
+  console.log("updatedUSer: ", updatedUser);
+
+  res.status(201).json({
+    id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    favorites: updatedUser.favorites,
   });
 };
 
-router.get("/favorites", getFavorites);
+const removeFavorite = async (req, res) => {
+  const { userId, showId } = JSON.parse(req.body);
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(400).send("User not found");
+  }
+
+  user.favorites = user.favorites.filter(
+    (favorite) => favorite.showId !== showId.toString()
+  );
+
+  const updatedUser = await user.save();
+
+  res.status(201).json({
+    id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    favorites: updatedUser.favorites,
+  });
+};
+
+router.post("/favorite/remove", removeFavorite);
+router.post("/favorite/add", addFavorite);
 router.post("/user/register", registerUser);
 router.post("/user/login", loginUser);
 router.get("/user/:id", protect, getUser);
-
-// add route to login user
 
 app.use("/.netlify/functions/express", router); // path must route to lambda
 app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));

@@ -25,10 +25,10 @@ import PersonCard from "../PersonCard/PersonCard";
 */
 
 interface ShowProps {
-  page: number,
-  results: Show[],
-  total_pages: number,
-  total_results: number
+  page: number;
+  results: Show[];
+  total_pages: number;
+  total_results: number;
 }
 
 export default function ShowList(props: ShowListProps) {
@@ -69,15 +69,17 @@ export default function ShowList(props: ShowListProps) {
       const url = getApiUrl(section, category, urlParameter, pageNumber);
       const response = await fetch(url);
       const showsMore = await response.json();
-      console.log(showsMore);
       const actualPage = showsMore.page + 1;
 
       setPageNumber(actualPage);
 
       if (shows?.results) {
-        setShows({ ...shows, page: actualPage, results: [...shows.results, ...showsMore.results] });
+        setShows({
+          ...shows,
+          page: actualPage,
+          results: [...shows.results, ...showsMore.results],
+        });
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -100,22 +102,25 @@ export default function ShowList(props: ShowListProps) {
         </h1>
       )}
       <div className="shows__list">
-        {shows && shows.results &&
-          shows?.results.slice(0, cardAmount ?? undefined).map((show: Show | Person) => {
-            return (
-              section !== 'person' ?
+        {shows &&
+          shows.results &&
+          shows?.results
+            .slice(0, cardAmount ?? undefined)
+            .map((show: Show | Person) => {
+              return section !== "person" ? (
                 <ShowCard key={show.id.toString()} show={show as Show} />
-                :
-                <PersonCard person={show as Person} />)
-          })}
+              ) : (
+                <PersonCard person={show as Person} />
+              );
+            })}
       </div>
       {/* todo  add paging */}
       <div className="shows__show-more-elements">
-        {!cardAmount &&
+        {!cardAmount && (
           <button type="button" onClick={(e) => handleAddCards(e)}>
             Show more
           </button>
-        }
+        )}
       </div>
     </div>
   );
