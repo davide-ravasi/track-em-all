@@ -1,8 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //import axios from "axios";
 import authService from "./authService";
+import axios from "axios";
 
-//const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
+const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
+
+// https://trackem-all.netlify.app/.netlify/functions/express
+// https://8888-davideravasi-trackemall-mclb840f9og.ws-eu107.gitpod.io/.netlify/functions/express/favorite
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -24,6 +28,46 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
     return thunkAPI.rejectWithValue(message); // we can handle this in the error case
   }
 });
+
+export const favoriteAdd = createAsyncThunk(
+  "auth/favorites/add",
+  async (data, thunkAPI) => {
+    try {
+      return await axios.post(
+        actualHost + "/favorite/add",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      const message = error.response.data;
+      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+    }
+  }
+);
+
+export const favoriteRemove = createAsyncThunk(
+  "auth/favorites/remove",
+  async (data, thunkAPI) => {
+    try {
+      return await axios.post(
+        actualHost + "/favorite/remove",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      const message = error.response.data;
+      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+    }
+  }
+);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -84,7 +128,7 @@ export const authSlice = createSlice({
       //state.token = action.payload.data.token;
     });
 
-    builder.addCase(login.pending, (state, action) => {
+    builder.addCase(login.pending, (state) => {
       state.isLoading = true;
     });
 
@@ -92,6 +136,58 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.message = action.payload;
+    });
+
+    // favorite
+    builder.addCase(favoriteAdd.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.message = "the favorite has been added";
+      state.user = {
+        id: action.payload.data.id,
+        firstName: action.payload.data.firstName,
+        lastName: action.payload.data.lastName,
+        email: action.payload.data.email,
+        favorites: action.payload.data.favorites,
+      };
+      //state.token = action.payload.data.token;
+    });
+
+    builder.addCase(favoriteAdd.pending, (state, action) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(favoriteAdd.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      //state.token = action.payload.data.token;
+    });
+
+    builder.addCase(favoriteRemove.fulfilled, (state, action) => {
+      console.log("payload remove ", action.payload);
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.message = "the favorite has been removed from your list";
+      state.user = {
+        id: action.payload.data.id,
+        firstName: action.payload.data.firstName,
+        lastName: action.payload.data.lastName,
+        email: action.payload.data.email,
+        favorites: action.payload.data.favorites,
+      };
+      //state.token = action.payload.data.token;
+    });
+
+    builder.addCase(favoriteRemove.pending, (state, action) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(favoriteRemove.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      //state.token = action.payload.data.token;
     });
   },
 });

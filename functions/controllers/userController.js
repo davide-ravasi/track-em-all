@@ -27,7 +27,6 @@ const getUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404).send("User not found");
-    throw new Error("User not found");
   }
 });
 

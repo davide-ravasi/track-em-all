@@ -3,7 +3,6 @@
 $mrCardMobile: 1rem;
 $mrCardDesktop: 1.5rem;
 
-
 @mixin cardBasicStyles($width, $mr) {
   flex: 1 0 calc(#{$width} - #{$mr});
   max-width: calc(#{$width} - #{$mr});
@@ -11,7 +10,7 @@ $mrCardDesktop: 1.5rem;
 }
 
 .show__card {
-  @include cardBasicStyles('26%', $mrCardMobile);
+  @include cardBasicStyles("26%", $mrCardMobile);
   font-size: 0.9rem;
   margin-bottom: 1.6rem;
 
@@ -20,12 +19,11 @@ $mrCardDesktop: 1.5rem;
   }
 
   @media (min-width: $bp-min-desktop) {
-    @include cardBasicStyles('17%', $mrCardDesktop);
+    @include cardBasicStyles("17%", $mrCardDesktop);
 
     &:nth-child(4n) {
       margin-right: $mrCardDesktop;
     }
-
 
     &:nth-child(6n),
     &:last-child {
@@ -70,6 +68,10 @@ $mrCardDesktop: 1.5rem;
       color: $color-secondary;
       transition: all 0.2s ease-in-out;
       filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+    }
+
+    svg.selected {
+      color: $color-warning;
     }
 
     &:hover {

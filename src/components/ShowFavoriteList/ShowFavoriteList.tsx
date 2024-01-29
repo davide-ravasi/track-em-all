@@ -12,6 +12,8 @@ interface ShowFavoritesProps {
 export default function ShowFavoriteList(props: ShowFavoritesProps) {
   const { favorites } = props;
 
+  console.log(favorites);
+
   return (
     <div className="shows__list">
       {favorites.map((show) => (
