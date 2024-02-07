@@ -9,8 +9,6 @@ import "./FavoritesPage.scss";
 export default function FavoritesPage() {
   const { favorites } = useSelector((state: RootState) => state.auth.user);
 
-  console.log(favorites);
-
   return (
     <div className="page">
       <div className="page__content-wrapper">
