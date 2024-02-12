@@ -43,6 +43,8 @@ export default function ShowList(props: ShowListProps) {
     cardAmount,
   } = props;
 
+  console.log(section, category, urlParameter);
+
   const url = getApiUrl(section, category, urlParameter);
 
   const { response, error, loading } = useApiCall(url);
@@ -95,7 +97,10 @@ export default function ShowList(props: ShowListProps) {
         <h1>
           {title ? title : en.categories[category].title}{" "}
           {cardAmount && linkMore && (
-            <a className="shows__show-more" href={`/list/${category}`}>
+            <a
+              className="shows__show-more"
+              href={`/list/${section}/${category}`}
+            >
               {"show more >"}
             </a>
           )}
@@ -114,7 +119,6 @@ export default function ShowList(props: ShowListProps) {
               );
             })}
       </div>
-      {/* todo  add paging */}
       <div className="shows__show-more-elements">
         {!cardAmount && (
           <button type="button" onClick={(e) => handleAddCards(e)}>

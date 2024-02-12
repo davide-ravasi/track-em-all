@@ -55,10 +55,17 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   }
 };
 
-const getApiUrl = (section: string, type: string, id?: number, pageNumber?: number) => {
-  return `${process.env.REACT_APP_BASE_URL}${section}/${id ? `${id}/` : ""
-    }${type}?api_key=${process.env.REACT_APP_API_KEY}${id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
-    }`;
+const getApiUrl = (
+  section: string,
+  type: string,
+  id?: number,
+  pageNumber?: number
+) => {
+  return `${process.env.REACT_APP_BASE_URL}${section}/${
+    id ? `${id}/` : ""
+  }${type}?api_key=${process.env.REACT_APP_API_KEY}${
+    id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
+  }`;
 };
 
 const getSearchUrl = (query: string, page: number = 1) => {
