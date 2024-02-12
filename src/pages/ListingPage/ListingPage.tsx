@@ -5,15 +5,16 @@ import { Categories, Sections } from "../../typescript/types";
 import "./ListingPage.scss";
 
 export default function ListingPage() {
-  const params = useParams<{ category: Categories }>();
-  const gategoryFormatted = params.category.replace(/_/g, " ");
+  const params = useParams<{ category: Categories, section: Sections }>();
+  const categoryFormatted = params.category;
+
   return (
     <div className="page">
       <div className="page__content-wrapper">
         {true && (
           <ShowList
-            section={Sections.Tv}
-            title={`Your ${gategoryFormatted} Shows`}
+            section={params.section}
+            title={`Your ${categoryFormatted} Shows`}
             category={params.category}
           />
         )}

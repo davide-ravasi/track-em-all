@@ -30,7 +30,7 @@ function App() {
             <Route path="/about" exact component={AboutPage} />
             <Route path="/signup" exact component={SignUp} />
             <Route path="/signin" exact component={SignIn} />
-            <Route path="/list/:category" exact component={ListingPage} />
+            <Route path="/list/:section/:category" exact component={ListingPage} />
             <PrivateRoute path="/favorites">
               <FavoritesPage />
             </PrivateRoute>

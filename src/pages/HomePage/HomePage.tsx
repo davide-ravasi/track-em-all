@@ -119,7 +119,6 @@ export default function HomePage() {
 
               <ShowList
                 title={en.categories.personpopular.title}
-                linkMore={false}
                 section={Sections.Person}
                 category={Categories.Popular}
                 cardAmount={6}
