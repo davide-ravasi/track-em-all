@@ -5,21 +5,25 @@ $mrCardDesktop: 1.5rem;
 
 @mixin cardBasicStyles($width, $mr) {
   flex: 1 0 calc(#{$width} - #{$mr});
-  max-width: calc(#{$width} - #{$mr});
+  max-width: #{$width};
   margin-right: $mr;
 }
 
 .show__card {
-  @include cardBasicStyles("26%", $mrCardMobile);
+  @include cardBasicStyles("33.3%", $mrCardMobile);
   font-size: 0.9rem;
   margin-bottom: 1.6rem;
 
-  &:nth-child(6n) {
+  &:nth-child(3n) {
     margin-right: 0;
   }
 
   @media (min-width: $bp-min-desktop) {
     @include cardBasicStyles("17%", $mrCardDesktop);
+
+    &:nth-child(3n) {
+      margin-right: $mrCardDesktop;
+    }
 
     &:nth-child(4n) {
       margin-right: $mrCardDesktop;
