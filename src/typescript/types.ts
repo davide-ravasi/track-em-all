@@ -52,7 +52,7 @@ type ShowListProps = {
   section: Sections;
   linkMore?: boolean;
   category: Categories;
-  urlParameter?: number;
+  id?: string;
   cardAmount?: number;
 };
 

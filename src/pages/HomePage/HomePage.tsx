@@ -6,62 +6,40 @@ import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { Categories } from "../../typescript/types";
 
-import firebase from "../../firebase/firebase";
+//import firebase from "../../firebase/firebase";
 
-import { useAuth } from "../../contexts/AuthContext";
+//import { useAuth } from "../../contexts/AuthContext";
 
 import "../../components/Search/Search.scss";
-//import { useQuery } from "@apollo/client";
-//import { gql } from "apollo-server-lambda";
 import { getSearchUrl } from "../../utils";
 import { en } from "../../trads/en";
+import { useSelector } from "react-redux";
+// import { set } from "mongoose";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Show[]>([]);
-  const [recommendedId, setRecommendedId] = useState<number>();
+  const [recommendedId, setRecommendedId] = useState<string>();
   const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const [searchError, setSearchError] = useState("");
-  const { currentUser } = useAuth();
-  const ref = firebase.firestore().collection("Favorites");
-
-  // const HELLO = gql`
-  //   query Query {
-  //     hello
-  //   }
-  // `;
-
-  // const { loading, error, data } = useQuery(HELLO);
-
-  // console.log(loading, error, data);
+  const { user } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
-    if (!recommendedId) {
-      const fetchData = async () => {
-        if (currentUser) {
-          await ref
-            .where("user", "==", currentUser.uid)
-            .get()
-            .then(function (querySnapshot) {
-              if (querySnapshot.size > 0) {
-                const random =
-                  Math.floor(
-                    Math.random() * (1 + (querySnapshot.size - 1) - 0)
-                  ) + 0;
-                const result = querySnapshot.docs[random].data();
-                console.log(result);
-                setRecommendedId(result.id);
-                setRecommendedName(result.name);
-              }
-            });
-        }
-      };
+    if (user && user.favorites !== null && user.favorites.length) {
+      const randomFavoritesIndex = Math.floor(
+        Math.random() * user.favorites.length
+      );
 
-      fetchData();
+      setRecommendedId(user.favorites[randomFavoritesIndex].showId);
+      setRecommendedName(user.favorites[randomFavoritesIndex].name);
     }
-  }, [recommendedId, currentUser, ref]);
+
+    // url example
+    // https://api.themoviedb.org/3/tv/series_id/recommendations?language=en-US&page=1
+    // https://api.themoviedb.org/3/tv/1396/recommendations?api_key=b61f13ab08388482df500390ef8de990&language=en-US&page=1
+  }, [user]);
 
   const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,22 +95,22 @@ export default function HomePage() {
                 cardAmount={6}
               />
 
+              {recommendedId && recommendedName && (
+                <ShowList
+                  title={`because you liked:  ${recommendedName}`}
+                  section={Sections.Tv}
+                  category={Categories.Recommended}
+                  id={recommendedId}
+                  cardAmount={6}
+                />
+              )}
+
               <ShowList
                 title={en.categories.personpopular.title}
                 section={Sections.Person}
                 category={Categories.Popular}
                 cardAmount={6}
               />
-
-              {recommendedId && (
-                <ShowList
-                  title={`because you liked:  ${recommendedName}`}
-                  section={Sections.Tv}
-                  category={Categories.Recommended}
-                  urlParameter={recommendedId}
-                  cardAmount={6}
-                />
-              )}
             </>
           ) : (
             <>

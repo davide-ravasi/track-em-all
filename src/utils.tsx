@@ -1,4 +1,9 @@
-import { VideoApiResponse, Video } from "./typescript/types";
+import {
+  VideoApiResponse,
+  Video,
+  Sections,
+  Categories,
+} from "./typescript/types";
 import placeholderVert from "./assets/thumb-vert-placeholder.png";
 import placeholderHoriz from "./assets/thumb-horiz-placeholder.png";
 
@@ -56,14 +61,14 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
 };
 
 const getApiUrl = (
-  section: string,
-  type: string,
-  id?: number,
+  section: Sections,
+  category: Categories,
+  id?: string,
   pageNumber?: number
 ) => {
   return `${process.env.REACT_APP_BASE_URL}${section}/${
     id ? `${id}/` : ""
-  }${type}?api_key=${process.env.REACT_APP_API_KEY}${
+  }${category}?api_key=${process.env.REACT_APP_API_KEY}${
     id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
   }`;
 };

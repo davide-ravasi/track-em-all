@@ -34,18 +34,9 @@ interface ShowProps {
 export default function ShowList(props: ShowListProps) {
   const [shows, setShows] = useState<ShowProps | null>();
   const [pageNumber, setPageNumber] = useState(2);
-  const {
-    title,
-    section,
-    linkMore = true,
-    category,
-    urlParameter,
-    cardAmount,
-  } = props;
+  const { title, section, linkMore = true, category, id, cardAmount } = props;
 
-  console.log(section, category, urlParameter);
-
-  const url = getApiUrl(section, category, urlParameter);
+  const url = getApiUrl(section, category, id, 1);
 
   const { response, error, loading } = useApiCall(url);
 
@@ -68,7 +59,7 @@ export default function ShowList(props: ShowListProps) {
     e.preventDefault();
 
     try {
-      const url = getApiUrl(section, category, urlParameter, pageNumber);
+      const url = getApiUrl(section, category, id, pageNumber);
       const response = await fetch(url);
       const showsMore = await response.json();
       const actualPage = showsMore.page + 1;
@@ -99,7 +90,7 @@ export default function ShowList(props: ShowListProps) {
           {cardAmount && linkMore && (
             <a
               className="shows__show-more"
-              href={`/list/${section}/${category}`}
+              href={`/list/${section}/${id ? id + "/" : ""}${category}`}
             >
               {"show more >"}
             </a>
