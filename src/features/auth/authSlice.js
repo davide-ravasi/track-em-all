@@ -33,15 +33,11 @@ export const favoriteAdd = createAsyncThunk(
   "auth/favorites/add",
   async (data, thunkAPI) => {
     try {
-      return await axios.post(
-        actualHost + "/favorite/add",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      return await axios.post(actualHost + "/favorite/add", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     } catch (error) {
       const message = error.response.data;
       return thunkAPI.rejectWithValue(message); // we can handle this in the error case
@@ -53,15 +49,11 @@ export const favoriteRemove = createAsyncThunk(
   "auth/favorites/remove",
   async (data, thunkAPI) => {
     try {
-      return await axios.post(
-        actualHost + "/favorite/remove",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      return await axios.post(actualHost + "/favorite/remove", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     } catch (error) {
       const message = error.response.data;
       return thunkAPI.rejectWithValue(message); // we can handle this in the error case
@@ -165,7 +157,6 @@ export const authSlice = createSlice({
     });
 
     builder.addCase(favoriteRemove.fulfilled, (state, action) => {
-      console.log("payload remove ", action.payload);
       state.isLoading = false;
       state.isSuccess = true;
       state.message = "the favorite has been removed from your list";

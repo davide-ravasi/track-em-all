@@ -46,7 +46,7 @@ export default function ShowCard(props) {
 
   const handleUnfavorite = (e, favoriteId) => {
     e.preventDefault();
-    console.log("remove from favorites: ", favoriteId);
+
     dispatch(
       favoriteRemove({
         userId: user.id,
