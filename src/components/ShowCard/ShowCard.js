@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faCircleNotch, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { favoriteAdd, favoriteRemove } from "../../features/auth/authSlice";
 
 import { getUrlImages } from "../../utils";
@@ -9,11 +9,13 @@ import VoteBox from "../VoteBox/VoteBox";
 
 import "./ShowCard.scss";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 export default function ShowCard(props) {
   const { id, name, vote_average, poster_path, showId } = props.show;
 
   const { user } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -33,6 +35,8 @@ export default function ShowCard(props) {
   const handleFavorite = (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     dispatch(
       favoriteAdd({
         name,
@@ -41,18 +45,24 @@ export default function ShowCard(props) {
         userId: user.id,
         showId: id,
       })
-    );
+    ).then(() => {
+      setLoading(false);
+    });
   };
 
   const handleUnfavorite = (e, favoriteId) => {
     e.preventDefault();
+
+    setLoading(true);
 
     dispatch(
       favoriteRemove({
         userId: user.id,
         showId: favoriteId,
       })
-    );
+    ).then(() => {
+      setLoading(false);
+    });
   };
 
   return (
@@ -66,10 +76,17 @@ export default function ShowCard(props) {
           }
         >
           {user && (
-            <FontAwesomeIcon
-              icon={faHeart}
-              className={favorite ? "selected" : ""}
-            />
+            <>
+              {!loading && (
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className={favorite ? "selected" : ""}
+                />
+              )}
+              {loading && (
+                <FontAwesomeIcon icon={faCircleNotch} className={"fa-spin"} />
+              )}
+            </>
           )}
         </button>
         <Link to={`/show/${showId || id}`}>
