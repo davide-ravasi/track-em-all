@@ -71,7 +71,7 @@ const addFavorite = async (req, res) => {
   const { name, poster_path, vote_average, userId, showId } = JSON.parse(
     req.body
   );
-  console.log("userId: ", userId)
+  console.log("userId: ", userId);
   const user = await User.findById(userId);
 
   console.log("user: ", user);
@@ -89,8 +89,6 @@ const addFavorite = async (req, res) => {
   user.favorites.push(favorite);
 
   const updatedUser = await user.save();
-
-  console.log("updatedUSer: ", updatedUser);
 
   res.status(201).json({
     id: updatedUser._id,

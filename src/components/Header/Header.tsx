@@ -14,6 +14,7 @@ export default function Header() {
 
   const handleLogout = () => {
     toast.success("You have successfully logout!", { autoClose: 2000 });
+    localStorage.removeItem("tea-token");
     dispatch(logout());
   };
 

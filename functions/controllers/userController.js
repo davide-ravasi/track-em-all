@@ -7,7 +7,7 @@ const jwtSecret = process.env.REACT_APP_JWT_SECRET;
 const { User } = require("../models/user");
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, jwtSecret, { expiresIn: "30d" });
+  return jwt.sign(user, jwtSecret, { expiresIn: "1h" });
 };
 
 const saltRounds = 10;
