@@ -23,7 +23,7 @@ const login = async (data) => {
     });
 
     if (response.data) {
-      localStorage.setItem("tea-token", JSON.stringify(response.data.token));
+      localStorage.setItem("tea-token", response.data.token);
       return response;
     }
   }
