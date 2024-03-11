@@ -10,7 +10,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser] = useState();
   const token = localStorage.getItem("tea-token");
   const dispatch = useDispatch();
 
@@ -28,16 +28,6 @@ export function AuthProvider({ children }) {
       }
     }
   }, [token, dispatch]);
-
-  // if (token) {
-  //   const decodedToken = jwt.decode(token);
-  //   if (decodedToken.exp * 1000 < Date.now()) {
-  //     localStorage.removeItem("token");
-  //   } else {
-  //     setCurrentUser(decodedToken);
-  //   }
-
-  //   console.log(decodedToken);
 
   // function signup(email, password) {
   //   return auth.createUserWithEmailAndPassword(email, password);
