@@ -3,20 +3,13 @@ import { Link } from "react-router-dom";
 
 import "./Header.scss";
 import trackEmAllLogo from "../../assets/track-em-all.svg";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../features/auth/authSlice";
-import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { RootState } from "../../typescript/types";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Header() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    toast.success("You have successfully logout!", { autoClose: 2000 });
-    localStorage.removeItem("tea-token");
-    dispatch(logout());
-  };
+  const { handleLogout } = useAuth();
 
   return (
     <>
