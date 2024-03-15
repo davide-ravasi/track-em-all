@@ -15,11 +15,14 @@ export function AuthProvider({ children }) {
   const token = localStorage.getItem("tea-token");
   const dispatch = useDispatch();
 
-  const handleLogout = useCallback(() => {
-    toast.success("You have logout!", { autoClose: 2000 });
-    localStorage.removeItem("tea-token");
-    dispatch(logout());
-  }, [dispatch]);
+  const handleLogout = useCallback(
+    (message) => {
+      toast.success(message, { autoClose: 1000 });
+      localStorage.removeItem("tea-token");
+      dispatch(logout());
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (token) {
@@ -30,7 +33,7 @@ export function AuthProvider({ children }) {
       const now = new Date();
 
       if (now >= tokenExpirationDate) {
-        handleLogout();
+        handleLogout("you're connection has expired");
       }
     }
   }, [token, dispatch, handleLogout]);
