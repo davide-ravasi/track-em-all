@@ -34,7 +34,7 @@ export default function Header() {
                   Favorites
                 </Link>
                 <Link
-                  onClick={handleLogout}
+                  onClick={() => handleLogout("You've been logged out!")}
                   to="#"
                   className="navbar__menuItem"
                 >
