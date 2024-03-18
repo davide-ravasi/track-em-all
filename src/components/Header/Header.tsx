@@ -9,7 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export default function Header() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
-  const { handleLogout } = useAuth();
+  const { logoutUser } = useAuth();
 
   return (
     <>
@@ -34,7 +34,7 @@ export default function Header() {
                   Favorites
                 </Link>
                 <Link
-                  onClick={() => handleLogout("You've been logged out!")}
+                  onClick={() => logoutUser("You've been logged out!")}
                   to="#"
                   className="navbar__menuItem"
                 >

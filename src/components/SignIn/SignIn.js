@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { login } from "../../features/auth/authSlice";
-
 import "./SignIn.scss";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -30,7 +29,8 @@ export const useInput = (initialValue) => {
 
 export default function Signin() {
   const history = useHistory();
-  const dispatch = useDispatch();
+
+  const { loginUser } = useAuth();
 
   const timer = 2000;
   //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
@@ -71,12 +71,7 @@ export default function Signin() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const loginUser = {
-      email,
-      password,
-    };
-
-    dispatch(login(loginUser));
+    loginUser({ email, password });
   }
 
   return (
