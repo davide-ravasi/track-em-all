@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
-import { logout, register, login, reset } from "../features/auth/authSlice";
+import { logout, register, login } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
