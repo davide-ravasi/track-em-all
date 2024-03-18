@@ -5,9 +5,10 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { register, reset } from "../../features/auth/authSlice";
+import { reset } from "../../features/auth/authSlice";
 
 import "./Signup.scss";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -31,6 +32,8 @@ export default function Signup() {
 
   const timer = 2000;
 
+  const { registerUser } = useAuth();
+
   const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
@@ -39,15 +42,6 @@ export default function Signup() {
   const { value: lastName, bind: bindLastName } = useInput("");
   const { value: email, bind: bindEmail } = useInput("");
   const { value: password, bind: bindPassword } = useInput("");
-
-  // const resetFields = useCallback(() => {
-  //   resetFirstName();
-  //   resetLastName();
-  //   resetEmail();
-  //   resetPassword();
-  // }, [resetFirstName, resetLastName, resetEmail, resetPassword])
-
-  // check if the problem in duplicating useEffect is resetFields
 
   useEffect(() => {
     if (isSuccess) {
@@ -73,14 +67,7 @@ export default function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const registerUser = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    };
-
-    dispatch(register(registerUser));
+    registerUser({ firstName, lastName, email, password });
   };
 
   if (isLoading) return <div className="page">...is loading</div>;

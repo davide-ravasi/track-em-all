@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
-import { logout } from "../features/auth/authSlice";
+import { logout, register, login, reset } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -11,11 +11,12 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser] = useState();
-  const token = localStorage.getItem("tea-token");
   const dispatch = useDispatch();
 
-  const handleLogout = useCallback(
+  const [currentUser] = useState();
+  const token = localStorage.getItem("tea-token");
+
+  const logoutUser = useCallback(
     (message) => {
       toast.success(message, { autoClose: 1000 });
       localStorage.removeItem("tea-token");
@@ -23,6 +24,26 @@ export function AuthProvider({ children }) {
     },
     [dispatch]
   );
+
+  const registerUser = ({ firstName, lastName, email, password }) => {
+    const registerUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
+
+    dispatch(register(registerUser));
+  };
+
+  const loginUser = ({ email, password }) => {
+    const loginUser = {
+      email: email,
+      password: password,
+    };
+
+    dispatch(login(loginUser));
+  };
 
   useEffect(() => {
     if (token) {
@@ -33,10 +54,10 @@ export function AuthProvider({ children }) {
       const now = new Date();
 
       if (now >= tokenExpirationDate) {
-        handleLogout("you're connection has expired");
+        logoutUser("you're connection has expired");
       }
     }
-  }, [token, dispatch, handleLogout]);
+  }, [token, dispatch, logoutUser]);
 
   // function signup(email, password) {
   //   return auth.createUserWithEmailAndPassword(email, password);
@@ -60,7 +81,9 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    handleLogout,
+    logoutUser,
+    registerUser,
+    loginUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
