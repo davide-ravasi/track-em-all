@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import { reset } from "../../features/auth/authSlice";
 
 import "./Signup.scss";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../hooks/UseToast";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -37,6 +35,7 @@ export default function Signup() {
   const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+  const { notifySuccess, notifyInfo, notifyError } = useToast();
 
   const { value: firstName, bind: bindFirstName } = useInput("");
   const { value: lastName, bind: bindLastName } = useInput("");
@@ -45,8 +44,8 @@ export default function Signup() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You have successfully registered!", { autoClose: timer });
-      toast.info("We are redirecting you to the login page", {
+      notifySuccess("You have successfully registered!", { autoClose: timer });
+      notifyInfo("We are redirecting you to the login page", {
         autoClose: timer,
       });
 
@@ -56,13 +55,17 @@ export default function Signup() {
         history.push("/signin");
       }, timer);
     }
-  }, [isSuccess, history, dispatch]);
+  }, [isSuccess, history, dispatch, notifySuccess, notifyInfo]);
 
   useEffect(() => {
     if (isError) {
-      toast.error(message);
+      notifyError(message, {
+        onClose: () => {
+          dispatch(reset());
+        },
+      });
     }
-  }, [isError, message]);
+  }, [dispatch, isError, message, notifyError]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
