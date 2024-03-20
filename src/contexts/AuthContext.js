@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
 import { logout, register, login } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import { useToast } from "../hooks/UseToast";
 
 const AuthContext = React.createContext();
 
@@ -12,17 +12,18 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const dispatch = useDispatch();
+  const { notifySuccess } = useToast();
 
   const [currentUser] = useState();
   const token = localStorage.getItem("tea-token");
 
   const logoutUser = useCallback(
     (message) => {
-      toast.success(message, { autoClose: 1000 });
+      notifySuccess(message, { autoClose: 1000 });
       localStorage.removeItem("tea-token");
       dispatch(logout());
     },
-    [dispatch]
+    [dispatch, notifySuccess]
   );
 
   const registerUser = ({ firstName, lastName, email, password }) => {

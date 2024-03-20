@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import "./SignIn.scss";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../hooks/UseToast";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -37,6 +35,8 @@ export default function Signin() {
   const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  const { notifySuccess, notifyInfo, notifyError } = useToast();
+
   const {
     value: password,
     bind: bindPassword,
@@ -45,8 +45,8 @@ export default function Signin() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You have successfully login!", { autoClose: timer });
-      toast.info("We are redirecting you to the homepage", {
+      notifySuccess("You have successfully login!", { autoClose: timer });
+      notifyInfo("We are redirecting you to the homepage", {
         autoClose: timer,
       });
 
@@ -55,18 +55,18 @@ export default function Signin() {
         history.push("/");
       }, timer);
     }
-  }, [isSuccess, history]);
+  }, [isSuccess, history, notifySuccess, notifyInfo]);
 
   useEffect(() => {
     if (isError) {
-      toast.error(message, {
+      notifyError(message, {
         onClose: () => {
           resetEmail();
           resetPassword();
         },
       });
     }
-  }, [isError, resetEmail, resetPassword, message]);
+  }, [isError, resetEmail, resetPassword, message, notifyError]);
 
   function handleSubmit(e) {
     e.preventDefault();
