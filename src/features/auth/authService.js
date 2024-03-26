@@ -2,7 +2,8 @@ import axios from "axios";
 
 const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
 
-//const actualHost = "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu107.gitpod.io/.netlify/functions/express";
+//const actualHost =
+//("https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express");
 
 const register = async (data) => {
   if (data) {
