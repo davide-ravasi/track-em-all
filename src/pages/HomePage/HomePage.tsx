@@ -5,16 +5,11 @@ import ShowList from "../../components/ShowList/ShowList";
 import Search from "../../components/Search/Search";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { Categories } from "../../typescript/types";
-
-//import firebase from "../../firebase/firebase";
-
-//import { useAuth } from "../../contexts/AuthContext";
-
 import "../../components/Search/Search.scss";
 import { getSearchUrl } from "../../utils";
 import { en } from "../../trads/en";
 import { useSelector } from "react-redux";
-// import { set } from "mongoose";
+import { useToast } from "../../hooks/UseToast";
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState("");
@@ -40,6 +35,15 @@ export default function HomePage() {
     // https://api.themoviedb.org/3/tv/series_id/recommendations?language=en-US&page=1
     // https://api.themoviedb.org/3/tv/1396/recommendations?api_key=b61f13ab08388482df500390ef8de990&language=en-US&page=1
   }, [user]);
+
+  const { isError, message } = useSelector((state: any) => state.auth);
+  const { notifyError } = useToast();
+
+  useEffect(() => {
+    if (isError) {
+      notifyError(message.message, { autoClose: 2000 });
+    }
+  }, [isError, notifyError, message]);
 
   const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

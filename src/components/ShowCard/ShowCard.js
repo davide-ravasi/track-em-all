@@ -47,7 +47,10 @@ export default function ShowCard(props) {
       })
     ).then(() => {
       setLoading(false);
-    });
+    })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleUnfavorite = (e, favoriteId) => {
@@ -62,7 +65,10 @@ export default function ShowCard(props) {
       })
     ).then(() => {
       setLoading(false);
-    });
+    })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

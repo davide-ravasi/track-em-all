@@ -19,9 +19,9 @@ export function AuthProvider({ children }) {
 
   const logoutUser = useCallback(
     (message) => {
+      dispatch(logout());
       notifySuccess(message, { autoClose: 1000 });
       localStorage.removeItem("tea-token");
-      dispatch(logout());
     },
     [dispatch, notifySuccess]
   );

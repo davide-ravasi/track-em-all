@@ -50,11 +50,9 @@ const protect = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "Invalid token" });
     }
-
-    req.user = decoded;
+    next();
   });
 
-  next();
 };
 // better object with real data from api
 // to check if exists in db if not
@@ -123,8 +121,8 @@ const removeFavorite = async (req, res) => {
   });
 };
 
-router.post("/favorite/remove", removeFavorite);
-router.post("/favorite/add", addFavorite);
+router.post("/favorite/remove", protect, removeFavorite);
+router.post("/favorite/add", protect, addFavorite);
 router.post("/user/register", registerUser);
 router.post("/user/login", loginUser);
 router.get("/user/:id", protect, getUser);
