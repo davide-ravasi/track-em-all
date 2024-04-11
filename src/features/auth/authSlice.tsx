@@ -2,7 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //import axios from "axios";
 import authService from "./authService";
 import axios from "axios";
-import { AuthState, Favorite, RootState } from "../../typescript/types";
+import { AuthState, Favorite } from "../../typescript/types";
 
 //const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
 const actualHost =
