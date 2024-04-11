@@ -150,16 +150,43 @@ type ShowResponse = {
   results: Show[];
 };
 
+interface Favorite {
+  name: string;
+  vote_average: number;
+  poster_path: string;
+  showId: string;
+}
+
 interface RootState {
   auth: {
     user: {
       firstName: string;
       lastName: string;
       email: string;
-      favorites: Show[];
+      favorites: Favorite[];
     };
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    message: string | null;
   };
 }
+
+interface User {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  favorites: Favorite[];
+}
+
+type AuthState = {
+  user: User | null;
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  message: string | null;
+};
 
 export type {
   Show,
@@ -181,4 +208,7 @@ export type {
   ImagesData,
   ShowResponse,
   RootState,
+  Favorite,
+  AuthState,
+  User,
 };
