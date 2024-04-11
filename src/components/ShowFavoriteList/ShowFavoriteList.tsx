@@ -1,12 +1,12 @@
 import React from "react";
-import { Show } from "../../typescript/types";
+import { Favorite, Show } from "../../typescript/types";
 
 import "./ShowFavoritesList.scss";
 
 import ShowCard from "../ShowCard/ShowCard";
 
 interface ShowFavoritesProps {
-  favorites: Show[];
+  favorites: Show[] | Favorite[];
 }
 
 export default function ShowFavoriteList(props: ShowFavoritesProps) {
@@ -14,9 +14,10 @@ export default function ShowFavoriteList(props: ShowFavoritesProps) {
 
   return (
     <div className="shows__list">
-      {favorites.map((show) => (
-        <ShowCard key={show.id} show={show} />
-      ))}
+      {favorites.map((show) => {
+        const key = "showId" in show ? show.showId : show.id;
+        return <ShowCard key={key} show={show} />;
+      })}
     </div>
   );
 }
