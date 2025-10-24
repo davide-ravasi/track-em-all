@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 import { logout, register, login } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useToast } from "../hooks/UseToast";
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
-      const decodedToken = jwt.decode(token);
+      const decodedToken = jose.decodeJwt(token);
       // @TODO: I need to check why i can't use the expiration date (exp, date not correct)
       const tokenExpirationDate = new Date(decodedToken.iat * 1000);
       tokenExpirationDate.setHours(tokenExpirationDate.getHours() + 1);
