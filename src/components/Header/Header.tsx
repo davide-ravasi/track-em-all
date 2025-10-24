@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import "./Header.scss";
 import { useSelector } from "react-redux";
 import { useAuth } from "../../contexts/AuthContext";
@@ -17,7 +16,7 @@ export default function Header() {
           <div className="navbar-container--left">
             <Link to="/" className="navbar_menuItem">
               <img
-                src="../../assets/track-em-all.svg"
+                src="/assets/track-em-all.svg"
                 alt="Track'em all logo"
                 className="navbar__logo"
               />
