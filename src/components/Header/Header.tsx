@@ -2,10 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "./Header.scss";
-import trackEmAllLogo from "../../assets/track-em-all.svg";
 import { useSelector } from "react-redux";
-import { RootState } from "../../typescript/types";
 import { useAuth } from "../../contexts/AuthContext";
+import { RootState } from "../../typescript/types";
 
 export default function Header() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
@@ -18,7 +17,7 @@ export default function Header() {
           <div className="navbar-container--left">
             <Link to="/" className="navbar_menuItem">
               <img
-                src={trackEmAllLogo}
+                src="../../assets/track-em-all.svg"
                 alt="Track'em all logo"
                 className="navbar__logo"
               />
