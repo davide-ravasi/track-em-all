@@ -1,10 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import "./Header.scss";
 import { useSelector } from "react-redux";
-import { RootState } from "../../typescript/types";
 import { useAuth } from "../../contexts/AuthContext";
+import { RootState } from "../../typescript/types";
 
 export default function Header() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
