@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const mongoDB = process.env.REACT_APP_MONGODB_URI;
-const jwtSecret = process.env.REACT_APP_JWT_SECRET;
+// const mongoDB = import.meta.env.VITE_APP_MONGODB_URI;
+const jwtSecret = import.meta.env.VITE_APP_JWT_SECRET;
 
 const { User } = require("../models/user");
 

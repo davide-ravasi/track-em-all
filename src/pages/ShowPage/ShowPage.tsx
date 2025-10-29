@@ -26,7 +26,9 @@ export default function ShowPage(props: ShowPageType) {
   const { id } = useParams<ShowPageType>();
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}`;
+  const url = `${import.meta.env.VITE_BASE_TVSHOW_URL}${id}?api_key=${
+    import.meta.env.VITE_API_KEY
+  }`;
 
   const [showData, setShowData] = useState<Show | null>();
   const { response, error, loading } = useApiCall(url);

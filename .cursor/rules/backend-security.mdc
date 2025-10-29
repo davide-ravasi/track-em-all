@@ -1,0 +1,13 @@
+---
+globs: functions/**/*.js
+---
+
+# Backend Security and Auth
+
+- JWT middleware lives in [functions/express.js](mdc:functions/express.js). It must:
+  - Require `Authorization: Bearer <token>`
+  - Verify with `import.meta.env.REACT_APP_JWT_SECRET`
+  - Attach `req.user` on success
+- Passwords must be hashed with bcrypt (see [functions/controllers/userController.js](mdc:functions/controllers/userController.js)).
+- Protect favorites routes with `protect` middleware.
+- Consider rate limiting and input validation for `/user/login` and `/user/register`.

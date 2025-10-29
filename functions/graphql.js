@@ -7,7 +7,7 @@ const typeDefs = gql`
   }
 `;
 
-const uri = process.env.REACT_APP_MONGODB_URI;
+const uri = import.meta.env.VITE_APP_MONGODB_URI;
 const main = async () => {
   await mongoose.connect(uri, {
     useNewUrlParser: true,

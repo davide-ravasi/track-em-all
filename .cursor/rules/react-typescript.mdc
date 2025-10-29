@@ -1,0 +1,10 @@
+---
+globs: *.ts,*.tsx
+---
+
+# React + TypeScript Conventions
+
+- TS config should use `"jsx": "react-jsx"` (already set in [tsconfig.json](mdc:tsconfig.json)).
+- After migration to React 18, update entry to `createRoot` in [src/index.tsx](mdc:src/index.tsx).
+- Import `RootState` from [src/typescript/types.ts](mdc:src/typescript/types.ts) when using `useSelector`.
+- If JSX intrinsic errors occur, ensure `@types/react` and `@types/react-dom` versions align with React version.

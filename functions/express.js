@@ -9,8 +9,8 @@ const jwt = require("jsonwebtoken");
 // connect express server to mongodb database
 const mongoose = require("mongoose");
 
-const mongoDB = process.env.REACT_APP_MONGODB_URI;
-const jwtSecret = process.env.REACT_APP_JWT_SECRET;
+const mongoDB = import.meta.env.VITE__APP_MONGODB_URI;
+const jwtSecret = import.meta.env.VITE__APP_JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

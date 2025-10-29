@@ -4,7 +4,7 @@ import authService from "./authService";
 import axios from "axios";
 import { AuthState, Favorite } from "../../typescript/types";
 
-const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
+const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 //const actualHost =
 // "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express";
 

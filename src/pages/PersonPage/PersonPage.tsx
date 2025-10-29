@@ -10,8 +10,12 @@ export default function PersonPage() {
   const [personData, setPersonData] = useState<any>();
   const [imagesData, setImagesData] = useState<any>();
   // @TODO create and external function for this url
-  const personUrl = `${process.env.REACT_APP_BASE_PERSON_URL}${id}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`;
-  const photosUrl = `${process.env.REACT_APP_BASE_PERSON_URL}${id}/images?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`;
+  const personUrl = `${import.meta.env.VITE_BASE_PERSON_URL}${id}?api_key=${
+    import.meta.env.VITE_API_KEY
+  }&language=en-US`;
+  const photosUrl = `${
+    import.meta.env.VITE_BASE_PERSON_URL
+  }${id}/images?api_key=${import.meta.env.VITE_API_KEY}&language=en-US`;
 
   const {
     response: personResponse,

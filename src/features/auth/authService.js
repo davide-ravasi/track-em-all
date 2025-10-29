@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const actualHost = process.env.REACT_APP_EXPRESS_ENDPOINT;
+const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 
 //const actualHost =
 //("https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express");

@@ -20,8 +20,16 @@ export default function EpisodePage(props: any) {
     showId,
   } = location.state;
 
-  const castUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}${showId}/season/${season_number}/episode/${episode_number}/credits?api_key=${process.env.REACT_APP_API_KEY}`;
-  const imagesUrl = `${process.env.REACT_APP_BASE_TVSHOW_URL}${showId}/season/${season_number}/episode/${episode_number}/images?api_key=${process.env.REACT_APP_API_KEY}`;
+  const castUrl = `${
+    import.meta.env.VITE_BASE_TVSHOW_URL
+  }${showId}/season/${season_number}/episode/${episode_number}/credits?api_key=${
+    import.meta.env.VITE_API_KEY
+  }`;
+  const imagesUrl = `${
+    import.meta.env.VITE_BASE_TVSHOW_URL
+  }${showId}/season/${season_number}/episode/${episode_number}/images?api_key=${
+    import.meta.env.VITE_API_KEY
+  }`;
   const {
     response: castResponse,
     error: castError,
@@ -68,9 +76,7 @@ export default function EpisodePage(props: any) {
         <div className="cast_container">
           {actorData &&
             actorData.cast &&
-            actorData.cast.map((actor) => (
-              <PersonCard person={actor} />
-            ))}
+            actorData.cast.map((actor) => <PersonCard person={actor} />)}
         </div>
 
         {imagesData && <PhotoList imagesData={imagesData.stills} />}

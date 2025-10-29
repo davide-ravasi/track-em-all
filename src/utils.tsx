@@ -12,7 +12,7 @@ const getUrlImages = (
   imgName?: string,
   imgOrientation?: string
 ) => {
-  const baseImgUrl = `${process.env.REACT_APP_BASE_IMG_URL}`;
+  const baseImgUrl = `${import.meta.env.VITE_BASE_IMG_URL}`;
   let finalImgUrl = "";
 
   // if no image get a placeholder
@@ -30,13 +30,19 @@ const getUrlImages = (
   // if image get one by type
   switch (type) {
     case "thumb":
-      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_THUMB_WIDTH}${imgName}`;
+      finalImgUrl = `${baseImgUrl}/${
+        import.meta.env.VITE_BASE_THUMB_WIDTH
+      }${imgName}`;
       break;
     case "medium":
-      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_MEDIUM_IMG_WIDTH}${imgName}`;
+      finalImgUrl = `${baseImgUrl}/${
+        import.meta.env.VITE_BASE_MEDIUM_IMG_WIDTH
+      }${imgName}`;
       break;
     case "big":
-      finalImgUrl = `${baseImgUrl}/${process.env.REACT_APP_BASE_BIG_IMG_WIDTH}${imgName}`;
+      finalImgUrl = `${baseImgUrl}/${
+        import.meta.env.VITE_BASE_BIG_IMG_WIDTH
+      }${imgName}`;
       break;
     default:
       return "";
@@ -56,7 +62,7 @@ const getTrailerUrl = (response: VideoApiResponse | null) => {
   if (response) {
     const { results } = response;
     const video = results.find((video: Video) => video.type === "Trailer");
-    if (video) return `${process.env.REACT_APP_YOUTUBE_BASE_URL}/${video.key}`;
+    if (video) return `${import.meta.env.VITE_YOUTUBE_BASE_URL}/${video.key}`;
   }
 };
 
@@ -66,15 +72,17 @@ const getApiUrl = (
   id?: string,
   pageNumber?: number
 ) => {
-  return `${process.env.REACT_APP_BASE_URL}${section}/${
+  return `${import.meta.env.VITE_BASE_URL}${section}/${
     id ? `${id}/` : ""
-  }${category}?api_key=${process.env.REACT_APP_API_KEY}${
+  }${category}?api_key=${import.meta.env.VITE_API_KEY}${
     id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
   }`;
 };
 
 const getSearchUrl = (query: string, page: number = 1) => {
-  return `${process.env.REACT_APP_BASE_SEARCH_URL}?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${query}&page=${page}&include_adult=false`;
+  return `${import.meta.env.VITE_BASE_SEARCH_URL}?api_key=${
+    import.meta.env.VITE_API_KEY
+  }&language=en-US&query=${query}&page=${page}&include_adult=false`;
 };
 
 const padNumber = (numberToPad: number) =>
