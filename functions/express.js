@@ -36,7 +36,7 @@ const router = express.Router();
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader && authHeader.startsWith("Bearer ")) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Access token not found" });
   }
 
@@ -50,9 +50,9 @@ const protect = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "Invalid token" });
     }
+    req.user = decoded; // Attach user to request
     next();
   });
-
 };
 // better object with real data from api
 // to check if exists in db if not
@@ -126,6 +126,11 @@ router.post("/favorite/add", protect, addFavorite);
 router.post("/user/register", registerUser);
 router.post("/user/login", loginUser);
 router.get("/user/:id", protect, getUser);
+
+// Health check endpoint
+router.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 app.use("/.netlify/functions/express", router); // path must route to lambda
 app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
