@@ -1,0 +1,13 @@
+---
+globs: *.tsx
+---
+
+# Asset Handling Rules
+
+- Assets in `public/` are referenced from root: `/logo.svg`.
+- Assets in `src/` must be imported and used via the import variable.
+
+Examples in this repo:
+
+- Header logo should be referenced either via import from `src/assets` or via `/track-em-all.svg` if placed in `public/`.
+- Avoid relative paths to `../../assets` for runtime URLs; use import instead.

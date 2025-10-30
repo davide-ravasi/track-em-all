@@ -9,9 +9,11 @@ import EpisodeCard from "../../components/EpisodeCard/EpisodeCard";
 
 export const ShowEpisodes = (props: ShowSeasonProps) => {
   const { season, idShow, setLoading } = props;
-  const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${idShow}/season/${season}?api_key=${process.env.REACT_APP_API_KEY}`;
+  const url = `${
+    import.meta.env.VITE_BASE_TVSHOW_URL
+  }${idShow}/season/${season}?api_key=${import.meta.env.VITE_API_KEY}`;
   const { response, error, loading } = useApiCall(url);
-  const [seasonData, setSeasonData] = useState<Season | null >();
+  const [seasonData, setSeasonData] = useState<Season | null>();
 
   useEffect(() => {
     setSeasonData(response);

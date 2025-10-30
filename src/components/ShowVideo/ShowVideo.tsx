@@ -12,7 +12,9 @@ export const ShowVideo = (props: ShowVideoProps) => {
   const { idShow, setLoading } = props;
   const [trailerUrl, setTrailerUrl] = useState<string | undefined>("");
 
-  const url = `${process.env.REACT_APP_BASE_TVSHOW_URL}${idShow}/videos?api_key=${process.env.REACT_APP_API_KEY}`;
+  const url = `${
+    import.meta.env.VITE_BASE_TVSHOW_URL
+  }${idShow}/videos?api_key=${import.meta.env.VITE_API_KEY}`;
   const { response, error, loading } = useApiCall(url);
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { ReactComponent as TmdbLogo } from "../../assets/tmdb-logo.svg";
 import "./Footer.scss";
 
 export default function Footer() {
@@ -18,7 +17,7 @@ export default function Footer() {
       </div>
       <div className="footer-item">
         <a href="https://www.themoviedb.org/">
-          <TmdbLogo width="30px" />
+          <img src="/tmdb-logo.svg" alt="TMDB logo" width="30px" />
         </a>
       </div>
     </footer>

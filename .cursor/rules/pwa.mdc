@@ -1,0 +1,8 @@
+---
+---
+
+# PWA and Service Worker
+
+- CRA currently registers the service worker via [src/serviceWorkerRegistration.js](mdc:src/serviceWorkerRegistration.js).
+- After Vite migration, use `vite-plugin-pwa` to generate and register the SW.
+- Ensure icons/manifest under `public/` remain valid ([public/manifest.json](mdc:public/manifest.json)).

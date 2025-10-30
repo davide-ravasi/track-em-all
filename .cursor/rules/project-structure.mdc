@@ -1,0 +1,24 @@
+---
+alwaysApply: true
+---
+
+# Project Structure and Entry Points
+
+- Frontend entry: [src/index.tsx](mdc:src/index.tsx) bootstraps React and Redux.
+- App root: [src/App.tsx](mdc:src/App.tsx)
+- Global store: [src/app/store.ts](mdc:src/app/store.ts)
+- Types: [src/typescript/types.ts](mdc:src/typescript/types.ts)
+- Service worker (CRA): [src/serviceWorkerRegistration.js](mdc:src/serviceWorkerRegistration.js), [src/service-worker.js](mdc:src/service-worker.js)
+- HTML template (CRA): [public/index.html](mdc:public/index.html)
+- Netlify config: [netlify.toml](mdc:netlify.toml)
+- Serverless backend: [functions/express.js](mdc:functions/express.js), controllers in [functions/controllers](mdc:functions/controllers), models in [functions/models](mdc:functions/models)
+
+# Migration Context (CRA → Vite)
+
+- Migration plan: [REACT-TO-VITE-MIGRATION-PLAN.md](mdc:REACT-TO-VITE-MIGRATION-PLAN.md) and [cra-to-vite-migration.plan.md](mdc:cra-to-vite-migration.plan.md)
+- After migration, move `public/index.html` → root `index.html` and use `<script type="module" src="/src/index.tsx"></script>`.
+
+# Navigation Tips
+
+- Prefer updating files listed above when touching bootstrapping, env, or routing.
+- Backend routes live under `/.netlify/functions/express/*` in production.
