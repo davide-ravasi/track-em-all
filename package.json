@@ -2,6 +2,10 @@
   "name": "v30-bears-team-06",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.6.6",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
