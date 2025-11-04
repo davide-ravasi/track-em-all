@@ -82,7 +82,7 @@ export default function HomePage() {
         getSearchData,
       }}
     >
-      <div className="page">
+      <main className="page">
         <div className="page__content-wrapper">
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
@@ -123,7 +123,7 @@ export default function HomePage() {
           )}
           {searchError && <div>{searchError}</div>}
         </div>
-      </div>
+      </main>
     </Context.Provider>
   );
 }
