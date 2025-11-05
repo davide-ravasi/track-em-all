@@ -15,10 +15,10 @@ jobs:
           node-version: lts/*
       - name: SEt up environment variables
         run: |
-          if [ "$GITHUB_EVENT_NAME" == "pull_request" ]; then
-            echo "BASE_URL=https://deploy-preview-${github.event.pull_request.number}--trackem-all.netlify.app" >> $GITHUB_ENV
+          if [ ${{github.event_name}} == "pull_request" ]; then
+            echo "BASE_URL=https://deploy-preview-${{github.event.pull_request.number}}--trackem-all.netlify.app" >> "$GITHUB_ENV"
           else
-            echo "BASE_URL=https://trackem-all.netlify.app" >> $GITHUB_ENV
+            echo "BASE_URL=https://trackem-all.netlify.app" >> "$GITHUB_ENV"
           fi
       - name: Install dependencies
         run: npm ci
