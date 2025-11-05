@@ -83,7 +83,7 @@ export default function ShowList(props: ShowListProps) {
   };
 
   return (
-    <div className="shows">
+    <section className="shows">
       {shows && shows.results && shows?.results.length && (
         <h1>
           {title ? title : en.categories[category].title}{" "}
@@ -117,6 +117,6 @@ export default function ShowList(props: ShowListProps) {
           </button>
         )}
       </div>
-    </div>
+    </section>
   );
 }
