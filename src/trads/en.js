@@ -4,7 +4,7 @@ export const en = {
       title: "Popular tv shows",
     },
     personpopular: {
-      title: "Most popular Actors"
+      title: "Most popular actors",
     },
     top_rated: {
       title: "Top rated tv shows",

@@ -47,15 +47,6 @@ type Creator = {
   profile_path: string;
 };
 
-type ShowListProps = {
-  title?: string;
-  section: Sections;
-  linkMore?: boolean;
-  category: Categories;
-  id?: string;
-  cardAmount?: number;
-};
-
 type SearchProps = {
   shows: Show[];
 };

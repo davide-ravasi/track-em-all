@@ -82,7 +82,7 @@ export default function HomePage() {
         getSearchData,
       }}
     >
-      <div className="page">
+      <main className="page">
         <div className="page__content-wrapper">
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
@@ -91,12 +91,14 @@ export default function HomePage() {
                 section={Sections.Tv}
                 category={Categories.Popular}
                 cardAmount={6}
+                data-testid="section-tv-shows"
               />
 
               <ShowList
                 section={Sections.Tv}
                 category={Categories.TopRated}
                 cardAmount={6}
+                data-testid="section-top-rated"
               />
 
               {recommendedId && recommendedName && (
@@ -106,6 +108,7 @@ export default function HomePage() {
                   category={Categories.Recommended}
                   id={recommendedId}
                   cardAmount={6}
+                  data-testid="section-recommended"
                 />
               )}
 
@@ -114,6 +117,7 @@ export default function HomePage() {
                 section={Sections.Person}
                 category={Categories.Popular}
                 cardAmount={6}
+                data-testid="section-person-popular"
               />
             </>
           ) : (
@@ -123,7 +127,7 @@ export default function HomePage() {
           )}
           {searchError && <div>{searchError}</div>}
         </div>
-      </div>
+      </main>
     </Context.Provider>
   );
 }

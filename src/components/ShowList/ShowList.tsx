@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Person, Show, ShowListProps } from "../../typescript/types";
+import { Categories, Person, Sections, Show } from "../../typescript/types";
 import useApiCall from "../../hooks/UseApiCall";
 
 import "./ShowList.scss";
@@ -24,6 +24,16 @@ import PersonCard from "../PersonCard/PersonCard";
   @todo - remove results near map and add it when fetching data
 */
 
+export interface ShowListProps
+  extends React.HtmlHTMLAttributes<HTMLDivElement> {
+  title?: string;
+  section: Sections;
+  linkMore?: boolean;
+  category: Categories;
+  id?: string;
+  cardAmount?: number;
+}
+
 interface ShowProps {
   page: number;
   results: Show[];
@@ -31,10 +41,17 @@ interface ShowProps {
   total_results: number;
 }
 
-export default function ShowList(props: ShowListProps) {
+export default function ShowList({
+  title,
+  section,
+  linkMore = true,
+  category,
+  id,
+  cardAmount,
+  ...props
+}: ShowListProps) {
   const [shows, setShows] = useState<ShowProps | null>();
   const [pageNumber, setPageNumber] = useState(2);
-  const { title, section, linkMore = true, category, id, cardAmount } = props;
 
   const url = getApiUrl(section, category, id, 1);
 
@@ -83,7 +100,7 @@ export default function ShowList(props: ShowListProps) {
   };
 
   return (
-    <div className="shows">
+    <section className="shows" {...props}>
       {shows && shows.results && shows?.results.length && (
         <h1>
           {title ? title : en.categories[category].title}{" "}
@@ -117,6 +134,6 @@ export default function ShowList(props: ShowListProps) {
           </button>
         )}
       </div>
-    </div>
+    </section>
   );
 }

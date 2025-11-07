@@ -72,7 +72,7 @@ export default function ShowCard(props) {
   };
 
   return (
-    <div className="show__card">
+    <article className="show__card">
       <div className="show__card-image">
         <button
           type="button"
@@ -101,6 +101,6 @@ export default function ShowCard(props) {
         </Link>
       </div>
       <p className="show__card-name">{name}</p>
-    </div>
+    </article>
   );
 }
