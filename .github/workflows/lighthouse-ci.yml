@@ -1,0 +1,54 @@
+name: Build project and run Lighthouse CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: Set up environment variables
+        run: |
+          if [ ${{github.event_name}} == "pull_request" ]; then
+              echo "BASE_URL=https://deploy-preview-${{github.event.pull_request.number}}--trackem-all.netlify.app" >> "$GITHUB_ENV"
+          else
+              echo "BASE_URL=https://trackem-all.netlify.app" >> "$GITHUB_ENV"
+          fi
+      - name: npm install
+        run: |
+          npm ci
+      - name: Wait for Netlify preview to be ready
+        run: |
+          echo "Waiting for $BASE_URL to be accessible..."
+          for i in {1..30}; do
+            if curl -f -s -o /dev/null -w "%{http_code}" "$BASE_URL" | grep -q "200"; then
+              echo "URL is accessible!"
+              exit 0
+            fi
+            echo "Attempt $i/30: URL not ready yet, waiting 10 seconds..."
+            sleep 10
+          done
+          echo "URL failed to become accessible after 5 minutes"
+          exit 1
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.3.x
+          lhci autorun --collect.url=$BASE_URL --upload.target=temporary-public-storage
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 30
