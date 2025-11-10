@@ -24,10 +24,27 @@ jobs:
       - name: npm install
         run: |
           npm ci
+      - name: Wait for Netlify preview to be ready
+        run: |
+          echo "Waiting for $BASE_URL to be accessible..."
+          for i in {1..30}; do
+            if curl -f -s -o /dev/null -w "%{http_code}" "$BASE_URL" | grep -q "200"; then
+              echo "URL is accessible!"
+              exit 0
+            fi
+            echo "Attempt $i/30: URL not ready yet, waiting 10 seconds..."
+            sleep 10
+          done
+          echo "URL failed to become accessible after 5 minutes"
+          exit 1
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.3.x
           lhci autorun --collect.url=$BASE_URL --upload.target=temporary-public-storage
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
