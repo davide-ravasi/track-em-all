@@ -10,10 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: lts/*
       - name: Set up environment variables
         run: |
           if [ ${{github.event_name}} == "pull_request" ]; then
@@ -21,43 +20,12 @@ jobs:
           else
               echo "BASE_URL=https://trackem-all.netlify.app" >> "$GITHUB_ENV"
           fi
-      - name: npm install
-        run: |
-          npm ci
-      - name: Wait for Netlify preview to be ready
-        run: |
-          echo "Waiting for $BASE_URL to be accessible..."
-          for i in {1..60}; do
-            HTTP_CODE=$(curl -f -s -o /dev/null -w "%{http_code}" "$BASE_URL" || echo "000")
-            if [ "$HTTP_CODE" = "200" ]; then
-              echo "HTTP 200 received, waiting additional 15 seconds for JavaScript to load..."
-              sleep 15
-              echo "Checking if page content is loaded..."
-              if curl -s "$BASE_URL" | grep -q "root"; then
-                echo "Page is fully accessible and content is loaded!"
-                exit 0
-              fi
-            fi
-            echo "Attempt $i/60: HTTP $HTTP_CODE - waiting 5 seconds..."
-            sleep 5
-          done
-          echo "URL failed to become accessible after 5 minutes"
-          exit 1
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
-      - name: run Lighthouse CI
-        run: |
-          npm install -g @lhci/cli@0.3.x
-          lhci autorun \
-            --collect.url=$BASE_URL \
-            --collect.numberOfRuns=1 \
-            --collect.settings.chromeFlags="--no-sandbox --disable-gpu" \
-            --collect.settings.maxWaitForFcp=30000 \
-            --collect.settings.maxWaitForLoad=60000 \
-            --upload.target=temporary-public-storage
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
-        timeout-minutes: 10
+      - name: npm install dependencies
+        run: npm ci
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.3.x
+      - run: npm run build
+      - run: lhci autorun
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
