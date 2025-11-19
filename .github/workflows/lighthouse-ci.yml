@@ -24,8 +24,18 @@ jobs:
         run: npm ci
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.3.x
-      - run: npm run build
-      - run: lhci autorun
+      - name: Run Lighthouse CI
+        run: |
+          lhci autorun \
+            --collect.url=$BASE_URL \
+            --collect.numberOfRuns=3 \
+            --collect.settings.chromeFlags="--no-sandbox --disable-gpu" \
+            --collect.settings.maxWaitForFcp=30000 \
+            --collect.settings.maxWaitForLoad=60000 \
+            --upload.target=temporary-public-storage
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+        timeout-minutes: 10
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
