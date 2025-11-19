@@ -27,13 +27,19 @@ jobs:
       - name: Wait for Netlify preview to be ready
         run: |
           echo "Waiting for $BASE_URL to be accessible..."
-          for i in {1..30}; do
-            if curl -f -s -o /dev/null -w "%{http_code}" "$BASE_URL" | grep -q "200"; then
-              echo "URL is accessible!"
-              exit 0
+          for i in {1..60}; do
+            HTTP_CODE=$(curl -f -s -o /dev/null -w "%{http_code}" "$BASE_URL" || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "HTTP 200 received, waiting additional 15 seconds for JavaScript to load..."
+              sleep 15
+              echo "Checking if page content is loaded..."
+              if curl -s "$BASE_URL" | grep -q "root"; then
+                echo "Page is fully accessible and content is loaded!"
+                exit 0
+              fi
             fi
-            echo "Attempt $i/30: URL not ready yet, waiting 10 seconds..."
-            sleep 10
+            echo "Attempt $i/60: HTTP $HTTP_CODE - waiting 5 seconds..."
+            sleep 5
           done
           echo "URL failed to become accessible after 5 minutes"
           exit 1
@@ -42,9 +48,16 @@ jobs:
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.3.x
-          lhci autorun --collect.url=$BASE_URL --upload.target=temporary-public-storage
+          lhci autorun \
+            --collect.url=$BASE_URL \
+            --collect.numberOfRuns=1 \
+            --collect.settings.chromeFlags="--no-sandbox --disable-gpu" \
+            --collect.settings.maxWaitForFcp=30000 \
+            --collect.settings.maxWaitForLoad=60000 \
+            --upload.target=temporary-public-storage
         env:
           BASE_URL: ${{ env.BASE_URL }}
+        timeout-minutes: 10
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

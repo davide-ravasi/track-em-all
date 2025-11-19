@@ -5,6 +5,11 @@ module.exports = {
       url: ["http://localhost:5173"],
       numberOfRuns: 3,
       staticDistDir: "./build",
+      settings: {
+        maxWaitForFcp: 30000,
+        maxWaitForLoad: 60000,
+        chromeFlags: "--no-sandbox --disable-gpu",
+      },
     },
     upload: {
       target: "temporary-public-storage",
