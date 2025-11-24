@@ -27,12 +27,8 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           lhci autorun \
-            --collect.url=$BASE_URL \
-            --collect.numberOfRuns=1 \
-            --collect.settings.chromeFlags="--no-sandbox --disable-gpu" \
-            --collect.settings.maxWaitForFcp=30000 \
-            --collect.settings.maxWaitForLoad=60000 \
-            --upload.target=temporary-public-storage
+            --config=lighthouserc.ci.cjs \
+            --collect.url=$BASE_URL
         env:
           BASE_URL: ${{ env.BASE_URL }}
         timeout-minutes: 10
