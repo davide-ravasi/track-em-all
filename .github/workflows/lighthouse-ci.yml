@@ -1,0 +1,41 @@
+name: Build project and run Lighthouse CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Set up environment variables
+        run: |
+          if [ ${{github.event_name}} == "pull_request" ]; then
+              echo "BASE_URL=https://deploy-preview-${{github.event.pull_request.number}}--trackem-all.netlify.app" >> "$GITHUB_ENV"
+          else
+              echo "BASE_URL=https://trackem-all.netlify.app" >> "$GITHUB_ENV"
+          fi
+      - name: npm install dependencies
+        run: npm ci
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.15.1
+      - name: Run Lighthouse CI
+        run: |
+          lhci autorun \
+            --config=lighthouserc.ci.cjs \
+            --collect.url=$BASE_URL
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+        timeout-minutes: 10
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 30
