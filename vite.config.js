@@ -14,14 +14,20 @@ export default defineConfig({
           "Track'em all is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).",
         icons: [
           {
-            src: "/path-to-pwa-icon-size-192x192.png",
+            src: "/logo192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "pwa-512x512.png",
+            src: "/logo512.png",
             sizes: "512x512",
             type: "image/png",
+          },
+          {
+            src: "/logo180.png",
+            sizes: "180x180",
+            type: "image/png",
+            purpose: "any",
           },
         ],
         theme_color: "#2e2d3f",
