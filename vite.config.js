@@ -27,7 +27,11 @@ export default defineConfig({
             src: "/logo180.png",
             sizes: "180x180",
             type: "image/png",
-            purpose: "any",
+          },
+          {
+            src: "/apple-touch-icon.png",
+            sizes: "180x180",
+            type: "image/png",
           },
         ],
         theme_color: "#2e2d3f",

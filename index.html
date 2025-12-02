@@ -2,12 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+    <link rel="apple-touch-icon" sizes="192x192" href="/logo192.png?v=2">
+    <link rel="apple-touch-icon" sizes="512x512" href="/logo512.png?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="mask-icon" href="/mask-icon.svg" color="#FFFFFF">
     <meta name="theme-color" content="#2e2d3f" />
+    <!-- iOS Safari Home Screen App Configuration -->
+    <!-- https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <!-- Removes Safari UI (address bar, navigation) when launched from home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- Controls status bar appearance: "black-translucent" | "black" | "default" -->
+    <!-- https://developer.apple.com/documentation/webkit/safari_web_content/configuring_web_applications -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Custom name displayed under the home screen icon (overrides <title>) -->
+    <meta name="apple-mobile-web-app-title" content="Track'em All" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Windows Tiles -->
     <meta name="msapplication-TileColor" content="#2e2d3f" />
