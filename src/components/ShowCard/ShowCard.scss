@@ -61,6 +61,7 @@ $mrCardDesktop: 1.5rem;
     background-color: transparent;
     border: 0;
     cursor: pointer;
+    z-index: 10; // Ensure button is above image for proper focus visibility
 
     @media (min-width: $bp-min-desktop) {
       top: 10px;
@@ -82,6 +83,11 @@ $mrCardDesktop: 1.5rem;
       svg {
         color: $color-warning;
       }
+    }
+
+    // Ensure focus indicator is visible on top of image
+    &:focus-visible {
+      z-index: 11;
     }
   }
 }

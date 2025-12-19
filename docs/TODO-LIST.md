@@ -231,6 +231,17 @@ This document tracks all pending tasks and improvements for the Track'em All app
 - [ ] Configure CI to run on all PRs
 - [ ] Add status badges to README
 
+### Component Reusability
+
+- [ ] **Create reusable component loader**
+  - [ ] Design a flexible loader component that can be used across different contexts
+  - [ ] Support different sizes (small, medium, large)
+  - [ ] Support different variants (spinner, skeleton, overlay)
+  - [ ] Replace manual loading state implementations in pages (PersonPage, EpisodePage, ShowPage, etc.)
+  - [ ] Replace LoadingStateHOC with the new component loader pattern
+  - [ ] Standardize loading states across the application
+  - [ ] Improve code reusability and maintainability
+
 ---
 
 ## ♿ Accessibility & Semantic HTML

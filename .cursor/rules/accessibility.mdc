@@ -1,0 +1,60 @@
+---
+globs: *.tsx,*.jsx,*.ts,*.js,*.scss,*.css
+alwaysApply: true
+---
+
+# Accessibility Rules (WCAG 2.1 Level AA)
+
+**Priority:** Always enforce accessibility best practices. Reference: [docs/ACCESSIBILITY-REFERENCE.md](mdc:docs/ACCESSIBILITY-REFERENCE.md)
+
+## Core Principles
+
+### 1. Semantic HTML First
+- Use semantic elements: <main>, <section>, <article>, <nav>, <header>, <footer>
+- Proper heading hierarchy: H1 → H2 → H3 (don't skip levels)
+- **One H1 per page** (page title only)
+- Use <button> for buttons, <a> for links (never <div> or <span> for interactive elements)
+
+### 2. ARIA: Use Only When Necessary
+- **Don't use ARIA if native HTML works**
+- Use ARIA to enhance, not replace, semantic HTML
+- Avoid redundant ARIA (e.g., aria-label on elements with visible text)
+- **Prefer hidden spans over `aria-label`** for providing accessible names to icon buttons
+
+### 3. Icon Buttons
+- **Prefer hidden spans over aria-label** for icon-only buttons
+- Use `<span className="sr-only">` with descriptive text inside the button
+- Icons inside buttons MUST have `aria-hidden="true"` to prevent redundant announcements
+- Icon-only buttons MUST have accessible text (via hidden span, not aria-label)
+
+**Example:**
+```tsx
+// ✅ Good - hidden span for button label
+<button type="button">
+  <span className="sr-only">
+    {favorite ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
+  </span>
+  <FontAwesomeIcon icon={faHeart} aria-hidden="true" />
+</button>
+
+// ❌ Avoid - using aria-label (prefer hidden span instead)
+<button type="button" aria-label="Add to favorites">
+  <FontAwesomeIcon icon={faHeart} aria-hidden="true" />
+</button>
+```
+
+### 4. Images
+- **All images MUST have `alt` text**
+- Decorative images: `alt=""` (empty string)
+- Functional images: descriptive `alt` text
+
+### 5. Focus Indicators (WCAG 2.4.7 - Focus Visible)
+- **ALL keyboard-operable elements MUST have visible focus indicators**
+- Use `:focus-visible` (not `:focus`) for better UX
+- **NEVER use `outline: none` without providing an alternative focus indicator**
+
+## Enforcement
+
+- **Always check accessibility** when writing or modifying components
+- **Suggest fixes** for accessibility issues automatically
+- **Reference WCAG 2.1 Level AA** standards
