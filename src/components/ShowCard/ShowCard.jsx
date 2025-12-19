@@ -80,6 +80,11 @@ export default function ShowCard(props) {
           onClick={(e) =>
             favorite ? handleUnfavorite(e, favoriteId) : handleFavorite(e)
           }
+          aria-label={
+            favorite
+              ? `Remove ${name} from favorites`
+              : `Add ${name} to favorites`
+          }
         >
           {user && (
             <>
@@ -87,16 +92,24 @@ export default function ShowCard(props) {
                 <FontAwesomeIcon
                   icon={faHeart}
                   className={favorite ? "selected" : ""}
+                  aria-hidden="true"
                 />
               )}
               {loading && (
-                <FontAwesomeIcon icon={faCircleNotch} className={"fa-spin"} />
+                <FontAwesomeIcon
+                  icon={faCircleNotch}
+                  className={"fa-spin"}
+                  aria-hidden="true"
+                />
               )}
             </>
           )}
         </button>
         <Link to={`/show/${showId || id}`}>
-          <img alt={name} src={getUrlImages("thumb", poster_path)} />
+          <img
+            alt={`${name} poster`}
+            src={getUrlImages("thumb", poster_path)}
+          />
           {vote_average && <VoteBox vote={vote_average} />}
         </Link>
       </div>

@@ -8,14 +8,14 @@ import ShowCard from "../ShowCard/ShowCard";
 export default function Search(props: SearchProps) {
   const { shows } = props;
 
-
   return (
-    <div className="search">
-      <div className="search__list">
+    <section className="search">
+      <h2 id="search-results">Search Results</h2>
+      <div className="search__list" role="list">
         {shows.map((show) => {
-            return <ShowCard key={show.id.toString()} show={show} />;
-          })}
+          return <ShowCard key={show.id.toString()} show={show} />;
+        })}
       </div>
-    </div>
+    </section>
   );
 }
