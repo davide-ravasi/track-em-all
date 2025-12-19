@@ -99,11 +99,17 @@ export default function ShowList({
     // }
   };
 
+  const sectionTitle = title ? title : en.categories[category].title;
+  const sectionId = `section-${category}-${id || ""}`
+    .replace(/\s+/g, "-")
+    .toLowerCase();
+  const hasResults = shows && shows.results && shows?.results.length;
+
   return (
     <section className="shows" {...props}>
-      {shows && shows.results && shows?.results.length && (
-        <h1>
-          {title ? title : en.categories[category].title}{" "}
+      {hasResults && (
+        <h2 id={sectionId}>
+          {sectionTitle}{" "}
           {cardAmount && linkMore && (
             <a
               className="shows__show-more"
@@ -112,7 +118,7 @@ export default function ShowList({
               {"show more >"}
             </a>
           )}
-        </h1>
+        </h2>
       )}
       <div className="shows__list">
         {shows &&

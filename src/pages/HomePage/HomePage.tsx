@@ -84,6 +84,7 @@ export default function HomePage() {
     >
       <main className="page">
         <div className="page__content-wrapper">
+          <h1 className="page__title">Track'em All - Discover TV Shows</h1>
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
@@ -125,7 +126,11 @@ export default function HomePage() {
               <Search shows={searchResults} />
             </>
           )}
-          {searchError && <div>{searchError}</div>}
+          {searchError && (
+            <div role="alert" className="search-error">
+              {searchError}
+            </div>
+          )}
         </div>
       </main>
     </Context.Provider>

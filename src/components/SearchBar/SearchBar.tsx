@@ -34,9 +34,14 @@ export default function SearchBar(props: SearchBarProps) {
             className="page__search__input"
             placeholder="Search tv shows"
             onChange={handleChange}
+            aria-label="Search TV shows"
           />
-          <button type="submit" className="page__search__button">
-            <FontAwesomeIcon icon={faSearch} />
+          <button
+            type="submit"
+            className="page__search__button"
+            aria-label="Search TV shows"
+          >
+            <FontAwesomeIcon icon={faSearch} aria-hidden="true" />
           </button>
         </form>
       </div>

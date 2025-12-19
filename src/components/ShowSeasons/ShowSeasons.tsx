@@ -28,9 +28,9 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
       >
         {showBoxSeasons ? "Hide all the episodes" : "Show all the episodes"}
         {showBoxSeasons ? (
-          <FontAwesomeIcon icon={faAngleUp} />
+          <FontAwesomeIcon icon={faAngleUp} aria-hidden="true" />
         ) : (
-          <FontAwesomeIcon icon={faAngleDown} />
+          <FontAwesomeIcon icon={faAngleDown} aria-hidden="true" />
         )}
       </button>
       {showBoxSeasons && (

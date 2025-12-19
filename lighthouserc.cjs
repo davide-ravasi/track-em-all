@@ -1,10 +1,10 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: "npm run start",
-      url: ["http://localhost:5173"],
-      numberOfRuns: 3,
+      // Use static build (simpler for local testing)
       staticDistDir: "./build",
+      url: ["/"],
+      numberOfRuns: 3,
       settings: {
         maxWaitForFcp: 30000,
         maxWaitForLoad: 60000,

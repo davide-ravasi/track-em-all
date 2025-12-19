@@ -16,6 +16,7 @@ export default function ShowCard(props) {
 
   const { user } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
+  const [loadingAnnouncement, setLoadingAnnouncement] = useState("");
 
   const dispatch = useDispatch();
 
@@ -36,6 +37,7 @@ export default function ShowCard(props) {
     e.preventDefault();
 
     setLoading(true);
+    setLoadingAnnouncement(`Adding ${name} to favorites`);
 
     dispatch(
       favoriteAdd({
@@ -47,9 +49,15 @@ export default function ShowCard(props) {
       })
     ).then(() => {
       setLoading(false);
+      setLoadingAnnouncement(`${name} added to favorites`);
+      // Clear announcement after screen reader has time to read it
+      setTimeout(() => setLoadingAnnouncement(""), 1000);
     })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
+        setLoadingAnnouncement(`Failed to add ${name} to favorites`);
+        setTimeout(() => setLoadingAnnouncement(""), 2000);
       });
   };
 
@@ -57,6 +65,7 @@ export default function ShowCard(props) {
     e.preventDefault();
 
     setLoading(true);
+    setLoadingAnnouncement(`Removing ${name} from favorites`);
 
     dispatch(
       favoriteRemove({
@@ -65,9 +74,15 @@ export default function ShowCard(props) {
       })
     ).then(() => {
       setLoading(false);
+      setLoadingAnnouncement(`${name} removed from favorites`);
+      // Clear announcement after screen reader has time to read it
+      setTimeout(() => setLoadingAnnouncement(""), 1000);
     })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
+        setLoadingAnnouncement(`Failed to remove ${name} from favorites`);
+        setTimeout(() => setLoadingAnnouncement(""), 2000);
       });
   };
 
@@ -80,23 +95,42 @@ export default function ShowCard(props) {
           onClick={(e) =>
             favorite ? handleUnfavorite(e, favoriteId) : handleFavorite(e)
           }
+          aria-busy={loading}
         >
+          <span className="sr-only">
+            {favorite
+              ? `Remove ${name} from favorites`
+              : `Add ${name} to favorites`}
+          </span>
           {user && (
             <>
               {!loading && (
                 <FontAwesomeIcon
                   icon={faHeart}
                   className={favorite ? "selected" : ""}
+                  aria-hidden="true"
                 />
               )}
               {loading && (
-                <FontAwesomeIcon icon={faCircleNotch} className={"fa-spin"} />
+                <FontAwesomeIcon
+                  icon={faCircleNotch}
+                  className={"fa-spin"}
+                  aria-hidden="true"
+                />
               )}
             </>
           )}
+          {loadingAnnouncement && (
+            <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+              {loadingAnnouncement}
+            </span>
+          )}
         </button>
-        <Link to={`/show/${showId || id}`}>
-          <img alt={name} src={getUrlImages("thumb", poster_path)} />
+        <Link to={`/show/${showId || id}`} aria-label={`View details for ${name}`}>
+          <img
+            alt={`Poster for ${name}${vote_average ? `, rated ${vote_average} out of 10` : ""}`}
+            src={getUrlImages("thumb", poster_path)}
+          />
           {vote_average && <VoteBox vote={vote_average} />}
         </Link>
       </div>

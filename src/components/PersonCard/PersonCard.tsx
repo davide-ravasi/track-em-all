@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { getUrlImages } from "../../utils";
 import { Person } from "../../typescript/types";
 import "./PersonCard.scss";
@@ -15,15 +16,15 @@ export default function PersonCard(props: PersonCardProps) {
   return (
     <article className="personcard_container">
       <img
-        alt={character}
+        alt={character ? `${name} as ${character}` : `${name} profile`}
         src={getUrlImages("thumb", profile_path)}
         width="100px"
       />
       <div className="personcard_details">
         <div className="personcard_name">
-          <a href={`/person/${id}`}>{name}</a>
+          <Link to={`/person/${id}`}>{name}</Link>
         </div>
-        <div className="personcard_character">{character}</div>
+        {character && <div className="personcard_character">{character}</div>}
       </div>
     </article>
   );
