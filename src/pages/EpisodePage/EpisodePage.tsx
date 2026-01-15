@@ -56,30 +56,51 @@ export default function EpisodePage(props: any) {
   ]);
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="page__content-wrapper">
-        {castError && <div className="loading-error">{castError}</div>}
-        {(loadingCast || loadingImages) && (
-          <div className="loader">
-            <Loader />
+        {castError && (
+          <div className="loading-error" role="alert">
+            {castError}
           </div>
         )}
-        <h2 className="page__h2">{name}</h2>
-        <img alt={name} src={getUrlImages("big", still_path)} width="100%" />
-        <h3 className="episode_number">
+        {(loadingCast || loadingImages) && (
+          <div
+            className="loader"
+            aria-live="polite"
+            aria-atomic="true"
+            role="status"
+            aria-label="Loading cast and photos"
+          >
+            <Loader aria-hidden="true" aria-busy="true" />
+          </div>
+        )}
+        <h1 className="page__title">{name}</h1>
+        <img
+          alt={`${name} still image`}
+          src={getUrlImages("big", still_path)}
+          width="100%"
+        />
+        <h2 className="episode_number">
           S{padNumber(season_number)}E{padNumber(episode_number)}
-        </h3>
-        <h4 className="episode_airdate">Air date: {air_date}</h4>
+        </h2>
+        <h3 className="episode_airdate">Air date: {air_date}</h3>
         <p className="episode_overview">{overview}</p>
 
-        <h3 className="page__h2">CAST</h3>
-        <div className="cast_container">
-          {actorData &&
-            actorData.cast &&
-            actorData.cast.map((actor) => <PersonCard person={actor} />)}
-        </div>
+        <section aria-labelledby="cast">
+          <h2 id="cast">CAST</h2>
+          <div className="cast_container">
+            {actorData &&
+              actorData.cast &&
+              actorData.cast.map((actor) => (
+                <PersonCard key={actor.id} person={actor} />
+              ))}
+          </div>
+        </section>
 
-        {imagesData && <PhotoList imagesData={imagesData.stills} />}
+        <section aria-labelledby="photos">
+          <h2 id="photos">PHOTOS</h2>
+          {imagesData && <PhotoList imagesData={imagesData.stills} />}
+        </section>
 
         {/* <h3 className="page__h2">PHOTOS</h3>
         <div className="photos_container">
@@ -100,6 +121,6 @@ export default function EpisodePage(props: any) {
             ))}
         </div> */}
       </div>
-    </div>
+    </main>
   );
 }
