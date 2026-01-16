@@ -8,6 +8,7 @@ import ShowCard from "../ShowCard/ShowCard";
 import { getApiUrl } from "../../utils";
 import { en } from "../../trads/en";
 import PersonCard from "../PersonCard/PersonCard";
+import Loader from "../Loader/Loader";
 
 /*
  * ShowList component
@@ -63,13 +64,6 @@ export default function ShowList({
     }
   }, [response]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error</div>;
-  }
-
   const handleAddCards = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -93,10 +87,6 @@ export default function ShowList({
     } catch (error) {
       console.log(error);
     }
-
-    // if (response) {
-    //   setShows({ ...shows, results: [...shows.results, ...response.results] });
-    // }
   };
 
   const sectionTitle = title ? title : en.categories[category].title;
@@ -105,21 +95,41 @@ export default function ShowList({
     .toLowerCase();
   const hasResults = shows && shows.results && shows?.results.length;
 
+  if (loading) {
+    return (
+      <div
+        className="loader"
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+        aria-label={`Loading ${sectionTitle}`}
+      >
+        <Loader aria-hidden="true" aria-busy="true" />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="loading-error" role="alert">
+        Failed to load {sectionTitle}. {error}
+      </div>
+    );
+  }
+
   return (
     <section className="shows" {...props}>
-      {hasResults && (
-        <h2 id={sectionId}>
-          {sectionTitle}{" "}
-          {cardAmount && linkMore && (
-            <a
-              className="shows__show-more"
-              href={`/list/${section}/${id ? id + "/" : ""}${category}`}
-            >
-              {"show more >"}
-            </a>
-          )}
-        </h2>
-      )}
+      <h1>
+        {sectionTitle}{" "}
+        {hasResults && cardAmount && linkMore && (
+          <a
+            className="shows__show-more"
+            href={`/list/${section}/${id ? id + "/" : ""}${category}`}
+          >
+            {"show more >"}
+          </a>
+        )}
+      </h1>
+      {!hasResults && <p>No {sectionTitle.toLowerCase()} found.</p>}
       <div className="shows__list">
         {shows &&
           shows.results &&
@@ -134,8 +144,12 @@ export default function ShowList({
             })}
       </div>
       <div className="shows__show-more-elements">
-        {!cardAmount && (
-          <button type="button" onClick={(e) => handleAddCards(e)}>
+        {hasResults && !cardAmount && (
+          <button
+            type="button"
+            onClick={(e) => handleAddCards(e)}
+            aria-label={`Load more ${sectionTitle.toLowerCase()}`}
+          >
             Show more
           </button>
         )}
