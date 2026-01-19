@@ -98,7 +98,6 @@ export default function EpisodePage(props: any) {
         </section>
 
         <section aria-labelledby="photos">
-          <h2 id="photos">PHOTOS</h2>
           {imagesData && <PhotoList imagesData={imagesData.stills} />}
         </section>
 
