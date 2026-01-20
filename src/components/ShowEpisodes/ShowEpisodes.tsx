@@ -22,10 +22,10 @@ export const ShowEpisodes = (props: ShowSeasonProps) => {
 
   return (
     <div className="list">
-      {error && <div className="loading-error">{error}</div>}
+      {error && <div className="loading-error" role="alert">{error}</div>}
       {loading && (
-        <div className="loader">
-          <Loader />
+        <div className="loader" aria-live="polite" aria-atomic="true" role="status" aria-label="Loading episodes">
+          <Loader aria-hidden="true" aria-busy="true" />
         </div>
       )}
       {seasonData &&

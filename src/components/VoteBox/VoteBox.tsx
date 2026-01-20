@@ -9,7 +9,7 @@ type VoteBoxProps = {
 export default function VoteBox({ vote }: VoteBoxProps) {
   return (
     <div className="vote-box">
-      <span>{vote.toFixed(1)}</span>
+      <span aria-label={`Vote: ${vote.toFixed(1)} out of 10`}>{vote.toFixed(1)}</span>
     </div>
   );
 }
