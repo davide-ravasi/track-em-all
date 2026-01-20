@@ -13,17 +13,15 @@ export default function ListingPage() {
   const categoryFormatted = params.category;
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="page__content-wrapper">
-        {true && (
-          <ShowList
-            section={params.section}
-            title={`Your ${categoryFormatted} Shows`}
-            category={params.category}
-            id={params.id}
-          />
-        )}
+        <ShowList
+          section={params.section}
+          title={`Your ${categoryFormatted} Shows`}
+          category={params.category}
+          id={params.id}
+        />
       </div>
-    </div>
+    </main>
   );
 }

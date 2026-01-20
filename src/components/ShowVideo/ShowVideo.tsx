@@ -8,8 +8,14 @@ import { getTrailerUrl } from "../../utils";
 
 import "./ShowVideo.scss";
 
-export const ShowVideo = (props: ShowVideoProps) => {
-  const { idShow, setLoading } = props;
+interface IShowVideoProps {
+  idShow: string;
+  showName: string;
+  setLoading: (isComponentLoading: boolean) => void;
+};
+
+export const ShowVideo = (props: IShowVideoProps) => {
+  const { idShow, showName, setLoading } = props;
   const [trailerUrl, setTrailerUrl] = useState<string | undefined>("");
 
   const url = `${
@@ -36,7 +42,7 @@ export const ShowVideo = (props: ShowVideoProps) => {
           <iframe
             width="560"
             height="315"
-            title="trailer"
+            title={`Trailer for ${showName}`}
             className="video__iframe"
             src={trailerUrl}
           ></iframe>

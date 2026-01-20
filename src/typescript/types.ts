@@ -131,11 +131,6 @@ type Video = {
   type: string;
 };
 
-type ShowVideoProps = {
-  idShow: string;
-  setLoading: (isComponentLoading: boolean) => void;
-};
-
 type ShowResponse = {
   page: number;
   results: Show[];

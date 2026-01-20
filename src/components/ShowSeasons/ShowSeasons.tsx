@@ -22,6 +22,8 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
       <button
         type="button"
         className="toggleSeasons"
+        aria-expanded={showBoxSeasons}
+        aria-controls="seasons-list"
         onClick={() => {
           toggleSeasons();
         }}
@@ -34,7 +36,7 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
         )}
       </button>
       {showBoxSeasons && (
-        <div>
+        <section id="seasons-list" aria-label="List of seasons">
           {nmbrSeasons &&
             Array.from({ length: nmbrSeasons }, (value, key) => {
               const nmbrSeason = key + 1;
@@ -45,7 +47,7 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
                 </div>
               );
             })}
-        </div>
+        </section>
       )}
     </>
   );

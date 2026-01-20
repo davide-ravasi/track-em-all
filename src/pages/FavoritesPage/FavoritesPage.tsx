@@ -10,13 +10,17 @@ export default function FavoritesPage() {
   const { favorites } = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="page__content-wrapper">
-        <div className="favorite">
+        <section>
           <h1>Your Favorite Shows</h1>
-          {favorites && <ShowFavoriteList favorites={favorites} />}
-        </div>
+          {favorites && favorites.length > 0 ? (
+            <ShowFavoriteList favorites={favorites} />
+          ) : (
+            <p>You haven't added any favorite shows yet.</p>
+          )}
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

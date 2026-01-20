@@ -63,20 +63,21 @@ export default function ShowPage(props: ShowPageType) {
   }, [response, error, loading]);
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="page__content-wrapper">
-        {error && <div className="loading-error">{error}</div>}
+        {error && <div className="loading-error" role="alert">{error}</div>}
         {loading && (
-          <div className="loader">
-            <Loader />
+          <div className="loader" aria-live="polite" aria-atomic="true" role="status" aria-label="Loading show information">
+            <Loader aria-hidden="true" aria-busy="true" />
           </div>
         )}
         {showData && (
-          <div className="show">
+          <section className="show">
             <div className="show__media-wrapper">
               <button
                 type="button"
                 className="show__card-add"
+                aria-busy={loadingFavorite}
                 onClick={(e) =>
                   favorite ? handleUnfavorite(e, id) : handleFavorite(e)
                 }
@@ -86,22 +87,27 @@ export default function ShowPage(props: ShowPageType) {
                     {!loadingFavorite && (
                       <FontAwesomeIcon
                         icon={faHeart}
+                        aria-hidden="true"
                         className={favorite ? "selected" : ""}
                       />
                     )}
                     {loadingFavorite && (
                       <FontAwesomeIcon
                         icon={faCircleNotch}
+                        aria-hidden="true"
                         className={"fa-spin"}
                       />
                     )}
+                    <span className="sr-only">
+                      {favorite ? `Remove ${showData.name} from favorites` : `Add ${showData.name} to favorites`}
+                    </span>
                   </>
                 )}
               </button>
 
               {showData.backdrop_path && (
                 <img
-                  alt={showData.name}
+                  alt={`${showData.name} backdrop`}
                   src={getUrlImages("big", showData.backdrop_path)}
                 />
               )}
@@ -119,10 +125,10 @@ export default function ShowPage(props: ShowPageType) {
                     );
                   })}
               </div>
-              <div className="show__title">
+              <h1 className="show__title">
                 {showData.name}
                 <VoteBox vote={showData.vote_average} />
-              </div>
+              </h1>
               <div className="show__genres">
                 {showData.genres &&
                   showData.genres.map((genre, i, arr) => {
@@ -152,15 +158,15 @@ export default function ShowPage(props: ShowPageType) {
                 <p>Number of episodes: {showData.number_of_episodes}</p>
               </div>
             </div>
-          </div>
+          </section>
         )}
 
         {showData && (
           <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
         )}
 
-        {showData && <ShowVideo idShow={id} />}
+        {showData && <ShowVideo idShow={id} showName={showData.name} />}
       </div>
-    </div>
+    </main>
   );
 }
