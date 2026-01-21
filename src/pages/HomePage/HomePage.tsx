@@ -82,7 +82,7 @@ export default function HomePage() {
         getSearchData,
       }}
     >
-      <main className="page">
+      <main id="main-content" className="page">
         <div className="page__content-wrapper">
           <h1 className="page__title">Track'em All - Discover TV Shows</h1>
           <SearchBar textInput={textInput} setTextInput={setTextInput} />

@@ -10,7 +10,7 @@ export default function FavoritesPage() {
   const { favorites } = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         <section>
           <h1>Your Favorite Shows</h1>

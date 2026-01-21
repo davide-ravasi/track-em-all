@@ -63,7 +63,7 @@ export default function ShowPage(props: ShowPageType) {
   }, [response, error, loading]);
 
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         {error && <div className="loading-error" role="alert">{error}</div>}
         {loading && (
