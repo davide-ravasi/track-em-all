@@ -176,7 +176,6 @@ type AuthState = {
 
 export type {
   Show,
-  ShowListProps,
   Person,
   SearchProps,
   ShowPageType,
@@ -185,7 +184,6 @@ export type {
   Season,
   Episode,
   EpisodeProps,
-  ShowVideoProps,
   VideoApiResponse,
   Video,
   Actor,

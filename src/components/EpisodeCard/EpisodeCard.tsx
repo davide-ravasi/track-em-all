@@ -90,10 +90,10 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   });
 
   return (
-    <div className="list__box">
-      <div className="list__box-image">
+    <article className="list__box">
+      <section className="list__box-image">
         <Link
-          className="list__box"
+          title={`View details for ${name} Season ${season_number} Episode ${episode_number}`}
           to={{
             pathname: `/episode/${id}`,
             state: {
@@ -107,33 +107,45 @@ export default function EpisodeCard(props: EpisodeCardProps) {
             },
           }}
         >
-          <img alt={name} src={getUrlImages("thumb", still_path)} />
+          <img 
+            alt={`${name} Season ${season_number} Episode ${episode_number} episode poster`}
+            src={getUrlImages("thumb", still_path)}
+            width="100%"
+          />
         </Link>
         {!currentUser || loading ? (
-          <FontAwesomeIcon icon={faSquare} />
+          <FontAwesomeIcon icon={faSquare} aria-hidden="true" />
         ) : !watched ? (
-          <FontAwesomeIcon
-            icon={faSquare}
-            onClick={() => {
-              handleWatched({
-                id,
-                user: currentUser.uid,
-              });
-            }}
-          />
+          <button type="button" className="list__box-watched" onClick={() => {
+            handleWatched({
+              id,
+              user: currentUser.uid,
+            });
+          }}>
+            <FontAwesomeIcon
+              icon={faSquare}
+              aria-hidden="true"
+            />
+            <span className="sr-only">Mark as watched</span>
+          </button>
         ) : (
-          <FontAwesomeIcon
-            icon={faCheckSquare}
-            onClick={() => {
-              handleUnwatch(id);
-            }}
-          />
+          <button type="button" className="list__box-watched" onClick={() => {
+            handleUnwatch(id);
+          }}>
+            <FontAwesomeIcon
+              icon={faCheckSquare}
+              aria-hidden="true"
+            />
+            <span className="sr-only">Mark as unwatched</span>
+          </button>
         )}
-      </div>
-      <p className="list__box-name">{name}</p>
-      <VoteBox vote={vote_average} />
-      <p className="list__box-detail">Episode {episode_number}</p>
-      <p className="list__box-detail">Air date: {air_date}</p>
-    </div>
+      </section>
+      <section className="list__box-content">
+        <h2 className="list__box-name">{name}</h2>
+        <VoteBox vote={vote_average} />
+        <p className="list__box-detail">Episode {episode_number}</p>
+        <p className="list__box-detail">Air date: {air_date}</p>
+    </section>
+    </article>
   );
 }
