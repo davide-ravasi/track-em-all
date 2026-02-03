@@ -56,7 +56,7 @@ export default function EpisodePage(props: any) {
   ]);
 
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         {castError && (
           <div className="loading-error" role="alert">

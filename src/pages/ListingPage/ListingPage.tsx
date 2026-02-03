@@ -13,7 +13,7 @@ export default function ListingPage() {
   const categoryFormatted = params.category;
 
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         <ShowList
           section={params.section}

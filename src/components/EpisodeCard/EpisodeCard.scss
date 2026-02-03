@@ -22,25 +22,68 @@
     margin-right: 1.5rem;
     margin-bottom: 1.5rem;
   }
+
   &-image {
     position: relative;
 
     img {
       width: 100%;
+      display: block;
+    }
+
+    a {
+      display: block;
+    }
+
+    // Watched/unwatched button: overlay on image, no default button chrome
+    .list__box-watched {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      margin: 0;
+      padding: 4px;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      color: $color-secondary;
+      cursor: pointer;
+      line-height: 1;
+      z-index: 1;
+
+      &:hover {
+        color: $color-main;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $color-main;
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
     }
   }
+
+  &-content {
+    margin: 0;
+    padding: 0;
+  }
+
   .vote-box {
     margin-top: 4px;
     font-size: 0.8rem;
+
     @media (min-width: $bp-min-desktop) {
       font-size: 0.9rem;
     }
   }
+
   &-name {
     text-align: center;
     color: #fff;
     margin-top: 4px;
+    margin-bottom: 0;
+    font-size: inherit;
   }
+
   &-detail {
     font-size: 0.8rem;
     color: $color-dark-grey;

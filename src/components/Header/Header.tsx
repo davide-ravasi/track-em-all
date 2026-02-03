@@ -11,7 +11,10 @@ export default function Header() {
 
   return (
     <>
-      <nav className="navbar">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <nav className="navbar" aria-label="Main navigation menu">
         <div className="navbar__links">
           <div className="navbar-container--left">
             <Link to="/" className="navbar_menuItem">
@@ -31,13 +34,13 @@ export default function Header() {
                 <Link to="/favorites" className="navbar__menuItem">
                   Favorites
                 </Link>
-                <Link
+                <button
+                  type="button"
                   onClick={() => logoutUser("You've been logged out!")}
-                  to="#"
                   className="navbar__menuItem"
                 >
                   Logout
-                </Link>
+                </button>
               </React.Fragment>
             ) : (
               <React.Fragment>

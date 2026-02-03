@@ -3,7 +3,7 @@ import "./AboutPage.scss";
 
 export default function AboutPage() {
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         <h1 className="page__title">About Show Tracker</h1>
         <p>

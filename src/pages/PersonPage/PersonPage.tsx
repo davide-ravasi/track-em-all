@@ -42,7 +42,7 @@ export default function PersonPage() {
   }, [photosResponse]);
 
   return (
-    <main className="page">
+    <main id="main-content" className="page">
       <div className="page__content-wrapper">
         {personError && (
           <div className="loading-error" role="alert">

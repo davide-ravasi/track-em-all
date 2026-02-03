@@ -21,14 +21,14 @@ export default function SearchBar(props: SearchBarProps) {
 
   return (
     <div className="search">
-      <div className="page__search">
+      <section className="page__search">
         <form
-          action="submit"
+          role="search"
           className="page__search__form"
           onSubmit={getSearchData}
         >
           <input
-            type="text"
+            type="search"
             name="searchterm"
             value={textInput}
             className="page__search__input"
@@ -39,12 +39,12 @@ export default function SearchBar(props: SearchBarProps) {
           <button
             type="submit"
             className="page__search__button"
-            aria-label="Search TV shows"
+            aria-label="Submit search"
           >
             <FontAwesomeIcon icon={faSearch} aria-hidden="true" />
           </button>
         </form>
-      </div>
+      </section>
     </div>
   );
 }
