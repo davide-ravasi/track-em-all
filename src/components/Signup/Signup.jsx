@@ -73,15 +73,23 @@ export default function Signup() {
     registerUser({ firstName, lastName, email, password });
   };
 
-  if (isLoading) return <div className="page">...is loading</div>;
+  if (isLoading) {
+    return (
+      <main id="main-content" className="page" aria-busy="true">
+        <div className="loader" aria-live="polite" aria-atomic="true" role="status" aria-label="Loading episodes">
+          <Loader aria-hidden="true" aria-busy="true" />
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <div className="page">
+    <main id="main-content" className="page">
       <form className="signup__form-container" onSubmit={handleSubmit}>
-        <div className="login__input-container">
+        <div className="signup__input-container">
           <label htmlFor="firstname">First Name: </label>
           <input
-            className="login__input"
+            className="signup__input"
             type="text"
             id="firstName"
             name="firstName"
@@ -89,10 +97,10 @@ export default function Signup() {
             {...bindFirstName}
           ></input>
         </div>
-        <div className="login__input-container">
+        <div className="signup__input-container">
           <label htmlFor="lastname">Last Name: </label>
           <input
-            className="login__input"
+            className="signup__input"
             type="text"
             id="lastName"
             name="lastName"
@@ -110,7 +118,7 @@ export default function Signup() {
           ></input>
         </div>
         <div className="signup__input-container">
-          <label htmlFor="password" type="text">
+          <label htmlFor="password">
             Password:
           </label>
           <input
@@ -129,6 +137,6 @@ export default function Signup() {
           Sign Up
         </button>
       </form>
-    </div>
+    </main>
   );
 }

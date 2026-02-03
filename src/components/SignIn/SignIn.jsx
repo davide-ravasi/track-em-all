@@ -9,8 +9,6 @@ import { useToast } from "../../hooks/UseToast";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
-  //const auth = useSelector((state) => state.auth.value)
-  //const dispatch = useDispatch()
 
   return {
     value,
@@ -75,8 +73,8 @@ export default function Signin() {
   }
 
   return (
-    <div className="page">
-      <form className="login__form-container">
+    <main id="main-content" className="page">
+      <form className="login__form-container" onSubmit={handleSubmit}>
         <div className="login__input-container">
           <label htmlFor="username">Email: </label>
           <input
@@ -99,7 +97,7 @@ export default function Signin() {
             {...bindPassword}
           ></input>
         </div>
-        <button type="submit" className="login__button" onClick={handleSubmit}>
+        <button type="submit" className="login__button">
           Sign In
         </button>
         <div className="login__singup-text">
@@ -109,6 +107,6 @@ export default function Signin() {
           </Link>
         </div>
       </form>
-    </div>
+    </main>
   );
 }
