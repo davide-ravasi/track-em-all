@@ -9,6 +9,7 @@ import { getApiUrl } from "../../utils";
 import { en } from "../../trads/en";
 import PersonCard from "../PersonCard/PersonCard";
 import Loader from "../Loader/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 /*
  * ShowList component
@@ -25,8 +26,7 @@ import Loader from "../Loader/Loader";
   @todo - remove results near map and add it when fetching data
 */
 
-export interface ShowListProps
-  extends React.HtmlHTMLAttributes<HTMLDivElement> {
+export interface ShowListProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
   title?: string;
   section: Sections;
   linkMore?: boolean;
@@ -56,16 +56,24 @@ export default function ShowList({
 
   const url = getApiUrl(section, category, id, 1);
 
-  const { response, error, loading } = useApiCall(url);
+  //const { response, error, loading } = useApiCall(url);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [category],
+    queryFn: async () => {
+      const response = await fetch(url);
+      return response.json();
+    },
+  });
 
   useEffect(() => {
-    if (response) {
-      setShows(response);
+    if (data) {
+      setShows(data);
     }
-  }, [response]);
+  }, [data]);
 
   const handleAddCards = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
 
@@ -95,7 +103,7 @@ export default function ShowList({
     .toLowerCase();
   const hasResults = shows && shows.results && shows?.results.length;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div
         className="loader"
@@ -111,7 +119,7 @@ export default function ShowList({
   if (error) {
     return (
       <div className="loading-error" role="alert">
-        Failed to load {sectionTitle}. {error}
+        Failed to load {sectionTitle}. {error?.message}
       </div>
     );
   }
