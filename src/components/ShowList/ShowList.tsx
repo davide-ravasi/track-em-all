@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Categories, Person, Sections, Show } from "../../typescript/types";
-import useApiCall from "../../hooks/UseApiCall";
 
 import "./ShowList.scss";
 
@@ -56,10 +55,8 @@ export default function ShowList({
 
   const url = getApiUrl(section, category, id, 1);
 
-  //const { response, error, loading } = useApiCall(url);
-
   const { data, isLoading, error } = useQuery({
-    queryKey: [category],
+    queryKey: [section, category, id],
     queryFn: async () => {
       const response = await fetch(url);
       return response.json();
@@ -72,6 +69,7 @@ export default function ShowList({
     }
   }, [data]);
 
+  // @todo Review: consider replacing "Load more" with useInfiniteQuery for caching and consistent loading state
   const handleAddCards = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
@@ -101,7 +99,7 @@ export default function ShowList({
   const sectionId = `section-${category}-${id || ""}`
     .replace(/\s+/g, "-")
     .toLowerCase();
-  const hasResults = shows && shows.results && shows?.results.length;
+  const hasResults = data && data.results && data.results.length;
 
   if (isLoading) {
     return (
