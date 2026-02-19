@@ -19,6 +19,7 @@ import ListingPage from "./pages/ListingPage/ListingPage";
 import PersonPage from "./pages/PersonPage/PersonPage";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +61,7 @@ function App() {
         </Router>
         <ToastContainer />
       </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
