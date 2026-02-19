@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNotch, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import useApiCall from "../../hooks/UseApiCall";
 import { getUrlImages } from "../../utils";
 
 import VoteBox from "../../components/VoteBox/VoteBox";
 import Loader from "../../components/Loader/Loader";
 import ShowSeasons from "../../components/ShowSeasons/ShowSeasons";
 import ShowVideo from "../../components/ShowVideo/ShowVideo";
+import { Creator, Genre } from "../../typescript/types";
 
 import {
   Favorite,
@@ -30,8 +31,15 @@ export default function ShowPage(props: ShowPageType) {
     import.meta.env.VITE_API_KEY
   }`;
 
-  const [showData, setShowData] = useState<Show | null>();
-  const { response, error, loading } = useApiCall(url);
+  const {
+    data: showData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["show", id],
+    queryFn: () => fetch(url).then((res) => res.json()),
+  });
+
   const [loadingFavorite, setLoadingFavorite] = useState(false);
   const { addFavorite, removeFavorite } = useFavorite();
 
@@ -50,24 +58,28 @@ export default function ShowPage(props: ShowPageType) {
 
   const handleUnfavorite = (
     e: React.MouseEvent<HTMLButtonElement>,
-    favoriteId: string
+    favoriteId: string,
   ) => {
     e.preventDefault();
     removeFavorite({ user, favoriteId, setLoadingFavorite });
   };
 
-  useEffect(() => {
-    setShowData(response);
-    //handleWasFavorited(parseInt(id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response, error, loading]);
-
   return (
     <main id="main-content" className="page">
       <div className="page__content-wrapper">
-        {error && <div className="loading-error" role="alert">{error}</div>}
-        {loading && (
-          <div className="loader" aria-live="polite" aria-atomic="true" role="status" aria-label="Loading show information">
+        {error && (
+          <div className="loading-error" role="alert">
+            {error.message}
+          </div>
+        )}
+        {isLoading && (
+          <div
+            className="loader"
+            aria-live="polite"
+            aria-atomic="true"
+            role="status"
+            aria-label="Loading show information"
+          >
             <Loader aria-hidden="true" aria-busy="true" />
           </div>
         )}
@@ -99,7 +111,9 @@ export default function ShowPage(props: ShowPageType) {
                       />
                     )}
                     <span className="sr-only">
-                      {favorite ? `Remove ${showData.name} from favorites` : `Add ${showData.name} to favorites`}
+                      {favorite
+                        ? `Remove ${showData.name} from favorites`
+                        : `Add ${showData.name} to favorites`}
                     </span>
                   </>
                 )}
@@ -116,14 +130,16 @@ export default function ShowPage(props: ShowPageType) {
               <div className="show__language">
                 <span>Languages: </span>
                 {showData.languages &&
-                  showData.languages.map((lang, i, arr) => {
-                    return (
-                      <span key={`language-${i}`}>
-                        {lang}
-                        {arr.length - 1 !== i && " / "}
-                      </span>
-                    );
-                  })}
+                  showData.languages.map(
+                    (lang: string, i: number, arr: string[]) => {
+                      return (
+                        <span key={`language-${i}`}>
+                          {lang}
+                          {arr.length - 1 !== i && " / "}
+                        </span>
+                      );
+                    },
+                  )}
               </div>
               <h1 className="show__title">
                 {showData.name}
@@ -131,27 +147,31 @@ export default function ShowPage(props: ShowPageType) {
               </h1>
               <div className="show__genres">
                 {showData.genres &&
-                  showData.genres.map((genre, i, arr) => {
-                    return (
-                      <span key={`genre-${i}`}>
-                        {genre.name}
-                        {arr.length - 1 !== i && " / "}
-                      </span>
-                    );
-                  })}
+                  showData.genres.map(
+                    (genre: Genre, i: number, arr: Genre[]) => {
+                      return (
+                        <span key={`genre-${i}`}>
+                          {genre.name}
+                          {arr.length - 1 !== i && " / "}
+                        </span>
+                      );
+                    },
+                  )}
               </div>
               <div className="show__description">{showData.overview}</div>
               <div className="show__creators">
                 <span>Created by: </span>
                 {showData.created_by &&
-                  showData.created_by.map((creator, i, arr) => {
-                    return (
-                      <span key={`creator-${i}`}>
-                        {creator.name}
-                        {arr.length - 1 !== i && ", "}
-                      </span>
-                    );
-                  })}
+                  showData.created_by.map(
+                    (creator: Creator, i: number, arr: Creator[]) => {
+                      return (
+                        <span key={`creator-${i}`}>
+                          {creator.name}
+                          {arr.length - 1 !== i && ", "}
+                        </span>
+                      );
+                    },
+                  )}
               </div>
               <div className="show__details">
                 <p>Number of seasons: {showData.number_of_seasons} </p>

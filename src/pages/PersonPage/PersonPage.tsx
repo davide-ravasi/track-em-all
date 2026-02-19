@@ -4,11 +4,10 @@ import Loader from "../../components/Loader/Loader";
 import PhotoList from "../../components/PhotoList/PhotoList";
 import useApiCall from "../../hooks/UseApiCall";
 import { getUrlImages } from "../../utils";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PersonPage() {
   const { id }: { id: string } = useParams();
-  const [personData, setPersonData] = useState<any>();
-  const [imagesData, setImagesData] = useState<any>();
   // @TODO create and external function for this url
   const personUrl = `${import.meta.env.VITE_BASE_PERSON_URL}${id}?api_key=${
     import.meta.env.VITE_API_KEY
@@ -18,39 +17,34 @@ export default function PersonPage() {
   }${id}/images?api_key=${import.meta.env.VITE_API_KEY}&language=en-US`;
 
   const {
-    response: personResponse,
+    data: personData,
     error: personError,
-    loading: personLoading,
-  } = useApiCall(personUrl);
+    isLoading: personIsLoading,
+  } = useQuery({
+    queryKey: ["person", id],
+    queryFn: () => fetch(personUrl).then((res) => res.json()),
+  });
 
   const {
-    response: photosResponse,
+    data: imagesData,
     error: photosError,
-    loading: photosLoading,
-  } = useApiCall(photosUrl);
-
-  useEffect(() => {
-    if (personResponse !== null) {
-      setPersonData(personResponse);
-    }
-  }, [personResponse]);
-
-  useEffect(() => {
-    if (photosResponse !== null) {
-      setImagesData(photosResponse);
-    }
-  }, [photosResponse]);
+    isLoading: photosIsLoading,
+  } = useQuery({
+    queryKey: ["photos", id],
+    queryFn: () => fetch(photosUrl).then((res) => res.json()),
+  });
 
   return (
     <main id="main-content" className="page">
       <div className="page__content-wrapper">
         {personError && (
           <div className="loading-error" role="alert">
-            {personError}
+            {personError.message}
           </div>
         )}
-        {personLoading && (
-          <div className="loader"
+        {personIsLoading && (
+          <div
+            className="loader"
             aria-live="polite"
             aria-atomic="true"
             role="status"
@@ -85,18 +79,30 @@ export default function PersonPage() {
               </section>
             </div>
 
-            {imagesData ? <section className="page__photos">
-              {photosError && (
-                <div className="loading-error" role="alert">{photosError}</div>
-              )}
-              {photosLoading && (
-                <div className="loader" aria-live="polite" aria-atomic="true" role="status" aria-label="Loading photos">
-                  <Loader aria-hidden="true" aria-busy="true" />
-                </div>
-              )}
+            {imagesData ? (
+              <section className="page__photos">
+                {photosError && (
+                  <div className="loading-error" role="alert">
+                    {photosError.message}
+                  </div>
+                )}
+                {photosIsLoading && (
+                  <div
+                    className="loader"
+                    aria-live="polite"
+                    aria-atomic="true"
+                    role="status"
+                    aria-label="Loading photos"
+                  >
+                    <Loader aria-hidden="true" aria-busy="true" />
+                  </div>
+                )}
 
-              <PhotoList imagesData={imagesData.profiles} />
-            </section> : <p>No photos available.</p>}
+                <PhotoList imagesData={imagesData.profiles} />
+              </section>
+            ) : (
+              <p>No photos available.</p>
+            )}
             <section className="page__related">
               <h2>Related</h2>
               <p>Coming soon</p>
