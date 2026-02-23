@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Categories, Person, Sections, Show } from "../../typescript/types";
-import useApiCall from "../../hooks/UseApiCall";
 
 import "./ShowList.scss";
 
@@ -9,6 +8,7 @@ import { getApiUrl } from "../../utils";
 import { en } from "../../trads/en";
 import PersonCard from "../PersonCard/PersonCard";
 import Loader from "../Loader/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 /*
  * ShowList component
@@ -25,8 +25,7 @@ import Loader from "../Loader/Loader";
   @todo - remove results near map and add it when fetching data
 */
 
-export interface ShowListProps
-  extends React.HtmlHTMLAttributes<HTMLDivElement> {
+export interface ShowListProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
   title?: string;
   section: Sections;
   linkMore?: boolean;
@@ -56,16 +55,23 @@ export default function ShowList({
 
   const url = getApiUrl(section, category, id, 1);
 
-  const { response, error, loading } = useApiCall(url);
+  const { data, isLoading, error } = useQuery({
+    queryKey: [section, category, id],
+    queryFn: async () => {
+      const response = await fetch(url);
+      return response.json();
+    },
+  });
 
   useEffect(() => {
-    if (response) {
-      setShows(response);
+    if (data) {
+      setShows(data);
     }
-  }, [response]);
+  }, [data]);
 
+  // @todo Review: consider replacing "Load more" with useInfiniteQuery for caching and consistent loading state
   const handleAddCards = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
 
@@ -93,9 +99,9 @@ export default function ShowList({
   const sectionId = `section-${category}-${id || ""}`
     .replace(/\s+/g, "-")
     .toLowerCase();
-  const hasResults = shows && shows.results && shows?.results.length;
+  const hasResults = data && data.results && data.results.length;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div
         className="loader"
@@ -111,7 +117,7 @@ export default function ShowList({
   if (error) {
     return (
       <div className="loading-error" role="alert">
-        Failed to load {sectionTitle}. {error}
+        Failed to load {sectionTitle}. {error?.message}
       </div>
     );
   }

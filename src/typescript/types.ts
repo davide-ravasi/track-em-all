@@ -34,12 +34,12 @@ type Person = {
   profile_path?: string;
 };
 
-type Genre = {
+export type Genre = {
   id: number;
   name: string;
 };
 
-type Creator = {
+export type Creator = {
   credit_id: string;
   gender: number;
   id: number;
@@ -74,7 +74,6 @@ type ShowPageType = {
 type ShowSeasonProps = {
   season: number;
   idShow: string;
-  setLoading: (isComponentLoading: boolean) => void;
 };
 
 type Season = {

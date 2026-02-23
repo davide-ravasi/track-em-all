@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import { getUrlImages, padNumber } from "../../utils";
-import { EpisodeProps, CastData, ImagesData } from "../../typescript/types";
+import { EpisodeProps, Actor } from "../../typescript/types";
 import Loader from "../../components/Loader/Loader";
-import useApiCall from "../../hooks/UseApiCall";
 import "./EpisodePage.scss";
 import PersonCard from "../../components/PersonCard/PersonCard";
 import PhotoList from "../../components/PhotoList/PhotoList";
+import { useQuery } from "@tanstack/react-query";
 
 export default function EpisodePage(props: any) {
   const location = useLocation<EpisodeProps>();
@@ -30,40 +30,42 @@ export default function EpisodePage(props: any) {
   }${showId}/season/${season_number}/episode/${episode_number}/images?api_key=${
     import.meta.env.VITE_API_KEY
   }`;
-  const {
-    response: castResponse,
-    error: castError,
-    loading: loadingCast,
-  } = useApiCall(castUrl);
-  const {
-    response: imagesResponse,
-    error: imagesError,
-    loading: loadingImages,
-  } = useApiCall(imagesUrl);
-  const [actorData, setActorData] = useState<CastData | null>();
-  const [imagesData, setImagesData] = useState<ImagesData | null>();
 
-  useEffect(() => {
-    setActorData(castResponse);
-    setImagesData(imagesResponse);
-  }, [
-    castResponse,
-    castError,
-    loadingCast,
-    imagesResponse,
-    imagesError,
-    loadingImages,
-  ]);
+  const {
+    data: castData,
+    error: castError,
+    isLoading: isLoadingCast,
+  } = useQuery({
+    queryKey: ["episode-cast", showId, season_number, episode_number],
+    queryFn: async () => {
+      const res = await fetch(castUrl);
+      if (!res.ok) throw new Error("Failed to fetch cast");
+      return res.json();
+    },
+  });
+
+  const {
+    data: imagesData,
+    error: imagesError,
+    isLoading: isLoadingImages,
+  } = useQuery({
+    queryKey: ["episode-images", showId, season_number, episode_number],
+    queryFn: async () => {
+      const res = await fetch(imagesUrl);
+      if (!res.ok) throw new Error("Failed to fetch images");
+      return res.json();
+    },
+  });
 
   return (
     <main id="main-content" className="page">
       <div className="page__content-wrapper">
-        {castError && (
+        {(castError || imagesError) && (
           <div className="loading-error" role="alert">
-            {castError}
+            {castError?.message ?? imagesError?.message}
           </div>
         )}
-        {(loadingCast || loadingImages) && (
+        {(isLoadingCast || isLoadingImages) && (
           <div
             className="loader"
             aria-live="polite"
@@ -89,16 +91,16 @@ export default function EpisodePage(props: any) {
         <section aria-labelledby="cast">
           <h2 id="cast">CAST</h2>
           <div className="cast_container">
-            {actorData &&
-              actorData.cast &&
-              actorData.cast.map((actor) => (
+            {castData &&
+              castData.cast &&
+              castData.cast.map((actor: Actor) => (
                 <PersonCard key={actor.id} person={actor} />
               ))}
           </div>
         </section>
 
         <section aria-labelledby="photos">
-          {imagesData && <PhotoList imagesData={imagesData.stills} />}
+          {imagesData?.stills && <PhotoList imagesData={imagesData.stills} />}
         </section>
 
         {/* <h3 className="page__h2">PHOTOS</h3>
