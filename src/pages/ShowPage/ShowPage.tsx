@@ -37,7 +37,11 @@ export default function ShowPage(props: ShowPageType) {
     error,
   } = useQuery({
     queryKey: ["show", id],
-    queryFn: () => fetch(url).then((res) => res.json()),
+    queryFn: async () => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch show");
+      return res.json();
+    },
   });
 
   const [loadingFavorite, setLoadingFavorite] = useState(false);

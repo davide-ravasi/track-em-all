@@ -74,7 +74,6 @@ type ShowPageType = {
 type ShowSeasonProps = {
   season: number;
   idShow: string;
-  setLoading: (isComponentLoading: boolean) => void;
 };
 
 type Season = {
