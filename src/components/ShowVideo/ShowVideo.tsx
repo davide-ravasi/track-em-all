@@ -1,41 +1,51 @@
-import React, { useState, useEffect } from "react";
-
-import { ShowVideoProps } from "../../typescript/types";
-
-import useApiCall from "../../hooks/UseApiCall";
-import LoadingStateHOC from "../../hoc/LoadingStateHOC";
+import React from "react";
 import { getTrailerUrl } from "../../utils";
 
 import "./ShowVideo.scss";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../Loader/Loader";
 
 interface IShowVideoProps {
   idShow: string;
   showName: string;
-  setLoading: (isComponentLoading: boolean) => void;
-};
+}
 
 export const ShowVideo = (props: IShowVideoProps) => {
-  const { idShow, showName, setLoading } = props;
-  const [trailerUrl, setTrailerUrl] = useState<string | undefined>("");
+  const { idShow, showName } = props;
 
   const url = `${
     import.meta.env.VITE_BASE_TVSHOW_URL
   }${idShow}/videos?api_key=${import.meta.env.VITE_API_KEY}`;
-  const { response, error, loading } = useApiCall(url);
 
-  useEffect(() => {
-    if (response) {
-      const url = getTrailerUrl(response);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["video", idShow],
+    queryFn: async () => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch videos");
+      return res.json();
+    },
+  });
 
-      setTrailerUrl(url);
-      setLoading(loading);
-    } else {
-      setLoading(false);
-    }
-  }, [response, error, loading, setLoading]);
+  const trailerUrl = data ? getTrailerUrl(data) : undefined;
 
   return (
     <>
+      {error && (
+        <div className="loading-error" role="alert">
+          {error?.message}
+        </div>
+      )}
+      {isLoading && (
+        <div
+          className="loader"
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
+          aria-label="Loading video"
+        >
+          <Loader aria-hidden="true" aria-busy="true" />
+        </div>
+      )}
       {trailerUrl && (
         <div className="video">
           <h2>Trailer</h2>
@@ -52,4 +62,4 @@ export const ShowVideo = (props: IShowVideoProps) => {
   );
 };
 
-export default LoadingStateHOC(ShowVideo);
+export default ShowVideo;

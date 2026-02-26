@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import PhotoList from "../../components/PhotoList/PhotoList";
-import useApiCall from "../../hooks/UseApiCall";
 import { getUrlImages } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 
