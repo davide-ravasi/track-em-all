@@ -1,7 +1,7 @@
-import React from "react";
-import { Redirect, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../typescript/types";
+import React from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../typescript/types';
 
 // https://ui.dev/react-router-v5-protected-routes-authentication
 // need to add the token verification pn backend?
@@ -20,6 +20,6 @@ export default function PrivateRoute({
   return currentUser ? (
     <Route {...rest} render={() => children}></Route>
   ) : (
-    <Redirect to="/signin" />
+    <Redirect to='/signin' />
   );
 }

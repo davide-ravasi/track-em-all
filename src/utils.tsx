@@ -3,9 +3,9 @@ import {
   Video,
   Sections,
   Categories,
-} from "./typescript/types";
-import placeholderVert from "./assets/thumb-vert-placeholder.png";
-import placeholderHoriz from "./assets/thumb-horiz-placeholder.png";
+} from './typescript/types';
+import placeholderVert from './assets/thumb-vert-placeholder.png';
+import placeholderHoriz from './assets/thumb-horiz-placeholder.png';
 
 const getUrlImages = (
   type: string,
@@ -13,7 +13,7 @@ const getUrlImages = (
   imgOrientation?: string
 ) => {
   const baseImgUrl = `${import.meta.env.VITE_BASE_IMG_URL}`;
-  let finalImgUrl = "";
+  let finalImgUrl = '';
 
   // if no image get a placeholder
   if (!imgName) {
@@ -22,30 +22,30 @@ const getUrlImages = (
     // if no image for big format
     // return nothing and in the page
     // doesn't show the image at all
-    if (type === "big") return "";
+    if (type === 'big') return '';
 
     return placeHolder;
   }
 
   // if image get one by type
   switch (type) {
-    case "thumb":
+    case 'thumb':
       finalImgUrl = `${baseImgUrl}/${
         import.meta.env.VITE_BASE_THUMB_WIDTH
       }${imgName}`;
       break;
-    case "medium":
+    case 'medium':
       finalImgUrl = `${baseImgUrl}/${
         import.meta.env.VITE_BASE_MEDIUM_IMG_WIDTH
       }${imgName}`;
       break;
-    case "big":
+    case 'big':
       finalImgUrl = `${baseImgUrl}/${
         import.meta.env.VITE_BASE_BIG_IMG_WIDTH
       }${imgName}`;
       break;
     default:
-      return "";
+      return '';
   }
 
   return finalImgUrl;
@@ -61,7 +61,7 @@ const getPlaceholder = (imgOrientation?: string) => {
 const getTrailerUrl = (response: VideoApiResponse | null) => {
   if (response) {
     const { results } = response;
-    const video = results.find((video: Video) => video.type === "Trailer");
+    const video = results.find((video: Video) => video.type === 'Trailer');
     if (video) return `${import.meta.env.VITE_YOUTUBE_BASE_URL}/${video.key}`;
   }
 };
@@ -73,9 +73,9 @@ const getApiUrl = (
   pageNumber?: number
 ) => {
   return `${import.meta.env.VITE_BASE_URL}${section}/${
-    id ? `${id}/` : ""
+    id ? `${id}/` : ''
   }${category}?api_key=${import.meta.env.VITE_API_KEY}${
-    id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ""
+    id || pageNumber ? `&language=en-US&page=${pageNumber?.toString()}` : ''
   }`;
 };
 
@@ -86,6 +86,6 @@ const getSearchUrl = (query: string, page: number = 1) => {
 };
 
 const padNumber = (numberToPad: number) =>
-  numberToPad > 9 ? String(numberToPad) : "0" + numberToPad;
+  numberToPad > 9 ? String(numberToPad) : '0' + numberToPad;
 
 export { getUrlImages, getTrailerUrl, padNumber, getApiUrl, getSearchUrl };

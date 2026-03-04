@@ -1,8 +1,8 @@
-import { createContext } from "react";
-import { GlobalContext } from "../typescript/types";
+import { createContext } from 'react';
+import { GlobalContext } from '../typescript/types';
 
 export const Context = createContext<GlobalContext>({
-  searchTerm: "",
+  searchTerm: '',
   searchResults: [],
-  getSearchData: (e: React.FormEvent<HTMLFormElement>) => {},
+  getSearchData: () => {},
 });

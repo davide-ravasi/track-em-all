@@ -1,0 +1,14 @@
+node_modules
+build
+.dist
+.lighthouseci
+.vscode
+.git
+.github
+.netlify
+.prettierrc
+.prettierignore
+.eslintrc.js
+.eslintignore
+.eslintrc.js
+docs

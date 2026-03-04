@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import '../../styles/variables';
 
 $mrCardMobile: 1rem;
 $mrCardDesktop: 1.5rem;
@@ -10,7 +10,7 @@ $mrCardDesktop: 1.5rem;
 }
 
 .show__card {
-  @include cardBasicStyles("33.3%", $mrCardMobile);
+  @include cardBasicStyles('33.3%', $mrCardMobile);
   font-size: 0.9rem;
   margin-bottom: 1.6rem;
 
@@ -19,7 +19,7 @@ $mrCardDesktop: 1.5rem;
   }
 
   @media (min-width: $bp-min-desktop) {
-    @include cardBasicStyles("17%", $mrCardDesktop);
+    @include cardBasicStyles('17%', $mrCardDesktop);
 
     &:nth-child(3n) {
       margin-right: $mrCardDesktop;

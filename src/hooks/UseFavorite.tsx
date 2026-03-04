@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux";
-import { favoriteAdd, favoriteRemove } from "../features/auth/authSlice";
-import { AppDispatch } from "../app/store";
-import { User } from "../typescript/types";
+import { useDispatch } from 'react-redux';
+import { favoriteAdd, favoriteRemove } from '../features/auth/authSlice';
+import { AppDispatch } from '../app/store';
+import { User } from '../typescript/types';
 
 export function useFavorite() {
   const dispatch: AppDispatch = useDispatch();

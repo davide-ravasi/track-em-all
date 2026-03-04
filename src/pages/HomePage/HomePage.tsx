@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Context } from "../../context/GlobalContext";
-import { Sections, Show } from "../../typescript/types";
-import ShowList from "../../components/ShowList/ShowList";
-import Search from "../../components/Search/Search";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import { Categories } from "../../typescript/types";
-import "../../components/Search/Search.scss";
-import { getSearchUrl } from "../../utils";
-import { en } from "../../trads/en";
-import { useSelector } from "react-redux";
-import { useToast } from "../../hooks/UseToast";
+import React, { useState, useEffect } from 'react';
+import { Context } from '../../context/GlobalContext';
+import { Sections, Show } from '../../typescript/types';
+import ShowList from '../../components/ShowList/ShowList';
+import Search from '../../components/Search/Search';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import { Categories } from '../../typescript/types';
+import '../../components/Search/Search.scss';
+import { getSearchUrl } from '../../utils';
+import { en } from '../../trads/en';
+import { useSelector } from 'react-redux';
+import { useToast } from '../../hooks/UseToast';
 
 export default function HomePage() {
-  const [textInput, setTextInput] = useState("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [textInput, setTextInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Show[]>([]);
   const [recommendedId, setRecommendedId] = useState<string>();
   const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
-  const [searchError, setSearchError] = useState("");
+  const [searchError, setSearchError] = useState('');
   const { user } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
@@ -56,9 +56,14 @@ export default function HomePage() {
           const res = await fetch(getSearchUrl(textInput));
           const data = await res.json();
           setSearchResults(data.results);
-        } catch (error) {
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setSearchError(error.message);
+          } else {
+            setSearchError('An unknown error occurred');
+          }
           setSearchResults([]);
-          setSearchTerm("");
+          setSearchTerm('');
         } finally {
           setHideHomepageContents(true);
         }
@@ -69,7 +74,7 @@ export default function HomePage() {
         setSearchError(error.message);
       } else {
         // Handle any other exceptions
-        setSearchError("An unknown error occurred");
+        setSearchError('An unknown error occurred');
       }
     }
   };
@@ -82,9 +87,9 @@ export default function HomePage() {
         getSearchData,
       }}
     >
-      <main id="main-content" className="page">
-        <div className="page__content-wrapper">
-          <h1 className="page__title">Track'em All - Discover TV Shows</h1>
+      <main id='main-content' className='page'>
+        <div className='page__content-wrapper'>
+          <h1 className='page__title'>Track&apos;em All - Discover TV Shows</h1>
           <SearchBar textInput={textInput} setTextInput={setTextInput} />
           {!hideHomepageContents ? (
             <>
@@ -92,14 +97,14 @@ export default function HomePage() {
                 section={Sections.Tv}
                 category={Categories.Popular}
                 cardAmount={6}
-                data-testid="section-tv-shows"
+                data-testid='section-tv-shows'
               />
 
               <ShowList
                 section={Sections.Tv}
                 category={Categories.TopRated}
                 cardAmount={6}
-                data-testid="section-top-rated"
+                data-testid='section-top-rated'
               />
 
               {recommendedId && recommendedName && (
@@ -109,7 +114,7 @@ export default function HomePage() {
                   category={Categories.Recommended}
                   id={recommendedId}
                   cardAmount={6}
-                  data-testid="section-recommended"
+                  data-testid='section-recommended'
                 />
               )}
 
@@ -118,7 +123,7 @@ export default function HomePage() {
                 section={Sections.Person}
                 category={Categories.Popular}
                 cardAmount={6}
-                data-testid="section-person-popular"
+                data-testid='section-person-popular'
               />
             </>
           ) : (
@@ -127,7 +132,7 @@ export default function HomePage() {
             </>
           )}
           {searchError && (
-            <div role="alert" className="search-error">
+            <div role='alert' className='search-error'>
               {searchError}
             </div>
           )}

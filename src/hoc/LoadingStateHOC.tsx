@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import Loader from "../components/Loader/Loader";
+import Loader from '../components/Loader/Loader';
 
 const LoadingStateHOC = (WrappedComponent: any) => {
   function HOC(props: any) {
@@ -13,7 +13,7 @@ const LoadingStateHOC = (WrappedComponent: any) => {
     return (
       <>
         {isLoading && (
-          <div className="loader">
+          <div className='loader'>
             <Loader />
           </div>
         )}

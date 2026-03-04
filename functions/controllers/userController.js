@@ -1,13 +1,13 @@
-const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 // const mongoDB = import.meta.env.VITE_APP_MONGODB_URI;
 const jwtSecret = import.meta.env.VITE_APP_JWT_SECRET;
 
-const { User } = require("../models/user");
+const { User } = require('../models/user');
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, jwtSecret, { expiresIn: "1h" });
+  return jwt.sign(user, jwtSecret, { expiresIn: '1h' });
 };
 
 const saltRounds = 10;
@@ -16,7 +16,7 @@ const saltRounds = 10;
 // @route GET /user/:id
 // @access Authenticated
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).populate("favorites");
+  const user = await User.findById(req.params.id).populate('favorites');
   if (user) {
     res.json({
       id: user._id,
@@ -26,7 +26,7 @@ const getUser = asyncHandler(async (req, res) => {
       favorites: user.favorites,
     });
   } else {
-    res.status(404).send("User not found");
+    res.status(404).send('User not found');
   }
 });
 
@@ -39,15 +39,15 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    res.status(400).send("User not found");
-    throw new Error("User not found");
+    res.status(400).send('User not found');
+    throw new Error('User not found');
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
-    res.status(400).send("Invalid password");
-    throw new Error("Invalid password");
+    res.status(400).send('Invalid password');
+    throw new Error('Invalid password');
   }
 
   res.status(201).json({
@@ -70,16 +70,16 @@ const loginUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = JSON.parse(req.body);
   if (!firstName || !lastName || !email || !password) {
-    res.status(400).send("Please fill all the fields");
-    throw new Error("Please fill all the fields");
+    res.status(400).send('Please fill all the fields');
+    throw new Error('Please fill all the fields');
   }
 
   const existingUser = await User.findOne({ email: email });
 
   if (existingUser) {
     // try with reponse text ?
-    res.status(400).send("User already exists");
-    throw new Error("User already exists");
+    res.status(400).send('User already exists');
+    throw new Error('User already exists');
   }
 
   try {

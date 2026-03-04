@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import * as jose from "jose";
-import { logout, register, login } from "../features/auth/authSlice";
-import { useDispatch } from "react-redux";
-import { useToast } from "../hooks/UseToast";
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import * as jose from 'jose';
+import { logout, register, login } from '../features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { useToast } from '../hooks/UseToast';
 
 const AuthContext = React.createContext();
 
@@ -15,13 +15,13 @@ export function AuthProvider({ children }) {
   const { notifySuccess } = useToast();
 
   const [currentUser] = useState();
-  const token = localStorage.getItem("tea-token");
+  const token = localStorage.getItem('tea-token');
 
   const logoutUser = useCallback(
     (message) => {
       dispatch(logout());
       notifySuccess(message, { autoClose: 1000 });
-      localStorage.removeItem("tea-token");
+      localStorage.removeItem('tea-token');
     },
     [dispatch, notifySuccess]
   );

@@ -1,12 +1,12 @@
-import { register } from "./authSlice";
+import { register } from './authSlice';
 
-describe("register", () => {
-  it("should successfully register a user", async () => {
+describe('register', () => {
+  it('should successfully register a user', async () => {
     const data = {
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
 
     const response = await register(data);
@@ -20,12 +20,12 @@ describe("register", () => {
     expect(json.token).toBeDefined();
   });
 
-  it("should reject with an error message if registration fails", async () => {
+  it('should reject with an error message if registration fails', async () => {
     const data = {
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
 
     const response = await register(data);
@@ -35,6 +35,6 @@ describe("register", () => {
 
     const message = await response.text();
 
-    expect(message).toContain("User already exists");
+    expect(message).toContain('User already exists');
   });
 });

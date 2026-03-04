@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 
@@ -7,9 +7,9 @@ const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 
 const register = async (data) => {
   if (data) {
-    return await axios.post(actualHost + "/user/register", data, {
+    return await axios.post(actualHost + '/user/register', data, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -17,14 +17,14 @@ const register = async (data) => {
 
 const login = async (data) => {
   if (data) {
-    const response = await axios.post(actualHost + "/user/login", data, {
+    const response = await axios.post(actualHost + '/user/login', data, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     if (response.data) {
-      localStorage.setItem("tea-token", response.data.token);
+      localStorage.setItem('tea-token', response.data.token);
       return response;
     }
   }

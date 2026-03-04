@@ -1,7 +1,6 @@
 @import '../../styles/variables';
 
 .page__search {
-
   &__form {
     margin: auto;
     max-width: 400px;
@@ -10,7 +9,7 @@
     padding-bottom: 3rem;
   }
 
-  &__input[type=search] {
+  &__input[type='search'] {
     padding: 10px;
     font-size: 17px;
     border: 1px solid grey;
@@ -36,7 +35,7 @@
   }
 
   &__button::after {
-    content: "";
+    content: '';
     clear: both;
     display: table;
   }

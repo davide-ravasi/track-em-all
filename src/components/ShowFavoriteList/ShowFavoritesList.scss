@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import '../../styles/variables';
 
 .page__favorite {
   &__form {
@@ -9,7 +9,7 @@
     padding-bottom: 3rem;
   }
 
-  &__input[type="text"] {
+  &__input[type='text'] {
     padding: 10px;
     font-size: 17px;
     border: 1px solid grey;
@@ -37,7 +37,7 @@
   }
 
   &__button::after {
-    content: "";
+    content: '';
     clear: both;
     display: table;
   }

@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import '../../styles/variables';
 
 .navbar {
   display: flex;
@@ -32,7 +32,7 @@
     &--right {
       display: flex;
       align-items: center;
-      
+
       @media (min-width: $bp-min-desktop) {
         padding: 1rem;
       }
