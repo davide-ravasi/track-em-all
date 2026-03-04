@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-import VoteBox from "../VoteBox/VoteBox";
+import VoteBox from '../VoteBox/VoteBox';
 
-import { Episode } from "../../typescript/types";
-import { getUrlImages } from "../../utils";
-import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Episode } from '../../typescript/types';
+import { getUrlImages } from '../../utils';
+import { faCheckSquare, faSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import firebase from "../../firebase/firebase";
+import firebase from '../../firebase/firebase';
 
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from '../../contexts/AuthContext';
 
-import "./EpisodeCard.scss";
+import './EpisodeCard.scss';
 
 type EpisodeCardProps = {
   episode: Episode;
@@ -34,7 +34,7 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   const [watched, setWatched] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
-  const ref = firebase.firestore().collection("Episodes");
+  const ref = firebase.firestore().collection('Episodes');
 
   const handleWatched = (watched: any) => {
     setLoading(true);
@@ -54,8 +54,8 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   const handleWasWatched = async (id: Number) => {
     if (currentUser) {
       await ref
-        .where("user", "==", currentUser.uid)
-        .where("id", "==", id)
+        .where('user', '==', currentUser.uid)
+        .where('id', '==', id)
         .limit(1)
         .get()
         .then(function (querySnapshot) {
@@ -74,8 +74,8 @@ export default function EpisodeCard(props: EpisodeCardProps) {
     setLoading(true);
     if (currentUser) {
       ref
-        .where("user", "==", currentUser.uid)
-        .where("id", "==", id)
+        .where('user', '==', currentUser.uid)
+        .where('id', '==', id)
         .get()
         .then((querySnapshot) => {
           querySnapshot.docs[0].ref.delete();
@@ -90,8 +90,8 @@ export default function EpisodeCard(props: EpisodeCardProps) {
   });
 
   return (
-    <article className="list__box">
-      <section className="list__box-image">
+    <article className='list__box'>
+      <section className='list__box-image'>
         <Link
           title={`View details for ${name} Season ${season_number} Episode ${episode_number}`}
           to={{
@@ -107,45 +107,47 @@ export default function EpisodeCard(props: EpisodeCardProps) {
             },
           }}
         >
-          <img 
+          <img
             alt={`${name} Season ${season_number} Episode ${episode_number} episode poster`}
-            src={getUrlImages("thumb", still_path)}
-            width="100%"
+            src={getUrlImages('thumb', still_path)}
+            width='100%'
           />
         </Link>
         {!currentUser || loading ? (
-          <FontAwesomeIcon icon={faSquare} aria-hidden="true" />
+          <FontAwesomeIcon icon={faSquare} aria-hidden='true' />
         ) : !watched ? (
-          <button type="button" className="list__box-watched" onClick={() => {
-            handleWatched({
-              id,
-              user: currentUser.uid,
-            });
-          }}>
-            <FontAwesomeIcon
-              icon={faSquare}
-              aria-hidden="true"
-            />
-            <span className="sr-only">Mark as watched</span>
+          <button
+            type='button'
+            className='list__box-watched'
+            onClick={() => {
+              handleWatched({
+                id,
+                user: currentUser.uid,
+              });
+            }}
+          >
+            <FontAwesomeIcon icon={faSquare} aria-hidden='true' />
+            <span className='sr-only'>Mark as watched</span>
           </button>
         ) : (
-          <button type="button" className="list__box-watched" onClick={() => {
-            handleUnwatch(id);
-          }}>
-            <FontAwesomeIcon
-              icon={faCheckSquare}
-              aria-hidden="true"
-            />
-            <span className="sr-only">Mark as unwatched</span>
+          <button
+            type='button'
+            className='list__box-watched'
+            onClick={() => {
+              handleUnwatch(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faCheckSquare} aria-hidden='true' />
+            <span className='sr-only'>Mark as unwatched</span>
           </button>
         )}
       </section>
-      <section className="list__box-content">
-        <h2 className="list__box-name">{name}</h2>
+      <section className='list__box-content'>
+        <h2 className='list__box-name'>{name}</h2>
         <VoteBox vote={vote_average} />
-        <p className="list__box-detail">Episode {episode_number}</p>
-        <p className="list__box-detail">Air date: {air_date}</p>
-    </section>
+        <p className='list__box-detail'>Episode {episode_number}</p>
+        <p className='list__box-detail'>Air date: {air_date}</p>
+      </section>
     </article>
   );
 }

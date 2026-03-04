@@ -1,23 +1,23 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
-import { RootState } from "../../typescript/types";
+import { RootState } from '../../typescript/types';
 
-import ShowFavoriteList from "../../components/ShowFavoriteList/ShowFavoriteList";
+import ShowFavoriteList from '../../components/ShowFavoriteList/ShowFavoriteList';
 
-import "./FavoritesPage.scss";
+import './FavoritesPage.scss';
 
 export default function FavoritesPage() {
   const { favorites } = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <main id="main-content" className="page">
-      <div className="page__content-wrapper">
+    <main id='main-content' className='page'>
+      <div className='page__content-wrapper'>
         <section>
           <h1>Your Favorite Shows</h1>
           {favorites && favorites.length > 0 ? (
             <ShowFavoriteList favorites={favorites} />
           ) : (
-            <p>You haven't added any favorite shows yet.</p>
+            <p>You haven&apos;t added any favorite shows yet.</p>
           )}
         </section>
       </div>

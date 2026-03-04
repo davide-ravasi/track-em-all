@@ -1,25 +1,25 @@
 export const en = {
   categories: {
     popular: {
-      title: "Popular tv shows",
+      title: 'Popular tv shows',
     },
     personpopular: {
-      title: "Most popular actors",
+      title: 'Most popular actors',
     },
     top_rated: {
-      title: "Top rated tv shows",
+      title: 'Top rated tv shows',
     },
     recommendations: {
-      title: "because you liked: ",
+      title: 'because you liked: ',
     },
     upcoming: {
-      title: "Upcoming",
+      title: 'Upcoming',
     },
     now_playing: {
-      title: "Now Playing",
+      title: 'Now Playing',
     },
     search: {
-      title: "Search",
+      title: 'Search',
     },
   },
 };

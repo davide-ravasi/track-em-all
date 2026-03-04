@@ -1,8 +1,8 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 //import axios from "axios";
-import authService from "./authService";
-import axios from "axios";
-import { AuthState, Favorite } from "../../typescript/types";
+import authService from './authService';
+import axios from 'axios';
+import { AuthState, Favorite } from '../../typescript/types';
 
 const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 //const actualHost =
@@ -12,7 +12,7 @@ const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express/favorite
 
 export const register = createAsyncThunk(
-  "auth/register",
+  'auth/register',
   async (data, thunkAPI) => {
     try {
       return await authService.register(data);
@@ -23,7 +23,7 @@ export const register = createAsyncThunk(
   }
 );
 
-export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
+export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   try {
     return await authService.login(data);
   } catch (error: any) {
@@ -33,13 +33,13 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
 });
 
 export const favoriteAdd = createAsyncThunk(
-  "auth/favorites/add",
+  'auth/favorites/add',
   async (data: Favorite & { userId: number | undefined }, thunkAPI) => {
     try {
-      return await axios.post(actualHost + "/favorite/add", data, {
+      return await axios.post(actualHost + '/favorite/add', data, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("tea-token") || "",
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
         },
       });
     } catch (error: any) {
@@ -50,13 +50,13 @@ export const favoriteAdd = createAsyncThunk(
 );
 
 export const favoriteRemove = createAsyncThunk(
-  "auth/favorites/remove",
+  'auth/favorites/remove',
   async (data: { userId: number; showId: string }, thunkAPI) => {
     try {
-      return await axios.post(actualHost + "/favorite/remove", data, {
+      return await axios.post(actualHost + '/favorite/remove', data, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("tea-token") || "",
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
         },
       });
     } catch (error: any) {
@@ -72,11 +72,11 @@ const initialState: AuthState | null = {
   isLoading: false,
   isSuccess: false,
   isError: false,
-  message: "",
+  message: '',
 };
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     reset: (state) => {
@@ -85,7 +85,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
-      state.message = "";
+      state.message = '';
     },
     logout: (state) => {
       state.user = null;
@@ -93,17 +93,17 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
-      state.message = "";
+      state.message = '';
     },
   },
   extraReducers: (builder) => {
     // register
-    builder.addCase(register.fulfilled, (state, action) => {
+    builder.addCase(register.fulfilled, (state) => {
       state.isLoading = false;
       state.isSuccess = true;
     });
 
-    builder.addCase(register.pending, (state, action) => {
+    builder.addCase(register.pending, (state) => {
       state.isLoading = true;
     });
 
@@ -143,7 +143,7 @@ export const authSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "the favorite has been added";
+        state.message = 'the favorite has been added';
         state.user = {
           id: action.payload.data.id,
           firstName: action.payload.data.firstName,
@@ -155,7 +155,7 @@ export const authSlice = createSlice({
       }
     );
 
-    builder.addCase(favoriteAdd.pending, (state, action) => {
+    builder.addCase(favoriteAdd.pending, (state) => {
       state.isLoading = true;
     });
 
@@ -171,7 +171,7 @@ export const authSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "the favorite has been removed from your list";
+        state.message = 'the favorite has been removed from your list';
         state.user = {
           id: action.payload.data.id,
           firstName: action.payload.data.firstName,
@@ -183,7 +183,7 @@ export const authSlice = createSlice({
       }
     );
 
-    builder.addCase(favoriteRemove.pending, (state, action) => {
+    builder.addCase(favoriteRemove.pending, (state) => {
       state.isLoading = true;
     });
 

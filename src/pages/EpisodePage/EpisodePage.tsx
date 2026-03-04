@@ -1,14 +1,13 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import { getUrlImages, padNumber } from "../../utils";
-import { EpisodeProps, Actor } from "../../typescript/types";
-import Loader from "../../components/Loader/Loader";
-import "./EpisodePage.scss";
-import PersonCard from "../../components/PersonCard/PersonCard";
-import PhotoList from "../../components/PhotoList/PhotoList";
-import { useQuery } from "@tanstack/react-query";
+import { useLocation } from 'react-router-dom';
+import { getUrlImages, padNumber } from '../../utils';
+import { EpisodeProps, Actor } from '../../typescript/types';
+import Loader from '../../components/Loader/Loader';
+import './EpisodePage.scss';
+import PersonCard from '../../components/PersonCard/PersonCard';
+import PhotoList from '../../components/PhotoList/PhotoList';
+import { useQuery } from '@tanstack/react-query';
 
-export default function EpisodePage(props: any) {
+export default function EpisodePage() {
   const location = useLocation<EpisodeProps>();
   const {
     season_number,
@@ -36,10 +35,10 @@ export default function EpisodePage(props: any) {
     error: castError,
     isLoading: isLoadingCast,
   } = useQuery({
-    queryKey: ["episode-cast", showId, season_number, episode_number],
+    queryKey: ['episode-cast', showId, season_number, episode_number],
     queryFn: async () => {
       const res = await fetch(castUrl);
-      if (!res.ok) throw new Error("Failed to fetch cast");
+      if (!res.ok) throw new Error('Failed to fetch cast');
       return res.json();
     },
   });
@@ -49,48 +48,48 @@ export default function EpisodePage(props: any) {
     error: imagesError,
     isLoading: isLoadingImages,
   } = useQuery({
-    queryKey: ["episode-images", showId, season_number, episode_number],
+    queryKey: ['episode-images', showId, season_number, episode_number],
     queryFn: async () => {
       const res = await fetch(imagesUrl);
-      if (!res.ok) throw new Error("Failed to fetch images");
+      if (!res.ok) throw new Error('Failed to fetch images');
       return res.json();
     },
   });
 
   return (
-    <main id="main-content" className="page">
-      <div className="page__content-wrapper">
+    <main id='main-content' className='page'>
+      <div className='page__content-wrapper'>
         {(castError || imagesError) && (
-          <div className="loading-error" role="alert">
+          <div className='loading-error' role='alert'>
             {castError?.message ?? imagesError?.message}
           </div>
         )}
         {(isLoadingCast || isLoadingImages) && (
           <div
-            className="loader"
-            aria-live="polite"
-            aria-atomic="true"
-            role="status"
-            aria-label="Loading cast and photos"
+            className='loader'
+            aria-live='polite'
+            aria-atomic='true'
+            role='status'
+            aria-label='Loading cast and photos'
           >
-            <Loader aria-hidden="true" aria-busy="true" />
+            <Loader aria-hidden='true' aria-busy='true' />
           </div>
         )}
-        <h1 className="page__title">{name}</h1>
+        <h1 className='page__title'>{name}</h1>
         <img
-          alt={`${name} still image`}
-          src={getUrlImages("big", still_path)}
-          width="100%"
+          alt={`${name} still`}
+          src={getUrlImages('big', still_path)}
+          width='100%'
         />
-        <h2 className="episode_number">
+        <h2 className='episode_number'>
           S{padNumber(season_number)}E{padNumber(episode_number)}
         </h2>
-        <h3 className="episode_airdate">Air date: {air_date}</h3>
-        <p className="episode_overview">{overview}</p>
+        <h3 className='episode_airdate'>Air date: {air_date}</h3>
+        <p className='episode_overview'>{overview}</p>
 
-        <section aria-labelledby="cast">
-          <h2 id="cast">CAST</h2>
-          <div className="cast_container">
+        <section aria-labelledby='cast'>
+          <h2 id='cast'>CAST</h2>
+          <div className='cast_container'>
             {castData &&
               castData.cast &&
               castData.cast.map((actor: Actor) => (
@@ -99,7 +98,7 @@ export default function EpisodePage(props: any) {
           </div>
         </section>
 
-        <section aria-labelledby="photos">
+        <section aria-labelledby='photos'>
           {imagesData?.stills && <PhotoList imagesData={imagesData.stills} />}
         </section>
 

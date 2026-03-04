@@ -1,9 +1,9 @@
-import { ShowSeasonProps, Season } from "../../typescript/types";
+import { ShowSeasonProps } from '../../typescript/types';
 
-import Loader from "../../components/Loader/Loader";
-import EpisodeCard from "../../components/EpisodeCard/EpisodeCard";
-import { useQuery } from "@tanstack/react-query";
-import { Episode } from "../../typescript/types";
+import Loader from '../../components/Loader/Loader';
+import EpisodeCard from '../../components/EpisodeCard/EpisodeCard';
+import { useQuery } from '@tanstack/react-query';
+import { Episode } from '../../typescript/types';
 
 export const ShowEpisodes = (props: ShowSeasonProps) => {
   const { season, idShow } = props;
@@ -12,30 +12,30 @@ export const ShowEpisodes = (props: ShowSeasonProps) => {
   }${idShow}/season/${season}?api_key=${import.meta.env.VITE_API_KEY}`;
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["episodes", idShow, season],
+    queryKey: ['episodes', idShow, season],
     queryFn: async () => {
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch episodes");
+      if (!res.ok) throw new Error('Failed to fetch episodes');
       return res.json();
     },
   });
 
   return (
-    <div className="list">
+    <div className='list'>
       {error && (
-        <div className="loading-error" role="alert">
+        <div className='loading-error' role='alert'>
           {error?.message}
         </div>
       )}
       {isLoading && (
         <div
-          className="loader"
-          aria-live="polite"
-          aria-atomic="true"
-          role="status"
-          aria-label="Loading episodes"
+          className='loader'
+          aria-live='polite'
+          aria-atomic='true'
+          role='status'
+          aria-label='Loading episodes'
         >
-          <Loader aria-hidden="true" aria-busy="true" />
+          <Loader aria-hidden='true' aria-busy='true' />
         </div>
       )}
       {data &&

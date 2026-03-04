@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
-import "./SignIn.scss";
-import { useAuth } from "../../contexts/AuthContext";
-import { useToast } from "../../hooks/UseToast";
+import './SignIn.scss';
+import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../hooks/UseToast';
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -13,7 +13,7 @@ export const useInput = (initialValue) => {
   return {
     value,
     setValue,
-    reset: () => setValue(""),
+    reset: () => setValue(''),
     bind: {
       value,
       onChange: (event) => {
@@ -32,25 +32,25 @@ export default function Signin() {
   //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
   const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
+  const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
   const { notifySuccess, notifyInfo, notifyError } = useToast();
 
   const {
     value: password,
     bind: bindPassword,
     reset: resetPassword,
-  } = useInput("");
+  } = useInput('');
 
   useEffect(() => {
     if (isSuccess) {
-      notifySuccess("You have successfully login!", { autoClose: timer });
-      notifyInfo("We are redirecting you to the homepage", {
+      notifySuccess('You have successfully login!', { autoClose: timer });
+      notifyInfo('We are redirecting you to the homepage', {
         autoClose: timer,
       });
 
       // redirect to the login page after registration
       setTimeout(() => {
-        history.push("/");
+        history.push('/');
       }, timer);
     }
   }, [isSuccess, history, notifySuccess, notifyInfo]);
@@ -73,37 +73,37 @@ export default function Signin() {
   }
 
   return (
-    <main id="main-content" className="page">
-      <form className="login__form-container" onSubmit={handleSubmit}>
-        <div className="login__input-container">
-          <label htmlFor="username">Email: </label>
+    <main id='main-content' className='page'>
+      <form className='login__form-container' onSubmit={handleSubmit}>
+        <div className='login__input-container'>
+          <label htmlFor='username'>Email: </label>
           <input
-            className="login__input"
-            type="email"
-            id="username"
-            name="username"
-            required="required"
+            className='login__input'
+            type='email'
+            id='username'
+            name='username'
+            required='required'
             {...bindEmail}
           ></input>
         </div>
-        <div className="login__input-container">
-          <label htmlFor="password">Password: </label>
+        <div className='login__input-container'>
+          <label htmlFor='password'>Password: </label>
           <input
-            className="login__input"
-            type="password"
-            id="password"
-            name="password"
-            required="required"
+            className='login__input'
+            type='password'
+            id='password'
+            name='password'
+            required='required'
             {...bindPassword}
           ></input>
         </div>
-        <button type="submit" className="login__button">
+        <button type='submit' className='login__button'>
           Sign In
         </button>
-        <div className="login__singup-text">
-          <span>Don't have account?</span>
-          <Link to="/signup">
-            <span className="login__singup-text__link">Sign Up</span>
+        <div className='login__singup-text'>
+          <span>Don&apos;t have account?</span>
+          <Link to='/signup'>
+            <span className='login__singup-text__link'>Sign Up</span>
           </Link>
         </div>
       </form>

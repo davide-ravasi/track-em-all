@@ -1,9 +1,9 @@
-import React from "react";
-import { getTrailerUrl } from "../../utils";
+import React from 'react';
+import { getTrailerUrl } from '../../utils';
 
-import "./ShowVideo.scss";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "../Loader/Loader";
+import './ShowVideo.scss';
+import { useQuery } from '@tanstack/react-query';
+import Loader from '../Loader/Loader';
 
 interface IShowVideoProps {
   idShow: string;
@@ -18,10 +18,10 @@ export const ShowVideo = (props: IShowVideoProps) => {
   }${idShow}/videos?api_key=${import.meta.env.VITE_API_KEY}`;
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["video", idShow],
+    queryKey: ['video', idShow],
     queryFn: async () => {
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch videos");
+      if (!res.ok) throw new Error('Failed to fetch videos');
       return res.json();
     },
   });
@@ -31,29 +31,29 @@ export const ShowVideo = (props: IShowVideoProps) => {
   return (
     <>
       {error && (
-        <div className="loading-error" role="alert">
+        <div className='loading-error' role='alert'>
           {error?.message}
         </div>
       )}
       {isLoading && (
         <div
-          className="loader"
-          aria-live="polite"
-          aria-atomic="true"
-          role="status"
-          aria-label="Loading video"
+          className='loader'
+          aria-live='polite'
+          aria-atomic='true'
+          role='status'
+          aria-label='Loading video'
         >
-          <Loader aria-hidden="true" aria-busy="true" />
+          <Loader aria-hidden='true' aria-busy='true' />
         </div>
       )}
       {trailerUrl && (
-        <div className="video">
+        <div className='video'>
           <h2>Trailer</h2>
           <iframe
-            width="560"
-            height="315"
+            width='560'
+            height='315'
             title={`Trailer for ${showName}`}
-            className="video__iframe"
+            className='video__iframe'
             src={trailerUrl}
           ></iframe>
         </div>

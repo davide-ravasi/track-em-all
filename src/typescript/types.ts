@@ -1,16 +1,16 @@
 export enum Sections {
-  Tv = "tv",
-  Movies = "movies",
-  Person = "person",
+  Tv = 'tv',
+  Movies = 'movies',
+  Person = 'person',
 }
 
 export enum Categories {
-  Popular = "popular",
-  TopRated = "top_rated",
-  Recommended = "recommendations",
-  Upcoming = "upcoming",
-  NowPlaying = "now_playing",
-  Search = "search",
+  Popular = 'popular',
+  TopRated = 'top_rated',
+  Recommended = 'recommendations',
+  Upcoming = 'upcoming',
+  NowPlaying = 'now_playing',
+  Search = 'search',
 }
 
 type Show = {
