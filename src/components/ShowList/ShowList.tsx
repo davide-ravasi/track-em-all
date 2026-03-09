@@ -68,6 +68,7 @@ export default function ShowList({
 
   useEffect(() => {
     if (data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync useQuery data to local state until useInfiniteQuery
       setShows(data);
     }
   }, [data]);
