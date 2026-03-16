@@ -8,7 +8,7 @@ import { getApiUrl } from '../../utils';
 import { en } from '../../trads/en';
 import PersonCard from '../PersonCard/PersonCard';
 import Loader from '../Loader/Loader';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 /*
  * ShowList component
@@ -62,22 +62,30 @@ export default function ShowList({
   const totalPages = 6;
 
   const {
-    data,
-    error,
+    data: infiniteData,
+    error: infiniteError,
     fetchNextPage,
     hasNextPage,
-    //isFetching,
     isFetchingNextPage,
-    //isPending,
-    isLoading,
-    //status,
+    isLoading: infiniteLoading,
   } = useInfiniteQuery({
-    queryKey: ['shows', section, category, id],
+    queryKey: ['shows', 'infinite', section, category, id],
     queryFn: fetchShows,
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.page < totalPages ? lastPage.page + 1 : undefined,
     maxPages: 6,
+    enabled: !cardAmount,
+  });
+
+  const {
+    data: previewData,
+    error: previewError,
+    isLoading: previewIsLoading,
+  } = useQuery({
+    queryKey: ['shows', 'preview', section, category, id],
+    queryFn: () => fetchShows({ pageParam: 1 }),
+    enabled: !!cardAmount,
   });
 
   const handleAddCards = async (
@@ -92,11 +100,14 @@ export default function ShowList({
 
   const sectionTitle = title ? title : en.categories[category].title;
   const shows = React.useMemo(
-    () => data?.pages.flatMap((page) => page.results),
-    [data]
+    () =>
+      cardAmount && previewData
+        ? previewData.results.slice(0, cardAmount)
+        : infiniteData?.pages.flatMap((page) => page.results),
+    [cardAmount, previewData, infiniteData]
   );
 
-  if (isLoading) {
+  if (previewIsLoading || infiniteLoading) {
     return (
       <div
         className='loader'
@@ -109,7 +120,8 @@ export default function ShowList({
       </div>
     );
   }
-  if (error) {
+  if (previewError || infiniteError) {
+    const error = previewError || infiniteError;
     return (
       <div className='loading-error' role='alert'>
         Failed to load {sectionTitle}. {error?.message}
