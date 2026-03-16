@@ -4,11 +4,10 @@ import { Categories, Person, Sections, Show } from '../../typescript/types';
 import './ShowList.scss';
 
 import ShowCard from '../ShowCard/ShowCard';
-import { getApiUrl } from '../../utils';
 import { en } from '../../trads/en';
 import PersonCard from '../PersonCard/PersonCard';
 import Loader from '../Loader/Loader';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQueryShow } from './useQueryShow';
 
 /*
  * ShowList component
@@ -34,13 +33,6 @@ export interface ShowListProps extends React.HtmlHTMLAttributes<HTMLDivElement> 
   cardAmount?: number;
 }
 
-interface ShowProps {
-  page: number;
-  results: Show[];
-  total_pages: number;
-  total_results: number;
-}
-
 export default function ShowList({
   title,
   section,
@@ -50,43 +42,14 @@ export default function ShowList({
   cardAmount,
   ...props
 }: ShowListProps) {
-  const fetchShows = async ({ pageParam }: { pageParam: number }) => {
-    const url = getApiUrl(section, category, id, pageParam);
-    const response = await fetch(url);
-
-    if (!response.ok) throw new Error('Failed to fetch shows');
-
-    return response.json() as Promise<ShowProps>;
-  };
-
-  const totalPages = 6;
-
   const {
-    data: infiniteData,
-    error: infiniteError,
+    shows,
+    error,
+    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading: infiniteLoading,
-  } = useInfiniteQuery({
-    queryKey: ['shows', 'infinite', section, category, id],
-    queryFn: fetchShows,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) =>
-      lastPage.page < totalPages ? lastPage.page + 1 : undefined,
-    maxPages: 6,
-    enabled: !cardAmount,
-  });
-
-  const {
-    data: previewData,
-    error: previewError,
-    isLoading: previewIsLoading,
-  } = useQuery({
-    queryKey: ['shows', 'preview', section, category, id],
-    queryFn: () => fetchShows({ pageParam: 1 }),
-    enabled: !!cardAmount,
-  });
+  } = useQueryShow({ section, category, id, cardAmount });
 
   const handleAddCards = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -99,15 +62,8 @@ export default function ShowList({
   };
 
   const sectionTitle = title ? title : en.categories[category].title;
-  const shows = React.useMemo(
-    () =>
-      cardAmount && previewData
-        ? previewData.results.slice(0, cardAmount)
-        : infiniteData?.pages.flatMap((page) => page.results),
-    [cardAmount, previewData, infiniteData]
-  );
 
-  if (previewIsLoading || infiniteLoading) {
+  if (isLoading) {
     return (
       <div
         className='loader'
@@ -120,8 +76,7 @@ export default function ShowList({
       </div>
     );
   }
-  if (previewError || infiniteError) {
-    const error = previewError || infiniteError;
+  if (error) {
     return (
       <div className='loading-error' role='alert'>
         Failed to load {sectionTitle}. {error?.message}
