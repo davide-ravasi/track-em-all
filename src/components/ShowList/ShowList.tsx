@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Categories, Person, Sections, Show } from '../../typescript/types';
 
 import './ShowList.scss';
 
 import ShowCard from '../ShowCard/ShowCard';
-import { getApiUrl } from '../../utils';
 import { en } from '../../trads/en';
 import PersonCard from '../PersonCard/PersonCard';
 import Loader from '../Loader/Loader';
-import { useQuery } from '@tanstack/react-query';
+import { useQueryShow } from './useQueryShow';
 
 /*
  * ShowList component
@@ -34,13 +33,6 @@ export interface ShowListProps extends React.HtmlHTMLAttributes<HTMLDivElement> 
   cardAmount?: number;
 }
 
-interface ShowProps {
-  page: number;
-  results: Show[];
-  total_pages: number;
-  total_results: number;
-}
-
 export default function ShowList({
   title,
   section,
@@ -50,57 +42,26 @@ export default function ShowList({
   cardAmount,
   ...props
 }: ShowListProps) {
-  const [shows, setShows] = useState<ShowProps | null>();
-  const [pageNumber, setPageNumber] = useState(2);
+  const {
+    shows,
+    error,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useQueryShow({ section, category, id, cardAmount });
 
-  const url = getApiUrl(section, category, id, 1);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: [section, category, id],
-    queryFn: async () => {
-      const response = await fetch(url);
-
-      if (!response.ok) throw new Error('Failed to fetch shows');
-
-      return response.json();
-    },
-  });
-
-  useEffect(() => {
-    if (data) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync useQuery data to local state until useInfiniteQuery
-      setShows(data);
-    }
-  }, [data]);
-
-  // @todo Review: consider replacing "Load more" with useInfiniteQuery for caching and consistent loading state
   const handleAddCards = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
 
-    try {
-      const url = getApiUrl(section, category, id, pageNumber);
-      const response = await fetch(url);
-      const showsMore = await response.json();
-      const actualPage = showsMore.page + 1;
-
-      setPageNumber(actualPage);
-
-      if (shows?.results) {
-        setShows({
-          ...shows,
-          page: actualPage,
-          results: [...shows.results, ...showsMore.results],
-        });
-      }
-    } catch (error) {
-      console.log(error);
+    if (hasNextPage) {
+      fetchNextPage();
     }
   };
 
   const sectionTitle = title ? title : en.categories[category].title;
-  const hasResults = data && data.results && data.results.length;
 
   if (isLoading) {
     return (
@@ -127,7 +88,7 @@ export default function ShowList({
     <section className='shows' {...props}>
       <h1>
         {sectionTitle}{' '}
-        {hasResults && cardAmount && linkMore && (
+        {cardAmount && linkMore && (
           <a
             className='shows__show-more'
             href={`/list/${section}/${id ? id + '/' : ''}${category}`}
@@ -136,28 +97,26 @@ export default function ShowList({
           </a>
         )}
       </h1>
-      {!hasResults && <p>No {sectionTitle.toLowerCase()} found.</p>}
+      {!shows ||
+        (shows.length === 0 && <p>No {sectionTitle.toLowerCase()} found.</p>)}
       <div className='shows__list'>
         {shows &&
-          shows.results &&
-          shows?.results
-            .slice(0, cardAmount ?? undefined)
-            .map((show: Show | Person) => {
-              return section !== 'person' ? (
-                <ShowCard key={show.id.toString()} show={show as Show} />
-              ) : (
-                <PersonCard person={show as Person} />
-              );
-            })}
+          shows.map((show: Show | Person) => {
+            return section !== 'person' ? (
+              <ShowCard key={show.id.toString()} show={show as Show} />
+            ) : (
+              <PersonCard person={show as Person} />
+            );
+          })}
       </div>
       <div className='shows__show-more-elements'>
-        {hasResults && !cardAmount && (
+        {hasNextPage && !cardAmount && (
           <button
             type='button'
             onClick={(e) => handleAddCards(e)}
             aria-label={`Load more ${sectionTitle.toLowerCase()}`}
           >
-            Show more
+            {isFetchingNextPage ? 'Loading more...' : 'Show more'}
           </button>
         )}
       </div>
