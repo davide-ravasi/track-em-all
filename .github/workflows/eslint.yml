@@ -1,9 +1,6 @@
 name: ESLint
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_call:
 jobs:
   lint:
     runs-on: ubuntu-latest

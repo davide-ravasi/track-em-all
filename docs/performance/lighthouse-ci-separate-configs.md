@@ -22,7 +22,6 @@ The site works fine at `https://deploy-preview-90--trackem-all.netlify.app`, but
 Lighthouse CI has two modes of operation:
 
 1. **Local Development Mode**: Tests your app by starting a local server
-
    - Uses `startServerCommand` to run your dev server
    - Tests `http://localhost:5173` (or similar)
    - Perfect for local testing before pushing code
@@ -50,25 +49,25 @@ module.exports = {
   ci: {
     collect: {
       // Start your local dev server
-      startServerCommand: "npm run start",
-      url: ["http://localhost:5173"],
+      startServerCommand: 'npm run start',
+      url: ['http://localhost:5173'],
       numberOfRuns: 3, // More runs for better accuracy locally
-      staticDistDir: "./build", // Optional: for static builds
+      staticDistDir: './build', // Optional: for static builds
       settings: {
         maxWaitForFcp: 30000,
         maxWaitForLoad: 60000,
-        chromeFlags: "--no-sandbox --disable-gpu",
+        chromeFlags: '--no-sandbox --disable-gpu',
       },
     },
     upload: {
-      target: "temporary-public-storage",
+      target: 'temporary-public-storage',
     },
     assert: {
       assertions: {
-        "categories:performance": ["warn", { minScore: 0.6 }],
-        "categories:accessibility": ["error", { minScore: 0.8 }],
-        "categories:seo": ["off"],
-        "categories:best-practices": ["off"],
+        'categories:performance': ['warn', { minScore: 0.6 }],
+        'categories:accessibility': ['error', { minScore: 0.8 }],
+        'categories:seo': ['off'],
+        'categories:best-practices': ['off'],
       },
     },
   },
@@ -94,18 +93,18 @@ module.exports = {
       settings: {
         maxWaitForFcp: 30000,
         maxWaitForLoad: 60000,
-        chromeFlags: "--no-sandbox --disable-gpu",
+        chromeFlags: '--no-sandbox --disable-gpu',
       },
     },
     upload: {
-      target: "temporary-public-storage",
+      target: 'temporary-public-storage',
     },
     assert: {
       assertions: {
-        "categories:performance": ["warn", { minScore: 0.6 }],
-        "categories:accessibility": ["error", { minScore: 0.8 }],
-        "categories:seo": ["off"],
-        "categories:best-practices": ["off"],
+        'categories:performance': ['warn', { minScore: 0.6 }],
+        'categories:accessibility': ['error', { minScore: 0.8 }],
+        'categories:seo': ['off'],
+        'categories:best-practices': ['off'],
       },
     },
   },
@@ -215,8 +214,8 @@ jobs:
 module.exports = {
   ci: {
     collect: {
-      ...(process.env.CI ? {} : { startServerCommand: "npm run start" }),
-      url: process.env.CI ? [process.env.BASE_URL] : ["http://localhost:5173"],
+      ...(process.env.CI ? {} : { startServerCommand: 'npm run start' }),
+      url: process.env.CI ? [process.env.BASE_URL] : ['http://localhost:5173'],
     },
   },
 };

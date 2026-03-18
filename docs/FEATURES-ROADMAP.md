@@ -22,7 +22,9 @@ This document outlines potential new features and enhancements for the Track'em 
 ### 🔥 High Priority Features
 
 #### 1. Watchlist System
+
 **Description:** Separate list from favorites - "Want to Watch" vs "Currently Watching" vs "Completed"
+
 - **User Value:** Better organization of shows user plans to watch
 - **Implementation:**
   - Add `watchlist` field to user model (array of show IDs)
@@ -33,7 +35,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** New page, Redux slice for watchlist state
 
 #### 2. Watch History Tracking
+
 **Description:** Track which episodes user has watched
+
 - **User Value:** Know where you left off in a series
 - **Implementation:**
   - Add `watchHistory` field to user model (object with showId: { lastEpisodeId, lastWatchedDate })
@@ -44,7 +48,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Episode tracking UI, progress bars
 
 #### 3. Episode Notifications
+
 **Description:** Alert users when new episodes of their favorite shows air
+
 - **User Value:** Never miss a new episode
 - **Implementation:**
   - Check TMDB API for new episodes (scheduled job or API polling)
@@ -57,7 +63,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Notification settings page, notification center component
 
 #### 4. User Profile & Settings
+
 **Description:** User profile page with preferences and settings
+
 - **User Value:** Customize app experience
 - **Implementation:**
   - Profile page showing:
@@ -70,7 +78,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Profile page, settings forms
 
 #### 5. Ratings & Reviews
+
 **Description:** Allow users to rate shows and episodes, write reviews
+
 - **User Value:** Share opinions, discover shows based on ratings
 - **Implementation:**
   - Add rating system (1-5 stars or 1-10 scale)
@@ -85,7 +95,9 @@ This document outlines potential new features and enhancements for the Track'em 
 ### 🟡 Medium Priority Features
 
 #### 6. Recommendations Engine
+
 **Description:** "Because you watched..." style recommendations
+
 - **User Value:** Discover new shows based on preferences
 - **Implementation:**
   - Analyze user's favorites and watch history
@@ -96,7 +108,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Recommendations component, similar shows section
 
 #### 7. Advanced Filters & Sorting
+
 **Description:** Enhanced search with filters (genre, year, rating, etc.)
+
 - **User Value:** Find exactly what you're looking for
 - **Implementation:**
   - Filter by:
@@ -110,7 +124,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Filter sidebar/panel, filter UI components
 
 #### 8. Calendar View
+
 **Description:** Calendar showing when new episodes air
+
 - **User Value:** Plan viewing schedule
 - **Implementation:**
   - Fetch upcoming episodes from TMDB
@@ -121,7 +137,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Calendar component, episode cards in calendar
 
 #### 9. Dark Mode / Theme Toggle
+
 **Description:** Dark mode and theme customization
+
 - **User Value:** Better viewing experience, reduce eye strain
 - **Implementation:**
   - Add theme toggle in header/settings
@@ -132,7 +150,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Theme context/provider, theme toggle component, dark mode styles
 
 #### 10. Export/Import Data
+
 **Description:** Allow users to backup and restore their data
+
 - **User Value:** Data portability, backup safety
 - **Implementation:**
   - Export favorites, watchlist, watch history to JSON/CSV
@@ -146,7 +166,9 @@ This document outlines potential new features and enhancements for the Track'em 
 ### 🟢 Nice to Have Features
 
 #### 11. Social Features
+
 **Description:** Share shows, follow other users, see friends' activity
+
 - **User Value:** Social interaction, discover shows from friends
 - **Implementation:**
   - Share show links (social media, copy link)
@@ -157,7 +179,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Share buttons, follow button, activity feed component
 
 #### 12. Custom Lists/Collections
+
 **Description:** Create custom lists (e.g., "Crime Shows", "Anime to Watch")
+
 - **User Value:** Organize shows into custom categories
 - **Implementation:**
   - Create named lists
@@ -168,7 +192,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Lists page, create list form, list management UI
 
 #### 13. Statistics Dashboard
+
 **Description:** View watch statistics (time watched, shows completed, etc.)
+
 - **User Value:** Track viewing habits, achievements
 - **Implementation:**
   - Calculate total watch time (estimate from episodes watched)
@@ -180,7 +206,9 @@ This document outlines potential new features and enhancements for the Track'em 
 - **Frontend:** Statistics dashboard page, charts library integration
 
 #### 14. Mobile UX Improvements
+
 **Description:** Enhanced mobile experience
+
 - **User Value:** Better mobile usability
 - **Implementation:**
   - Swipe gestures for navigation
@@ -196,6 +224,7 @@ This document outlines potential new features and enhancements for the Track'em 
 ## Implementation Notes
 
 ### Backend Considerations
+
 - All new features requiring user data will need:
   - MongoDB schema updates
   - New API endpoints in `functions/controllers/`
@@ -203,6 +232,7 @@ This document outlines potential new features and enhancements for the Track'em 
   - Input validation and error handling
 
 ### Frontend Considerations
+
 - New features will need:
   - Redux slices for state management (if needed)
   - New pages/components
@@ -210,7 +240,9 @@ This document outlines potential new features and enhancements for the Track'em 
   - TypeScript type definitions in `src/typescript/types.ts`
 
 ### Database Schema Updates
+
 Current user model likely needs:
+
 - `watchlist: Array<Object>` - Watchlist items with status
 - `watchHistory: Object` - Episode watch tracking
 - `ratings: Array<Object>` - User ratings
@@ -250,4 +282,3 @@ Current user model likely needs:
 
 **Last Updated:** 2024
 **Status:** Planning Phase
-

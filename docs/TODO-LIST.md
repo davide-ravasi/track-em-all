@@ -2,7 +2,9 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2025-01-19
+**Last Updated:** 2025-02-03
+
+**How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
 ---
 
@@ -10,13 +12,31 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ---
 
+## 🎯 Suggested priority (what to do next)
+
+Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md).
+
+| Priority | Area                         | What to do                                                             | Why                                                                                                                |
+| -------- | ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **1**    | **Security**                 | Input validation + rate limiting on auth → CORS/JWT review             | Protects users and app; unblocks peace of mind before new features.                                                |
+| **2**    | **Firebase**                 | ~~Remove Firebase~~ ✓ (done)                                           | —                                                                                                                  |
+| **3**    | **DevEx / CI**               | ESLint + Prettier (+ pre-commit) → add lint/build/test to CI → badges  | Catches issues on every PR; small setup, long-term payoff.                                                         |
+| **4**    | **Testing**                  | More Playwright smoke tests (Show, Person, Favorites, etc.)            | You already have homepage; extend coverage before adding features.                                                 |
+| **5**    | **Performance**              | Bundle visualizer → code splitting / lazy routes                       | Understand size first, then optimize; supports faster loads.                                                       |
+| **6**    | **PWA polish**               | Maskable icons, optional update/offline/install prompts                | Improves install experience; not blocking.                                                                         |
+| **7**    | **SEO**                      | Meta + Open Graph in `index.html` → dynamic meta (e.g. Helmet)         | Good for discovery; can batch in one pass.                                                                         |
+| **8**    | **Routing / deps**           | React Router v6 evaluation, then dependency upgrades                   | Plan as a dedicated change; do after security and testing.                                                         |
+| **9**    | **Polish / later**           | Reusable loader/error, headless kit audit, form CSS, README            | When foundation is solid; improves maintainability.                                                                |
+| **—**    | **Data fetching (parallel)** | Migrate API calls to React Query (TanStack Query)                      | Caching, loading/error handling; can be done in parallel with other priorities. See **Data fetching / API** below. |
+
+**Quick wins when you have little time:** one more smoke test, add lint to CI, or meta + Open Graph in `index.html`.
+
+---
+
 ## 📱 PWA (Progressive Web App)
 
 ### Icons & Manifest
 
-- [x] Configure PWA plugin in `vite.config.js`
-- [x] Create PWA icons (192x192, 512x512, 180x180)
-- [x] Update icon paths in manifest config
 - [ ] **Verify and add maskable icons for Android adaptive icons**
   - [ ] Research maskable icon requirements (safe zone, padding)
   - [ ] Create maskable versions of icons (192x192, 512x512)
@@ -26,19 +46,6 @@ This document tracks all pending tasks and improvements for the Track'em All app
 - [ ] **Icon improvements (low priority)**
   - [ ] Fix Safari icon background: Create new `apple-touch-icon.png` with black background baked into image (iOS uses white by default, need to design icon with black background)
   - [ ] Improve icon resolution for mobile home screens (currently low resolution)
-
-### Testing
-
-- [x] **Test PWA Installation**
-  - [x] Test on Android (Chrome)
-  - [x] Test on iOS (Safari)
-  - [x] Verify icons display correctly
-  - [x] Check app name and theme colors
-- [x] **Verify Offline Functionality**
-  - [x] Test service worker registration
-  - [x] Test offline mode (disable network)
-  - [x] Verify cached assets load offline
-  - [x] Test update mechanism
 
 ### Optional Enhancements
 
@@ -124,11 +131,11 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ### Cleanup
 
-- [ ] Remove Firebase if unused
-  - [ ] Currently used in `src/firebase/firebase.js` and `src/components/EpisodeCard/EpisodeCard.tsx`
-  - [ ] Migrate EpisodeCard to use backend API instead
-  - [ ] Delete `src/firebase/*` directory
-  - [ ] Remove Firebase-related environment variables
+- [x] **Remove Firebase** (done 2025-02)
+  - [x] Removed `src/firebase/` and Firebase dependencies from package.json
+  - [x] EpisodeCard simplified: "watched" icon/buttons hidden for now (no persistence)
+  - [ ] (Later) When backend has watched-episodes API: restore "watched" feature in EpisodeCard and connect to backend
+  - [ ] Remove Firebase-related env vars from .env / Netlify if not already done
 
 ---
 
@@ -143,8 +150,6 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ### Playwright Smoke Tests
 
-- [x] Install and configure Playwright
-- [x] Create homepage smoke test
 - [ ] Add smoke tests for other pages:
   - [ ] Show page (`/show/:id`)
   - [ ] Person page (`/person/:id`)
@@ -153,6 +158,7 @@ This document tracks all pending tasks and improvements for the Track'em All app
   - [ ] Episode page (`/episode/:id`)
 - [ ] Verify Playwright HTML report upload in CI
 - [ ] Improve test reliability and error messages
+- [ ] **Try Playwright CLI (e.g. with goose)** for generating tests from natural language and compare with current workflow. Link: [Agentic Testing with Playwright CLI Skill (goose)](https://block.github.io/goose/docs/tutorials/playwright-skill/)
 
 ### Unit/Integration Tests
 
@@ -160,6 +166,20 @@ This document tracks all pending tasks and improvements for the Track'em All app
 - [ ] Add tests for critical user flows
 - [ ] Add tests for auth slice
 - [ ] Add tests for API utilities
+
+---
+
+## 📡 Data fetching / API
+
+- [x] **Migrate API calls to React Query (TanStack Query)** (done)
+  - [x] Install `@tanstack/react-query` and React Query DevTools
+  - [x] Add `QueryClientProvider` and `QueryClient` in `src/index.tsx`
+  - [x] ShowList: migrated to `useQuery` (remaining: optional `useInfiniteQuery` for "Load more")
+  - [x] ShowPage, PersonPage, EpisodePage, ShowEpisodes, ShowVideo: migrated to `useQuery`
+  - [x] Remove `UseApiCall` hook (deleted)
+  - [ ] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })`
+  - [ ] (Optional) ShowList "Load more": migrate to `useInfiniteQuery`
+  - [ ] (Later) Auth (login/register/favorites): migrate to `useMutation` when desired
 
 ---
 
@@ -181,9 +201,6 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ### Performance Monitoring
 
-- [x] Set up Lighthouse CI
-- [x] Configure Lighthouse CI for local runs
-- [x] Configure Lighthouse CI for GitHub Actions
 - [ ] Set performance budgets/thresholds
 - [ ] Monitor Lighthouse scores over time
 - [ ] Address performance opportunities identified by Lighthouse
@@ -203,7 +220,9 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ### Dependency Audit
 
-- [ ] Run `npm audit` and fix vulnerabilities
+- [x] **Run `npm audit` and fix vulnerabilities** (done 2025-02)
+  - Safe fixes applied (`npm audit fix`); old/unused deps removed (e.g. nodemon)
+  - **7 remaining vulnerabilities documented:** firebase (moderate), tar via @mapbox/node-pre-gyp (high), tmp via @lhci/cli (low ×4). Address when doing Firebase removal or when LHCI updates its dependencies; see `npm audit` for details.
 - [ ] Review and upgrade older dependencies
 - [ ] Check for deprecated packages
 - [ ] Update to latest stable versions where possible
@@ -218,18 +237,17 @@ This document tracks all pending tasks and improvements for the Track'em All app
 - [ ] Set up unified ESLint configuration
 - [ ] Set up Prettier configuration
 - [ ] Configure ESLint + Prettier integration
-- [ ] Add pre-commit hooks (Husky + lint-staged)
+- [x] Add pre-commit hooks (Husky) — runs `npm run lint` on commit. Optional later: lint-staged to lint only staged files.
 - [ ] Document code style guidelines
 
 ### CI/CD Improvements
 
-- [x] Set up Playwright tests in CI
-- [x] Set up Lighthouse CI in GitHub Actions
-- [ ] Add lint check to CI pipeline
+- [x] Add lint check to CI pipeline (`.github/workflows/eslint.yml`)
 - [ ] Add build check to CI pipeline
 - [ ] Add test suite to CI pipeline
 - [ ] Configure CI to run on all PRs
 - [ ] Add status badges to README
+- [ ] (Optional) Unify CI in one pipeline: single orchestrator workflow that runs lint → test → lighthouse in sequence (e.g. with `needs` between jobs, or reusable workflows called from one main file).
 
 ### Component Reusability
 
@@ -242,24 +260,49 @@ This document tracks all pending tasks and improvements for the Track'em All app
   - [ ] Standardize loading states across the application
   - [ ] Improve code reusability and maintainability
 
+- [ ] **Create reusable error component**
+  - [ ] Design a flexible error component with proper ARIA attributes (`role="alert"`)
+  - [ ] Support different error types (API errors, validation errors, network errors)
+  - [ ] Include optional retry functionality
+  - [ ] Replace repeated error state implementations across pages (PersonPage, EpisodePage, ShowPage, ShowList, ShowEpisodes, etc.)
+  - [ ] Standardize error messaging and styling across the application
+  - [ ] Ensure all error states are accessible to screen readers
+
+- [ ] **Create reusable loading/error wrapper component**
+  - [ ] Combine loading and error states into a single reusable component
+  - [ ] Support conditional rendering based on loading/error/data states
+  - [ ] Include proper ARIA attributes for accessibility
+  - [ ] Replace repeated loading/error pattern across components
+  - [ ] Standardize the loading/error/data flow pattern
+
+### External component kit (headless)
+
+- [ ] **Audit and add an external headless component kit**
+  - [ ] Research headless/unstyled React component libraries (e.g. **Ariakit** ([ariakit.org](https://ariakit.org)) — smaller set; **Radix UI** — broader set; Headless UI, React Aria, etc.)
+  - [ ] Compare breadth of components (Ariakit has fewer primitives; Radix and others offer more out of the box) and choose according to needs
+  - [ ] Choose one without bundled CSS so the app can fully control look and feel (custom SCSS/CSS)
+  - [ ] Evaluate: accessibility, bundle size, API design, maintenance, and fit with existing stack
+  - [ ] Document choice and usage guidelines (which components to use from kit vs. custom)
+  - [ ] Introduce gradually (e.g. replace one existing component as pilot) before wider adoption
+
+### Styles / CSS
+
+- [ ] **Reorganize form-related CSS**
+  - [ ] Audit all form-related styles (SignIn.scss, Signup.scss, SearchBar.scss, Search.scss, etc.)
+  - [ ] Identify duplicated form patterns (inputs, labels, buttons, containers)
+  - [ ] Decide approach: shared SCSS partial (e.g. `_forms.scss`), shared form component styles, or design tokens/variables for form elements
+  - [ ] Consolidate and refactor form CSS to reduce duplication and improve maintainability
+  - [ ] Document form style conventions for future forms
+
 ---
 
 ## ♿ Accessibility & Semantic HTML
 
-### Homepage Improvements
-
-- [x] Review homepage HTML semantics
-- [x] Add proper `<main>` element
-- [x] Add proper heading hierarchy (`<h1>`, `<h2>`, etc.)
-- [x] Use semantic `<section>` elements (removed redundant `aria-labelledby`)
-- [x] Use `<article>` for show cards
-- [x] Improve ARIA labels where needed
-- [ ] Test with screen readers
+**Accessibility pass completed:** 2025-01 (all pages and components reviewed; skip link, ARIA, semantic HTML, and form/button fixes applied). Consider manual keyboard and screen reader testing when possible.
 
 ### General Accessibility
 
-- [x] Run accessibility audit (Lighthouse)
-- [x] Fix accessibility issues (✅ 100% accessibility score achieved!)
+- [ ] Test with screen readers
 - [ ] Add keyboard navigation support
 - [ ] Ensure proper focus management
 - [ ] Test color contrast ratios
@@ -268,9 +311,6 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ## 📚 Documentation
 
-- [x] Create CRA to Vite migration guide
-- [x] Create Lighthouse CI setup guide
-- [x] Create PWA setup summary
 - [ ] Update main README with:
   - [ ] Current tech stack
   - [ ] Setup instructions
@@ -282,47 +322,29 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ---
 
-## 🎯 Completed Tasks
+## 📋 Completed Items Log
 
-- [x] Migrate from Create React App to Vite
-- [x] Upgrade to React 18
-- [x] Configure PWA plugin
-- [x] Update environment variables (REACT*APP*\_ → VITE\_\_)
-- [x] Set up Playwright for smoke tests
-- [x] Create homepage smoke test
-- [x] Set up Lighthouse CI (local and CI)
-- [x] Configure GitHub Actions for Playwright
-- [x] Configure GitHub Actions for Lighthouse CI
-- [x] Create PWA icons
-- [x] Configure PWA manifest
-- [x] Reorganize `package.json` dependencies
-  - [x] Move testing libraries to `devDependencies` (`@testing-library/*`)
-  - [x] Move type definitions to `devDependencies` (`@types/jest`, `@types/node-sass`, `@types/react-router-dom`)
-  - [x] Move dev tools to `devDependencies` (`nodemon`)
-  - [x] Remove unused Apollo/GraphQL packages (`@apollo/client`, `apollo-server-lambda`, `graphql`)
-  - [x] Clean up commented Apollo code in `src/index.tsx`
-  - [x] Remove unused `functions/graphql.js` file
-- [x] **PWA Testing**
-  - [x] Test PWA installation on iOS (Safari) - ✅ All checks passed
-  - [x] Test PWA installation on Android (Chrome) - ✅ All checks passed
-  - [x] Verify offline functionality - ✅ Service worker working correctly
-  - [x] Test service worker registration and updates
-  - [ ] **Note for later:** Safari icon shows white background (prefer black) - need to create icon with black background baked in
-  - [ ] **Note for later:** Icons are low resolution on mobile home screens - needs improvement
+Completed tasks have been moved to **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md)** for reference.
+
+- **Firebase removal** (2025-02): Firebase and `src/firebase/` removed; EpisodeCard no longer uses Firestore; "watched" UI hidden until backend supports it.
 
 ---
 
 ## 📝 Notes
 
-- **Priority Order**: Focus on dependencies cleanup → PWA testing → Security → Testing expansion
-- **Breaking Changes**: React Router v6 migration should be planned carefully
-- **Firebase Removal**: Requires migrating EpisodeCard component to use backend API
-- **Testing Strategy**: Consider Vitest for better Vite integration, but Jest is already working
+- **Priority Order**: See **Suggested priority** section above; full phases in [TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md).
+- **DevEx sequence:** ~~Fix ESLint errors~~ ✓ ~~Husky (pre-commit)~~ ✓ ~~Lint in CI~~ ✓. Optional: lint-staged, build/test steps in CI, badges.
+- **Breaking Changes**: React Router v6 migration should be planned carefully.
+- **Firebase**: Removed. EpisodeCard "watched" feature to be restored when backend has watched-episodes API.
+- **Testing Strategy**: Consider Vitest for better Vite integration, but Jest is already working.
 
 ---
 
 ## 🔗 Related Documents
 
+- **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** - How to prioritize and organize work (phases, quick wins, themes)
+- **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md)** - Log of completed todo items (archive)
+- **[NPM-AUDIT-GUIDE.md](./NPM-AUDIT-GUIDE.md)** - Step-by-step guide to check and fix npm vulnerabilities (generic, any project)
 - **[Features Roadmap](./FEATURES-ROADMAP.md)** - Future features and enhancements planned for the application
 - **[PWA Setup Summary](./PWA-SETUP-SUMMARY.md)** - PWA configuration and setup details
 - **[CRA to Vite Migration Plan](./REACT-TO-VITE-MIGRATION-PLAN.md)** - Migration documentation

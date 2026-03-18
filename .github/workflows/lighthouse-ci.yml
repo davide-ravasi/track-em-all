@@ -1,9 +1,6 @@
 name: Build project and run Lighthouse CI
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_call:
 jobs:
   lhci:
     name: Lighthouse CI

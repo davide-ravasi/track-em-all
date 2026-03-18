@@ -9,6 +9,7 @@ A step-by-step guide for reviewing and improving semantic HTML structure.
 ## 🎯 Goal
 
 Improve semantic HTML structure for better:
+
 - Accessibility (screen readers, keyboard navigation)
 - SEO (search engine understanding)
 - Code maintainability
@@ -37,6 +38,7 @@ Improve semantic HTML structure for better:
    - Create a list of issues to fix
 
 **Expected Issues to Look For:**
+
 - Missing semantic HTML elements (`<main>`, `<header>`, `<nav>`, `<section>`, `<article>`)
 - Missing or incorrect heading hierarchy (H1, H2, H3)
 - Missing alt text on images
@@ -140,8 +142,12 @@ Improve semantic HTML structure for better:
 <p>Paragraph text</p>
 
 <!-- Lists -->
-<ul>Unordered list</ul>
-<ol>Ordered list</ol>
+<ul>
+  Unordered list
+</ul>
+<ol>
+  Ordered list
+</ol>
 <li>List item</li>
 
 <!-- Interactive -->
@@ -170,30 +176,32 @@ Improve semantic HTML structure for better:
 ## 🔍 Example: Before & After
 
 ### Before (Non-semantic)
+
 ```jsx
-<div className="page">
-  <div className="header">
-    <div className="nav">...</div>
+<div className='page'>
+  <div className='header'>
+    <div className='nav'>...</div>
   </div>
-  <div className="content">
-    <div className="section">
-      <div className="title">Popular Shows</div>
-      <div className="card">...</div>
-      <div className="card">...</div>
+  <div className='content'>
+    <div className='section'>
+      <div className='title'>Popular Shows</div>
+      <div className='card'>...</div>
+      <div className='card'>...</div>
     </div>
   </div>
 </div>
 ```
 
 ### After (Semantic)
+
 ```jsx
-<div className="page">
+<div className='page'>
   <header>
-    <nav aria-label="Main navigation">...</nav>
+    <nav aria-label='Main navigation'>...</nav>
   </header>
   <main>
-    <section aria-labelledby="popular-shows">
-      <h2 id="popular-shows">Popular Shows</h2>
+    <section aria-labelledby='popular-shows'>
+      <h2 id='popular-shows'>Popular Shows</h2>
       <article>...</article>
       <article>...</article>
     </section>
@@ -259,4 +267,3 @@ After tomorrow's work, you should have:
 ---
 
 **Good luck! Take it step by step and don't try to fix everything at once.**
-

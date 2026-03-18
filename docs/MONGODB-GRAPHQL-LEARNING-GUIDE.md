@@ -103,13 +103,11 @@
 ### Week 1: Understand Your Current Setup
 
 1. Study `functions/controllers/userController.js`
-
    - Learn how bcrypt.hash works
    - Understand JWT token generation
    - See how password comparison works
 
 2. Study `functions/models/user.js`
-
    - Learn MongoDB schemas
    - Understand how data is structured
    - See how favorites are stored
@@ -150,27 +148,27 @@ const validPassword = await bcrypt.compare(password, user.password);
 // Validate email format
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 if (!emailRegex.test(email)) {
-  return res.status(400).json({ message: "Invalid email" });
+  return res.status(400).json({ message: 'Invalid email' });
 }
 
 // Validate password strength (8+ chars, 1 number, 1 uppercase)
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 if (!passwordRegex.test(password)) {
-  return res.status(400).json({ message: "Password too weak" });
+  return res.status(400).json({ message: 'Password too weak' });
 }
 ```
 
 ### 4. Add Rate Limiting
 
 ```javascript
-const rateLimit = require("express-rate-limit");
+const rateLimit = require('express-rate-limit');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // limit each IP to 5 requests per windowMs
 });
 
-router.post("/user/login", loginLimiter, loginUser);
+router.post('/user/login', loginLimiter, loginUser);
 ```
 
 ## Comparison Summary

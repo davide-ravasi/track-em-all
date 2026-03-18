@@ -1,0 +1,17 @@
+name: Main Workflow
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  lint:
+    uses: ./.github/workflows/eslint.yml
+    
+  lighthouse:
+    needs: lint
+    uses: ./.github/workflows/lighthouse-ci.yml
+
+  playwright:
+    needs: lighthouse
+    uses: ./.github/workflows/playwright.yml
