@@ -1,6 +1,11 @@
 name: Build project and run Lighthouse CI
 on:
   workflow_call:
+    inputs:
+      base_url:
+        type: string
+        description: The base URL to run Lighthouse against
+        required: true
 jobs:
   lhci:
     name: Lighthouse CI
@@ -10,13 +15,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
       - name: Set up environment variables
-        run: |
-          if [ ${{github.event_name}} == "pull_request" ]; then
-              echo "BASE_URL=https://deploy-preview-${{github.event.pull_request.number}}--trackem-all.netlify.app" >> "$GITHUB_ENV"
-          else
-              echo "BASE_URL=https://trackem-all.netlify.app" >> "$GITHUB_ENV"
-          fi
+        run: echo "BASE_URL=${{ inputs.base_url }}" >> "$GITHUB_ENV"
       - name: npm install dependencies
         run: npm ci
       - name: Install Lighthouse CI
