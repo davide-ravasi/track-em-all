@@ -30,8 +30,8 @@ module.exports = {
   ci: {
     collect: {
       // Option 1: Static site (after build)
-      staticDistDir: "./build",
-      url: ["/"],
+      staticDistDir: './build',
+      url: ['/'],
 
       // Option 2: Dynamic site (if you prefer)
       // startServerCommand: 'npm run preview',
@@ -42,14 +42,14 @@ module.exports = {
     assert: {
       // Optional: Start with warnings, move to errors later
       assertions: {
-        "categories:performance": ["warn", { minScore: 0.6 }],
-        "categories:accessibility": ["error", { minScore: 0.8 }],
-        "categories:best-practices": ["warn", { minScore: 0.8 }],
-        "categories:seo": ["warn", { minScore: 0.8 }],
+        'categories:performance': ['warn', { minScore: 0.6 }],
+        'categories:accessibility': ['error', { minScore: 0.8 }],
+        'categories:best-practices': ['warn', { minScore: 0.8 }],
+        'categories:seo': ['warn', { minScore: 0.8 }],
       },
     },
     upload: {
-      target: "temporary-public-storage", // Quick setup, expires in 7 days
+      target: 'temporary-public-storage', // Quick setup, expires in 7 days
     },
   },
 };

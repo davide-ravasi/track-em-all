@@ -44,8 +44,8 @@ When in doubt, refer to these official sources:
 **Example:**
 
 ```jsx
-<button aria-label="Add to favorites">
-  <FontAwesomeIcon icon={faHeart} aria-hidden="true" />
+<button aria-label='Add to favorites'>
+  <FontAwesomeIcon icon={faHeart} aria-hidden='true' />
 </button>
 ```
 
@@ -121,7 +121,7 @@ When in doubt, refer to these official sources:
 ```jsx
 {
   error && (
-    <div role="alert" className="error">
+    <div role='alert' className='error'>
       {error}
     </div>
   );
@@ -215,13 +215,11 @@ When creating or reviewing components, check:
 ## 🔍 Testing Accessibility
 
 1. **Automated Testing:**
-
    - Lighthouse accessibility audit
    - axe DevTools browser extension
    - WAVE browser extension
 
 2. **Manual Testing:**
-
    - Keyboard navigation (Tab, Enter, Space, Arrow keys)
    - Screen reader testing (NVDA, JAWS, VoiceOver)
    - Color contrast checkers

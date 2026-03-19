@@ -9,11 +9,13 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 📱 iOS Testing (iPhone - Safari)
 
 ### Preparation
+
 - [ ] Clear Safari cache: Settings → Safari → Clear History and Website Data
 - [ ] Or use Private/Incognito mode for a fresh test
 - [ ] Ensure latest iOS version (or test on target iOS version)
 
 ### Icon Testing
+
 - [ ] Visit site in Safari
 - [ ] Tap Share button (bottom center)
 - [ ] Select "Add to Home Screen"
@@ -26,6 +28,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Verify app opens in standalone mode (no Safari UI - no address bar, no navigation buttons)
 
 ### App Functionality
+
 - [ ] App name displays correctly (matches `apple-mobile-web-app-title`)
 - [ ] Theme color matches (`theme-color` meta tag)
 - [ ] Status bar style is correct (`apple-mobile-web-app-status-bar-style`)
@@ -35,6 +38,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] App feels native (no browser chrome visible)
 
 ### Offline Testing (iOS)
+
 - [ ] Load app while online
 - [ ] Enable Airplane Mode
 - [ ] Reload app
@@ -46,6 +50,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 🤖 Android Testing (Chrome)
 
 ### Icon Testing
+
 - [ ] Visit site in Chrome
 - [ ] Tap menu (3 dots) → "Add to Home screen" or "Install app"
 - [ ] Verify install prompt shows correct icon
@@ -55,6 +60,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Verify app opens in standalone mode (no browser UI)
 
 ### App Functionality
+
 - [ ] App name displays correctly (matches manifest `short_name` or `name`)
 - [ ] Theme colors display correctly (`theme_color` in manifest)
 - [ ] Background color is correct (`background_color` in manifest)
@@ -64,6 +70,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] App feels native
 
 ### Offline Testing (Android)
+
 - [ ] Load app while online
 - [ ] Enable Airplane Mode or disable network
 - [ ] Reload app
@@ -75,6 +82,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 🔧 Service Worker & Offline Functionality
 
 ### Service Worker Registration
+
 - [ ] Open Chrome DevTools (F12)
 - [ ] Go to Application tab → Service Workers
 - [ ] Verify service worker is registered
@@ -83,6 +91,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Check service worker scope is correct
 
 ### Offline Mode Test
+
 - [ ] Load site normally (online)
 - [ ] Open DevTools → Network tab
 - [ ] Check "Offline" checkbox (or use airplane mode)
@@ -94,6 +103,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Note: API calls will fail offline (expected)
 
 ### Update Mechanism
+
 - [ ] Make a small change to your app
 - [ ] Rebuild and redeploy
 - [ ] Visit site again (service worker should auto-update if using `autoUpdate`)
@@ -106,6 +116,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 📋 Manifest Verification
 
 ### Manifest File
+
 - [ ] Verify `manifest.webmanifest` exists and is accessible
 - [ ] Check manifest is valid JSON
 - [ ] Verify all required fields are present:
@@ -119,6 +130,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Verify `scope` is set correctly
 
 ### HTML Meta Tags
+
 - [ ] Verify manifest link in HTML: `<link rel="manifest" href="/manifest.webmanifest">`
 - [ ] Check `theme-color` meta tag: `<meta name="theme-color" content="#...">`
 - [ ] Verify iOS-specific meta tags (if applicable):
@@ -132,6 +144,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 🎨 Visual & UX Testing
 
 ### Appearance
+
 - [ ] App looks good in standalone mode
 - [ ] No browser UI elements visible
 - [ ] Status bar color matches theme
@@ -140,6 +153,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Icons have appropriate background colors
 
 ### User Experience
+
 - [ ] App feels native (not like a website)
 - [ ] Navigation is smooth
 - [ ] No flash of unstyled content (FOUC)
@@ -151,6 +165,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 🔍 Lighthouse Audit
 
 ### Run Lighthouse PWA Audit
+
 - [ ] Install PWA audit passes (all checks green)
 - [ ] Service worker registered
 - [ ] Responds with 200 when offline
@@ -164,6 +179,7 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 - [ ] Has a `<meta name="viewport">` tag
 
 ### Performance
+
 - [ ] First Contentful Paint (FCP) is good
 - [ ] Largest Contentful Paint (LCP) is good
 - [ ] Time to Interactive (TTI) is acceptable
@@ -174,16 +190,19 @@ A comprehensive checklist for testing Progressive Web Apps (PWAs) that can be us
 ## 📝 Notes & Issues
 
 ### Issues Found
+
 ```
 [Document any problems encountered during testing]
 ```
 
 ### What Worked Well
+
 ```
 [Document successful tests and positive findings]
 ```
 
 ### Improvements Needed
+
 ```
 [Document areas that need improvement but aren't blockers]
 ```
@@ -216,12 +235,13 @@ npm run preview
 
 ## ✅ Sign-Off
 
-**Tested by:** _________________  
-**Date:** _________________  
+**Tested by:** ********\_********  
+**Date:** ********\_********  
 **Platforms Tested:** iOS / Android / Both  
 **Status:** ✅ Pass / ⚠️ Issues Found / ❌ Failed
 
 **Notes:**
+
 ```
 [Final notes and next steps]
 ```
@@ -229,4 +249,3 @@ npm run preview
 ---
 
 **Tip:** Save a copy of this checklist for each project and customize it based on your specific PWA requirements.
-

@@ -18,29 +18,6 @@ Copy `.env.example` to `.env` and fill in values (see section below).
 
 To use this project you must have a Firestore database and an API KEY for the TMDB API ([TMDB api docs](https://developers.themoviedb.org/3/getting-started/introduction)).
 
-## Firestore database
-
-In the firebase console go to your firestore database and click on:
-project settings -> general (first tab).
-
-You will find a configuration code like this one:
-
-```
-var firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://PROJECT_ID.firebaseio.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID",
-};
-```
-
-Add it in the `.env` file using the Vite variables (see `.env.example`).
-
-Refs: [firebase docs](https://firebase.google.com/docs/web/setup)
-
 ## Environment variables
 
 Vite exposes client env vars prefixed with `VITE_`.
@@ -58,15 +35,6 @@ VITE_BASE_URL=
 VITE_BASE_SEARCH_URL=
 VITE_BASE_TVSHOW_URL=
 VITE_BASE_PERSON_URL=
-
-# Firebase (optional)
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_APP_ID=
-VITE_FIREBASE_MEASUREMENT_ID=
 
 # Backend endpoint
 VITE_EXPRESS_ENDPOINT=

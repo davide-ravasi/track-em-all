@@ -1,0 +1,32 @@
+name: Main Workflow
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  set-base-url:
+    runs-on: ubuntu-latest
+    outputs:
+      base_url: ${{ steps.set-url.outputs.base_url }}
+    steps:
+      - id: set-url
+        name: Set base URL
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "base_url=https://deploy-preview-${{ github.event.pull_request.number }}--trackem-all.netlify.app" >> $GITHUB_OUTPUT
+          else
+            echo "base_url=https://trackem-all.netlify.app" >> $GITHUB_OUTPUT
+          fi
+  lint:
+    uses: ./.github/workflows/eslint.yml
+  lighthouse:
+    needs: [lint, set-base-url]
+    uses: ./.github/workflows/lighthouse-ci.yml
+    with:
+      base_url: ${{ needs.set-base-url.outputs.base_url }}
+  playwright:
+    needs: [lighthouse, set-base-url]
+    uses: ./.github/workflows/playwright.yml
+    with:
+      base_url: ${{ needs.set-base-url.outputs.base_url }}

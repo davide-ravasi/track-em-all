@@ -32,30 +32,30 @@
 
 ```javascript
 VitePWA({
-  registerType: "autoUpdate",
+  registerType: 'autoUpdate',
   manifest: {
     name: "Track'em all - Movies and Tv series Tracker",
     short_name: "Track'em all",
-    description: "...",
+    description: '...',
     icons: [
       {
-        src: "/path-to-pwa-icon-size-192x192.png", // ⚠️ Needs update
-        sizes: "192x192",
-        type: "image/png",
+        src: '/path-to-pwa-icon-size-192x192.png', // ⚠️ Needs update
+        sizes: '192x192',
+        type: 'image/png',
       },
       {
-        src: "pwa-512x512.png", // ⚠️ Needs update
-        sizes: "512x512",
-        type: "image/png",
+        src: 'pwa-512x512.png', // ⚠️ Needs update
+        sizes: '512x512',
+        type: 'image/png',
       },
     ],
-    theme_color: "#2e2d3f",
-    background_color: "#2e2d3f",
-    display: "standalone",
-    scope: "/",
-    start_url: "/",
-    orientation: "portrait",
-    lang: "en-US",
+    theme_color: '#2e2d3f',
+    background_color: '#2e2d3f',
+    display: 'standalone',
+    scope: '/',
+    start_url: '/',
+    orientation: 'portrait',
+    lang: 'en-US',
   },
 });
 ```
@@ -100,7 +100,6 @@ magick public/track-em-all.svg -resize 180x180 public/icon-180.png
 ### After Creating Icons
 
 1. **Place icons in `public/` folder:**
-
    - `icon-192.png` (192x192)
    - `icon-512.png` (512x512)
    - `icon-180.png` (180x180, optional for iOS)
@@ -133,6 +132,7 @@ magick public/track-em-all.svg -resize 180x180 public/icon-180.png
    ```bash
    npm run build
    ```
+
    - Check `build/manifest.webmanifest` includes correct icon paths
    - Test PWA installation on mobile device
    - Verify icons appear correctly
@@ -142,14 +142,12 @@ magick public/track-em-all.svg -resize 180x180 public/icon-180.png
 After icons are done:
 
 1. **Test PWA Installation**
-
    - Test on Android (Chrome)
    - Test on iOS (Safari)
    - Verify icons display correctly
    - Check app name and theme colors
 
 2. **Verify Offline Functionality**
-
    - Test service worker registration
    - Test offline mode (disable network)
    - Verify cached assets load offline
