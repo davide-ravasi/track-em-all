@@ -26,9 +26,10 @@ jobs:
         run: echo "BASE_URL=${{ inputs.base_url }}" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: npm ci
+      # Always run install --with-deps: restores OS packages (apt) even when browser
+      # binaries are cached; skipping this step caused "browser has been closed" on CI.
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
