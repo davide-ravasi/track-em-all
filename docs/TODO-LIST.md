@@ -2,7 +2,7 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2025-02-05
+**Last Updated:** 2025-02-06
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
@@ -20,7 +20,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 | -------- | ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | **1**    | **Security**                 | Input validation + rate limiting on auth → CORS/JWT review             | Protects users and app; unblocks peace of mind before new features.                                                |
 | **2**    | **Firebase**                 | ~~Remove Firebase~~ ✓ (done)                                           | —                                                                                                                  |
-| **3**    | **DevEx / CI**               | ~~Unify CI~~ ✓ → Prettier, build/test in CI, badges                    | Single pipeline (main-workflow) with lint → lighthouse → playwright; optional: build step, badges.                  |
+| **3**    | **DevEx / CI**               | ~~Unify CI~~ ✓ ~~Prettier~~ ✓ ~~README badge~~ ✓; ~~build in CI~~ N/A   | Build on Netlify; optional: `prettier --check` in CI, lint-staged.                                                  |
 | **4**    | **Testing**                  | More Playwright smoke tests (Show, Person, Favorites, etc.)            | You already have homepage; extend coverage before adding features.                                                 |
 | **5**    | **Performance**              | Bundle visualizer → code splitting / lazy routes                       | Understand size first, then optimize; supports faster loads.                                                       |
 | **6**    | **PWA polish**               | Maskable icons, optional update/offline/install prompts                | Improves install experience; not blocking.                                                                         |
@@ -234,19 +234,19 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ### Code Quality Tools
 
-- [ ] Set up unified ESLint configuration
-- [ ] Set up Prettier configuration
-- [ ] Configure ESLint + Prettier integration
+- [x] Set up unified ESLint configuration (`eslint.config.js`, flat config)
+- [x] Set up Prettier configuration (`.prettierrc`, `.prettierignore`, `npm run format`)
+- [x] Configure ESLint + Prettier integration (`eslint-config-prettier` in `eslint.config.js`)
 - [x] Add pre-commit hooks (Husky) — runs `npm run lint` on commit. Optional later: lint-staged to lint only staged files.
 - [ ] Document code style guidelines
 
 ### CI/CD Improvements
 
 - [x] Add lint check to CI pipeline (`.github/workflows/eslint.yml`)
-- [ ] Add build check to CI pipeline
+- [x] ~~Add build check to CI pipeline~~ **N/A:** production/preview build runs on Netlify (`npm run build`); no duplicate build in GitHub Actions needed.
 - [ ] Add test suite to CI pipeline
 - [ ] Configure CI to run on all PRs
-- [ ] Add status badges to README
+- [x] Add status badges to README (GitHub Actions workflow status in README)
 - [x] **Unify CI in one pipeline** (done 2025-02): `main-workflow.yml` runs lint → lighthouse → playwright in sequence via reusable workflows; fails fast with `needs`.
 - [x] **Centralize BASE_URL** (done 2025-02): Job `set-base-url` in main workflow; output passed as input to lighthouse and playwright (no duplicated logic).
 - [x] **CI caching** (done 2025-02): npm cache (`cache: 'npm'` in setup-node) in eslint, lighthouse, playwright; Playwright browser cache in playwright.yml with conditional install.
@@ -331,13 +331,15 @@ Completed tasks have been moved to **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.
 - **Firebase removal** (2025-02): Firebase and `src/firebase/` removed; EpisodeCard no longer uses Firestore; "watched" UI hidden until backend supports it.
 - **CI unification** (2025-02): Single entry point `main-workflow.yml` calling reusable workflows (eslint → lighthouse → playwright) with `needs`; Node 20 in all workflows.
 - **CI: BASE_URL + caching** (2025-02): `set-base-url` job outputs base_url and passes it to lighthouse/playwright; npm cache in all workflows; Playwright browser cache in playwright.yml (conditional install on cache miss).
+- **Prettier + ESLint** (2025-02): Prettier in devDependencies, `.prettierrc` / `.prettierignore`, `format` script; `eslint-config-prettier` wired in flat config. **CI build:** intentionally skipped — Netlify builds on deploy/preview.
+- **README CI badge** (2025-02): Workflow status badge linking to GitHub Actions.
 
 ---
 
 ## 📝 Notes
 
 - **Priority Order**: See **Suggested priority** section above; full phases in [TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md).
-- **DevEx sequence:** ~~Fix ESLint errors~~ ✓ ~~Husky (pre-commit)~~ ✓ ~~Lint in CI~~ ✓ ~~Unify CI (main-workflow)~~ ✓ ~~BASE_URL + cache~~ ✓. Optional: lint-staged, build step in CI, badges.
+- **DevEx sequence:** ~~Fix ESLint errors~~ ✓ ~~Husky (pre-commit)~~ ✓ ~~Lint in CI~~ ✓ ~~Unify CI (main-workflow)~~ ✓ ~~BASE_URL + cache~~ ✓ ~~Prettier + eslint-config-prettier~~ ✓ ~~README CI badge~~ ✓. ~~Build in CI~~ N/A (Netlify). Optional: `prettier --check` in CI, lint-staged.
 - **Breaking Changes**: React Router v6 migration should be planned carefully.
 - **Firebase**: Removed. EpisodeCard "watched" feature to be restored when backend has watched-episodes API.
 - **Testing Strategy**: Consider Vitest for better Vite integration, but Jest is already working.
