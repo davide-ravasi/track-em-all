@@ -1,5 +1,7 @@
 # Track'em all
 
+[![Main Workflow](https://github.com/davide-ravasi/track-em-all/actions/workflows/main-workflow.yml/badge.svg)](https://github.com/davide-ravasi/track-em-all/actions/workflows/main-workflow.yml)
+
 Track'em all is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).
 
 Stack: React 18, Vite, TypeScript, Sass, Firestore
