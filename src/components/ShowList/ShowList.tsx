@@ -20,7 +20,7 @@ import { useQueryShow } from './useQueryShow';
  */
 
 /*
-  @todo - remove slice from map and add in the setState
+  @todo - remove slice from map and add in setState
   @todo - remove results near map and add it when fetching data
 */
 
