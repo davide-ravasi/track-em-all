@@ -9,8 +9,9 @@ const jwt = require('jsonwebtoken');
 // connect express server to mongodb database
 const mongoose = require('mongoose');
 
-const mongoDB = import.meta.env.VITE__APP_MONGODB_URI;
-const jwtSecret = import.meta.env.VITE__APP_JWT_SECRET;
+// Netlify Functions run on Node, not Vite — use process.env (import.meta.env is undefined here).
+const mongoDB = process.env.VITE_MONGODB_URI;
+const jwtSecret = process.env.VITE_JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -29,6 +30,7 @@ const {
 const { User } = require('./models/user');
 
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const router = express.Router();
@@ -66,9 +68,7 @@ const protect = (req, res, next) => {
 // };
 
 const addFavorite = async (req, res) => {
-  const { name, poster_path, vote_average, userId, showId } = JSON.parse(
-    req.body
-  );
+  const { name, poster_path, vote_average, userId, showId } = req.body;
   console.log('userId: ', userId);
   const user = await User.findById(userId);
 
@@ -98,7 +98,7 @@ const addFavorite = async (req, res) => {
 };
 
 const removeFavorite = async (req, res) => {
-  const { userId, showId } = JSON.parse(req.body);
+  const { userId, showId } = req.body;
 
   const user = await User.findById(userId);
 
@@ -132,8 +132,13 @@ router.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-app.use('/.netlify/functions/express', router); // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/.netlify/functions/express', router);
+app.use(router);
+
+// SPA fallback only for GET / (avoid swallowing POST /user/register, etc.)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../index.html'));
+});
 
 module.exports = app;
 module.exports.handler = serverless(app);
