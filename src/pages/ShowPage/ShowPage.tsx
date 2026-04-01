@@ -42,6 +42,8 @@ export default function ShowPage() {
   const [loadingFavorite, setLoadingFavorite] = useState(false);
   const { addFavorite, removeFavorite } = useFavorite();
 
+  // TO DO: why favoriteId and id in the two different variables?
+  // (to check if it's the same)
   let favorite: Favorite | undefined;
 
   if (user && user.favorites) {
@@ -52,7 +54,7 @@ export default function ShowPage() {
 
   const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    addFavorite({ showData, user, id, setLoadingFavorite });
+    addFavorite({ showData, id, setLoadingFavorite });
   };
 
   const handleUnfavorite = (
@@ -60,7 +62,7 @@ export default function ShowPage() {
     favoriteId: string
   ) => {
     e.preventDefault();
-    removeFavorite({ user, favoriteId, setLoadingFavorite });
+    removeFavorite({ favoriteId, setLoadingFavorite });
   };
 
   return (

@@ -68,13 +68,18 @@ const protect = (req, res, next) => {
 // };
 
 const addFavorite = async (req, res) => {
-  const { name, poster_path, vote_average, userId, showId } = req.body;
-  console.log('userId: ', userId);
-  const user = await User.findById(userId);
+  // Set in `protect` after jwt.verify — same payload as login: { id: user._id, iat, exp }
+  const userId = req.user?.id;
 
-  console.log('user: ', user);
+  if (!userId) {
+    return res.status(401).json({ message: 'Invalid token payload' });
+  }
+
+  const { name, poster_path, vote_average, showId } = req.body;
+  const user = await User.findById(String(userId));
+
   if (!user) {
-    res.status(400).send('User not found');
+    return res.status(400).send('User not found');
   }
 
   const favorite = {
@@ -88,6 +93,8 @@ const addFavorite = async (req, res) => {
 
   const updatedUser = await user.save();
 
+  // TO DO:  the data can be removed from the response if not needed?
+  // TO DO: and for security reasons?
   res.status(201).json({
     id: updatedUser._id,
     firstName: updatedUser.firstName,
@@ -98,12 +105,16 @@ const addFavorite = async (req, res) => {
 };
 
 const removeFavorite = async (req, res) => {
-  const { userId, showId } = req.body;
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'Invalid token payload' });
+  }
 
-  const user = await User.findById(userId);
+  const { showId } = req.body;
+  const user = await User.findById(String(userId));
 
   if (!user) {
-    res.status(400).send('User not found');
+    return res.status(400).send('User not found');
   }
 
   user.favorites = user.favorites.filter(

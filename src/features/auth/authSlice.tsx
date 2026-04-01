@@ -11,6 +11,14 @@ const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 // https://trackem-all.netlify.app/.netlify/functions/express
 // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express/favorite
 
+function favoriteRequestHeaders(): Record<string, string> {
+  const token = localStorage.getItem('tea-token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export const register = createAsyncThunk(
   'auth/register',
   async (data, thunkAPI) => {
@@ -34,13 +42,10 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
 
 export const favoriteAdd = createAsyncThunk(
   'auth/favorites/add',
-  async (data: Favorite & { userId: number | undefined }, thunkAPI) => {
+  async (data: Favorite, thunkAPI) => {
     try {
       return await axios.post(actualHost + '/favorite/add', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
-        },
+        headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
       const message = error.response.data;
@@ -51,13 +56,10 @@ export const favoriteAdd = createAsyncThunk(
 
 export const favoriteRemove = createAsyncThunk(
   'auth/favorites/remove',
-  async (data: { userId: number; showId: string }, thunkAPI) => {
+  async (data: { showId: string }, thunkAPI) => {
     try {
       return await axios.post(actualHost + '/favorite/remove', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
-        },
+        headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
       const message = error.response.data;
