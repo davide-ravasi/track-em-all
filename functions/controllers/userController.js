@@ -16,7 +16,7 @@ const saltRounds = 10;
 // @route GET /user/:id
 // @access Authenticated
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).populate('favorites');
+  const user = await User.findById(String(req.user?.id)).populate('favorites');
   if (user) {
     res.json({
       id: user._id,

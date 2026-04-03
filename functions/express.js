@@ -136,7 +136,7 @@ router.post('/favorite/remove', protect, removeFavorite);
 router.post('/favorite/add', protect, addFavorite);
 router.post('/user/register', registerUser);
 router.post('/user/login', loginUser);
-router.get('/user/:id', protect, getUser);
+router.get('/user', protect, getUser);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

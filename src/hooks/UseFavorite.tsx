@@ -31,6 +31,7 @@ export function useFavorite() {
       })
       .catch((error) => {
         console.log(error);
+        setLoadingFavorite(false);
       });
   };
 
@@ -55,6 +56,7 @@ export function useFavorite() {
       })
       .catch((error) => {
         console.log(error);
+        setLoadingFavorite(false);
       });
   };
 
