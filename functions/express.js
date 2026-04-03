@@ -9,8 +9,9 @@ const jwt = require('jsonwebtoken');
 // connect express server to mongodb database
 const mongoose = require('mongoose');
 
-const mongoDB = import.meta.env.VITE__APP_MONGODB_URI;
-const jwtSecret = import.meta.env.VITE__APP_JWT_SECRET;
+// Netlify Functions run on Node, not Vite — use process.env (import.meta.env is undefined here).
+const mongoDB = process.env.VITE_MONGODB_URI;
+const jwtSecret = process.env.VITE_JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -29,6 +30,7 @@ const {
 const { User } = require('./models/user');
 
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const router = express.Router();
@@ -66,15 +68,18 @@ const protect = (req, res, next) => {
 // };
 
 const addFavorite = async (req, res) => {
-  const { name, poster_path, vote_average, userId, showId } = JSON.parse(
-    req.body
-  );
-  console.log('userId: ', userId);
-  const user = await User.findById(userId);
+  // Set in `protect` after jwt.verify — same payload as login: { id: user._id, iat, exp }
+  const userId = req.user?.id;
 
-  console.log('user: ', user);
+  if (!userId) {
+    return res.status(401).json({ message: 'Invalid token payload' });
+  }
+
+  const { name, poster_path, vote_average, showId } = req.body;
+  const user = await User.findById(String(userId));
+
   if (!user) {
-    res.status(400).send('User not found');
+    return res.status(400).send('User not found');
   }
 
   const favorite = {
@@ -88,6 +93,8 @@ const addFavorite = async (req, res) => {
 
   const updatedUser = await user.save();
 
+  // TO DO:  the data can be removed from the response if not needed?
+  // TO DO: and for security reasons?
   res.status(201).json({
     id: updatedUser._id,
     firstName: updatedUser.firstName,
@@ -98,12 +105,16 @@ const addFavorite = async (req, res) => {
 };
 
 const removeFavorite = async (req, res) => {
-  const { userId, showId } = JSON.parse(req.body);
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'Invalid token payload' });
+  }
 
-  const user = await User.findById(userId);
+  const { showId } = req.body;
+  const user = await User.findById(String(userId));
 
   if (!user) {
-    res.status(400).send('User not found');
+    return res.status(400).send('User not found');
   }
 
   user.favorites = user.favorites.filter(
@@ -125,15 +136,20 @@ router.post('/favorite/remove', protect, removeFavorite);
 router.post('/favorite/add', protect, addFavorite);
 router.post('/user/register', registerUser);
 router.post('/user/login', loginUser);
-router.get('/user/:id', protect, getUser);
+router.get('/user', protect, getUser);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-app.use('/.netlify/functions/express', router); // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/.netlify/functions/express', router);
+app.use(router);
+
+// SPA fallback only for GET / (avoid swallowing POST /user/register, etc.)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../index.html'));
+});
 
 module.exports = app;
 module.exports.handler = serverless(app);

@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const mongoDB = import.meta.env.VITE_APP_MONGODB_URI;
-const jwtSecret = import.meta.env.VITE_APP_JWT_SECRET;
+// Same as express.js: serverless uses process.env, not import.meta.env (Vite).
+const jwtSecret = process.env.VITE_JWT_SECRET;
 
 const { User } = require('../models/user');
 
@@ -16,7 +16,7 @@ const saltRounds = 10;
 // @route GET /user/:id
 // @access Authenticated
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).populate('favorites');
+  const user = await User.findById(String(req.user?.id)).populate('favorites');
   if (user) {
     res.json({
       id: user._id,
@@ -34,7 +34,7 @@ const getUser = asyncHandler(async (req, res) => {
 // @route POST /user/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = JSON.parse(req.body);
+  const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
@@ -68,7 +68,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route POST /user/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password } = JSON.parse(req.body);
+  const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
     res.status(400).send('Please fill all the fields');
     throw new Error('Please fill all the fields');
