@@ -13,7 +13,7 @@ const generateAccessToken = (user) => {
 const saltRounds = 10;
 
 // @desc get user informations
-// @route GET /user/:id
+// @route GET /user
 // @access Authenticated
 const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(String(req.user?.id)).populate('favorites');
@@ -36,18 +36,18 @@ const getUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     res.status(400).send('User not found');
-    throw new Error('User not found');
+    return;
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
     res.status(400).send('Invalid password');
-    throw new Error('Invalid password');
+    return;
   }
 
   res.status(201).json({
@@ -71,7 +71,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
     res.status(400).send('Please fill all the fields');
-    throw new Error('Please fill all the fields');
+    return;
   }
 
   const existingUser = await User.findOne({ email: email });
@@ -79,7 +79,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     // try with reponse text ?
     res.status(400).send('User already exists');
-    throw new Error('User already exists');
+    return;
   }
 
   try {
@@ -98,8 +98,9 @@ const registerUser = asyncHandler(async (req, res) => {
       id: savedUser._id,
     });
   } catch (err) {
-    res.status(400);
-    throw new Error(err);
+    console.error(err);
+    res.status(400).send('Registration failed');
+    return;
   }
 });
 

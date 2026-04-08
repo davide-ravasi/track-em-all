@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
     try {
       const decodedToken = jose.decodeJwt(token);
 
-      if(!decodedToken.exp !== "number") {
+      if(typeof decodedToken.exp !== "number") {
         logoutUser("an error occurred while checking the token");
         return;
       }

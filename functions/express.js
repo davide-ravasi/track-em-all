@@ -82,6 +82,10 @@ const addFavorite = async (req, res) => {
     return res.status(400).send('User not found');
   }
 
+  if (String(showId).trim() === '' || !name) {
+    return res.status(400).send('The favorite data is not valid');
+  }
+
   const favorite = {
     showId,
     name,
@@ -115,6 +119,10 @@ const removeFavorite = async (req, res) => {
 
   if (!user) {
     return res.status(400).send('User not found');
+  }
+
+  if (!showId) {
+    return res.status(400).send('The favorite showId is not valid');
   }
 
   user.favorites = user.favorites.filter(
