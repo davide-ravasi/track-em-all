@@ -44,11 +44,11 @@ export default function Header() {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Link to='/signin' className='navbar__menuItem'>
-                  SignIn
+                <Link to='/login' className='navbar__menuItem'>
+                  Log in
                 </Link>
-                <Link to='/signup' className='navbar__menuItem'>
-                  SignUp
+                <Link to='/register' className='navbar__menuItem'>
+                  Register
                 </Link>
               </React.Fragment>
             )}
