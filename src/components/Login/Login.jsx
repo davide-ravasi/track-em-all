@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import './SignIn.scss';
+import './Login.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/UseToast';
 
@@ -23,13 +23,12 @@ export const useInput = (initialValue) => {
   };
 };
 
-export default function Signin() {
+export default function Login() {
   const history = useHistory();
 
   const { loginUser } = useAuth();
 
   const timer = 2000;
-  //const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
   const { isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
@@ -48,7 +47,6 @@ export default function Signin() {
         autoClose: timer,
       });
 
-      // redirect to the login page after registration
       setTimeout(() => {
         history.push('/');
       }, timer);
@@ -98,12 +96,12 @@ export default function Signin() {
           ></input>
         </div>
         <button type='submit' className='login__button'>
-          Sign In
+          Log in
         </button>
-        <div className='login__singup-text'>
+        <div className='login__register-text'>
           <span>Don&apos;t have account?</span>
-          <Link to='/signup'>
-            <span className='login__singup-text__link'>Sign Up</span>
+          <Link to='/register'>
+            <span className='login__register-text__link'>Register</span>
           </Link>
         </div>
       </form>

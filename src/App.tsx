@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 
 import HomePage from './pages/HomePage/HomePage';
 import AboutPage from './pages/AboutPage/AboutPage';
@@ -8,8 +13,8 @@ import EpisodePage from './pages/EpisodePage/EpisodePage';
 import ShowPage from './pages/ShowPage/ShowPage';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import SignUp from './components/Signup/Signup';
-import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
+import Login from './components/Login/Login';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastContainer } from 'react-toastify';
@@ -41,8 +46,18 @@ function App() {
             <Switch>
               <Route path='/' exact component={HomePage} />
               <Route path='/about' exact component={AboutPage} />
-              <Route path='/signup' exact component={SignUp} />
-              <Route path='/signin' exact component={SignIn} />
+              <Route path='/login' exact component={Login} />
+              <Route path='/register' exact component={Register} />
+              <Route
+                exact
+                path='/signin'
+                render={() => <Redirect to='/login' />}
+              />
+              <Route
+                exact
+                path='/signup'
+                render={() => <Redirect to='/register' />}
+              />
               <Route
                 path='/list/:section/:id?/:category/'
                 exact

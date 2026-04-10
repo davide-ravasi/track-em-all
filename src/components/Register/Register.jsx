@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { reset } from '../../features/auth/authSlice';
 
-import './Signup.scss';
+import './Register.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/UseToast';
 import Loader from '../Loader/Loader';
@@ -25,7 +25,7 @@ export const useInput = (initialValue) => {
   };
 };
 
-export default function Signup() {
+export default function Register() {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -50,10 +50,9 @@ export default function Signup() {
         autoClose: timer,
       });
 
-      // redirect to the login page after registration
       setTimeout(() => {
         dispatch(reset());
-        history.push('/signin');
+        history.push('/login');
       }, timer);
     }
   }, [isSuccess, history, dispatch, notifySuccess, notifyInfo]);
@@ -92,11 +91,11 @@ export default function Signup() {
 
   return (
     <main id='main-content' className='page'>
-      <form className='signup__form-container' onSubmit={handleSubmit}>
-        <div className='signup__input-container'>
+      <form className='register__form-container' onSubmit={handleSubmit}>
+        <div className='register__input-container'>
           <label htmlFor='firstname'>First Name: </label>
           <input
-            className='signup__input'
+            className='register__input'
             type='text'
             id='firstName'
             name='firstName'
@@ -104,10 +103,10 @@ export default function Signup() {
             {...bindFirstName}
           ></input>
         </div>
-        <div className='signup__input-container'>
+        <div className='register__input-container'>
           <label htmlFor='lastname'>Last Name: </label>
           <input
-            className='signup__input'
+            className='register__input'
             type='text'
             id='lastName'
             name='lastName'
@@ -115,31 +114,31 @@ export default function Signup() {
             {...bindLastName}
           ></input>
         </div>
-        <div className='signup__input-container'>
+        <div className='register__input-container'>
           <label htmlFor='email'>Email:</label>
           <input
             type='email'
             name='email'
-            className='signup__input'
+            className='register__input'
             {...bindEmail}
           ></input>
         </div>
-        <div className='signup__input-container'>
+        <div className='register__input-container'>
           <label htmlFor='password'>Password:</label>
           <input
             type='password'
             name='password'
-            className='signup__input'
+            className='register__input'
             {...bindPassword}
           ></input>
         </div>
         <button
           type='submit'
-          className='signup__button'
-          title='Sign Up'
-          value='Sign Up'
+          className='register__button'
+          title='Register'
+          value='Register'
         >
-          Sign Up
+          Register
         </button>
       </form>
     </main>

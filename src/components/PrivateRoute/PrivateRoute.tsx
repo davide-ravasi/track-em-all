@@ -20,6 +20,6 @@ export default function PrivateRoute({
   return currentUser ? (
     <Route {...rest} render={() => children}></Route>
   ) : (
-    <Redirect to='/signin' />
+    <Redirect to='/login' />
   );
 }
