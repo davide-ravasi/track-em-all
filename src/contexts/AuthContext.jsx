@@ -47,18 +47,31 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    if (token) {
+    if(!token) {
+      return;
+    }
+
+    try {
       const decodedToken = jose.decodeJwt(token);
-      // @TODO: I need to check why i can't use the expiration date (exp, date not correct)
-      const tokenExpirationDate = new Date(decodedToken.iat * 1000);
-      tokenExpirationDate.setHours(tokenExpirationDate.getHours() + 1);
+
+      if(typeof decodedToken.exp !== "number") {
+        logoutUser("an error occurred while checking the token");
+        return;
+      }
+
+      const tokenExpirationDate = new Date(decodedToken.exp * 1000);
       const now = new Date();
 
       if (now >= tokenExpirationDate) {
-        logoutUser("you're connection has expired");
+        logoutUser("your connection has expired");
       }
+
+    } catch (error) {
+      console.error(error);
+      logoutUser("an error occurred while checking the token");
     }
-  }, [token, dispatch, logoutUser]);
+
+  }, [token, logoutUser]);
 
   // function signup(email, password) {
   //   return auth.createUserWithEmailAndPassword(email, password);

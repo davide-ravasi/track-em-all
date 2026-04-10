@@ -4,6 +4,22 @@ import authService from './authService';
 import axios from 'axios';
 import { AuthState, Favorite } from '../../typescript/types';
 
+/** Normalizes axios `response.data` (string or JSON body) for Redux `message`. */
+function formatErrorMessage(data: unknown): string {
+  if (typeof data === 'string') {
+    return data;
+  }
+  if (
+    data &&
+    typeof data === 'object' &&
+    'message' in data &&
+    typeof (data as { message: unknown }).message === 'string'
+  ) {
+    return (data as { message: string }).message;
+  }
+  return 'An error occurred';
+}
+
 const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 //const actualHost =
 // "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express";
@@ -11,14 +27,23 @@ const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 // https://trackem-all.netlify.app/.netlify/functions/express
 // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express/favorite
 
+function favoriteRequestHeaders(): Record<string, string> {
+  const token = localStorage.getItem('tea-token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export const register = createAsyncThunk(
   'auth/register',
   async (data, thunkAPI) => {
     try {
       return await authService.register(data);
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );
@@ -27,41 +52,38 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   try {
     return await authService.login(data);
   } catch (error: any) {
-    const message = error.response.data;
-    return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+    return thunkAPI.rejectWithValue(
+      formatErrorMessage(error.response?.data ?? error?.message)
+    );
   }
 });
 
 export const favoriteAdd = createAsyncThunk(
   'auth/favorites/add',
-  async (data: Favorite & { userId: number | undefined }, thunkAPI) => {
+  async (data: Favorite, thunkAPI) => {
     try {
       return await axios.post(actualHost + '/favorite/add', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
-        },
+        headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );
 
 export const favoriteRemove = createAsyncThunk(
   'auth/favorites/remove',
-  async (data: { userId: number; showId: string }, thunkAPI) => {
+  async (data: { showId: string }, thunkAPI) => {
     try {
       return await axios.post(actualHost + '/favorite/remove', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('tea-token') || '',
-        },
+        headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );

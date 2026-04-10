@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const mongoDB = import.meta.env.VITE_APP_MONGODB_URI;
-const jwtSecret = import.meta.env.VITE_APP_JWT_SECRET;
+// Same as express.js: serverless uses process.env, not import.meta.env (Vite).
+const jwtSecret = process.env.VITE_JWT_SECRET;
 
 const { User } = require('../models/user');
 
@@ -13,10 +13,10 @@ const generateAccessToken = (user) => {
 const saltRounds = 10;
 
 // @desc get user informations
-// @route GET /user/:id
+// @route GET /user
 // @access Authenticated
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).populate('favorites');
+  const user = await User.findById(String(req.user?.id)).populate('favorites');
   if (user) {
     res.json({
       id: user._id,
@@ -34,20 +34,20 @@ const getUser = asyncHandler(async (req, res) => {
 // @route POST /user/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = JSON.parse(req.body);
+  const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     res.status(400).send('User not found');
-    throw new Error('User not found');
+    return;
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
     res.status(400).send('Invalid password');
-    throw new Error('Invalid password');
+    return;
   }
 
   res.status(201).json({
@@ -68,10 +68,10 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route POST /user/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password } = JSON.parse(req.body);
+  const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
     res.status(400).send('Please fill all the fields');
-    throw new Error('Please fill all the fields');
+    return;
   }
 
   const existingUser = await User.findOne({ email: email });
@@ -79,7 +79,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existingUser) {
     // try with reponse text ?
     res.status(400).send('User already exists');
-    throw new Error('User already exists');
+    return;
   }
 
   try {
@@ -98,8 +98,9 @@ const registerUser = asyncHandler(async (req, res) => {
       id: savedUser._id,
     });
   } catch (err) {
-    res.status(400);
-    throw new Error(err);
+    console.error(err);
+    res.status(400).send('Registration failed');
+    return;
   }
 });
 
