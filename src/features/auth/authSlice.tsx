@@ -4,6 +4,22 @@ import authService from './authService';
 import axios from 'axios';
 import { AuthState, Favorite } from '../../typescript/types';
 
+/** Normalizes axios `response.data` (string or JSON body) for Redux `message`. */
+function formatErrorMessage(data: unknown): string {
+  if (typeof data === 'string') {
+    return data;
+  }
+  if (
+    data &&
+    typeof data === 'object' &&
+    'message' in data &&
+    typeof (data as { message: unknown }).message === 'string'
+  ) {
+    return (data as { message: string }).message;
+  }
+  return 'An error occurred';
+}
+
 const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 //const actualHost =
 // "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express";
@@ -25,8 +41,9 @@ export const register = createAsyncThunk(
     try {
       return await authService.register(data);
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );
@@ -35,8 +52,9 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   try {
     return await authService.login(data);
   } catch (error: any) {
-    const message = error.response.data;
-    return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+    return thunkAPI.rejectWithValue(
+      formatErrorMessage(error.response?.data ?? error?.message)
+    );
   }
 });
 
@@ -48,8 +66,9 @@ export const favoriteAdd = createAsyncThunk(
         headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );
@@ -62,8 +81,9 @@ export const favoriteRemove = createAsyncThunk(
         headers: favoriteRequestHeaders(),
       });
     } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message); // we can handle this in the error case
+      return thunkAPI.rejectWithValue(
+        formatErrorMessage(error.response?.data ?? error?.message)
+      );
     }
   }
 );
