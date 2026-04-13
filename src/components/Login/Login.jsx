@@ -29,7 +29,8 @@ export default function Login() {
   const { loginUser } = useAuth();
 
   const timer = 2000;
-  const { isError, isSuccess, message } = useSelector((state) => state.auth);
+
+  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
   const { notifySuccess, notifyInfo, notifyError } = useToast();
@@ -42,7 +43,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isSuccess) {
-      notifySuccess('You have successfully login!', { autoClose: timer });
+      notifySuccess('You have successfully logged in!', { autoClose: timer });
       notifyInfo('We are redirecting you to the homepage', {
         autoClose: timer,
       });
@@ -74,12 +75,12 @@ export default function Login() {
     <main id='main-content' className='page'>
       <form className='login__form-container' onSubmit={handleSubmit}>
         <div className='login__input-container'>
-          <label htmlFor='username'>Email: </label>
+          <label htmlFor='email'>Email: </label>
           <input
             className='login__input'
             type='email'
-            id='username'
-            name='username'
+            id='email'
+            name='email'
             required='required'
             {...bindEmail}
           ></input>
@@ -95,8 +96,8 @@ export default function Login() {
             {...bindPassword}
           ></input>
         </div>
-        <button type='submit' className='login__button'>
-          Log in
+        <button type='submit' className='login__button' disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Log in'}
         </button>
         <div className='login__register-text'>
           <span>Don&apos;t have account?</span>
