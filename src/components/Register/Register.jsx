@@ -48,6 +48,17 @@ export default function Register() {
   const { value: password, bind: bindPassword } = useInput('');
   const { value: confirmPassword, bind: bindConfirmPassword } = useInput('');
 
+  const [passwordError, setPasswordError] = useState(false);
+  const passwordErrorMessage = 'Password must be at least 10 characters and include upper and lowercase letters, a number, and a symbol from @$!%*?&.';
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const confirmPasswordErrorMessage = 'Passwords do not match';
+  const [firstNameError, setFirstNameError] = useState(false);
+  const firstNameErrorMessage = 'First name is required';
+  const [lastNameError, setLastNameError] = useState(false);
+  const lastNameErrorMessage = 'Last name is required';
+  const [emailError, setEmailError] = useState(false);
+  const emailErrorMessage = 'Email is required';
+
   useEffect(() => {
     if (isSuccess) {
       notifySuccess('You have successfully registered!', { autoClose: timer });
@@ -75,17 +86,33 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!REGISTER_PASSWORD_REGEX.test(password)) {
-      notifyError(
-        'Password must be at least 10 characters and include upper and lowercase letters, a number, and a symbol from @$!%*?&.'
-      );
+    if (!firstName) {
+      setFirstNameError(true);
       return;
     }
+    setFirstNameError(false);
+    if (!lastName) {
+      setLastNameError(true);
+      return;
+    }
+    setLastNameError(false);
+    if (!email) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+
+    if (!REGISTER_PASSWORD_REGEX.test(password)) {
+      setPasswordError(true);
+      return;
+    }
+    setPasswordError(false);
 
     if (password !== confirmPassword) {
-      notifyError('Passwords do not match');
+      setConfirmPasswordError(true);
       return;
     }
+    setConfirmPasswordError(false);
 
     registerUser({ firstName, lastName, email, password });
   };
@@ -110,60 +137,59 @@ export default function Register() {
     <main id='main-content' className='page'>
       <form className='register__form-container' onSubmit={handleSubmit}>
         <div className='register__input-container'>
-          <label htmlFor='firstname'>First Name: </label>
+          <label htmlFor='firstname'>First Name*: </label>
           <input
             className='register__input'
             type='text'
             id='firstname'
             name='firstName'
-            required='required'
             {...bindFirstName}
           ></input>
+          {firstNameError && <span className='register__input-error'>{firstNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='lastname'>Last Name: </label>
+          <label htmlFor='lastname'>Last Name*: </label>
           <input
             className='register__input'
             type='text'
             id='lastname'
             name='lastName'
-            required='required'
             {...bindLastName}
           ></input>
+          {lastNameError && <span className='register__input-error'>{lastNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='email'>Email:</label>
+          <label htmlFor='email'>Email*: </label>
           <input
             type='email'
             id='email'
             name='email'
-            required='required'
             className='register__input'
             {...bindEmail}
           ></input>
+          {emailError && <span className='register__input-error'>{emailErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='password'>Password:</label>
+          <label htmlFor='password'>Password*: </label>
           <input
             type='password'
             id='password'
             name='password'
-            required='required'
-            minLength={10}
             className='register__input'
             {...bindPassword}
           ></input>
+          {passwordError && <span className='register__input-error'>{passwordErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='confirmPassword'>Confirm Password:</label>
+          <label htmlFor='confirmPassword'>Confirm Password*: </label>
           <input
             type='password'
             id='confirmPassword'
             name='confirmPassword'
-            required='required'
             className='register__input'
             {...bindConfirmPassword}
           ></input>
+          {confirmPasswordError && <span className='register__input-error'>{confirmPasswordErrorMessage}</span>}
         </div>
         <button
           type='submit'
