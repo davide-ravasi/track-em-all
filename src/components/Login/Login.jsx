@@ -6,6 +6,10 @@ import { useHistory } from 'react-router-dom';
 import './Login.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/UseToast';
+import {
+  AUTH_FORM_MESSAGES,
+  isValidEmailFormat,
+} from '../../utils/authValidation';
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -34,6 +38,12 @@ export default function Login() {
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
   const { notifySuccess, notifyInfo, notifyError } = useToast();
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(
+    AUTH_FORM_MESSAGES.emailRequired
+  );
+  const [passwordError, setPasswordError] = useState(false);
+  const passwordErrorMessage = AUTH_FORM_MESSAGES.loginPasswordRequired;
 
   const {
     value: password,
@@ -67,13 +77,34 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const trimmedEmail = email.trim();
+    setEmailError(false);
+    setPasswordError(false);
 
-    loginUser({ email, password });
+    if (!trimmedEmail) {
+      setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailRequired);
+      return;
+    }
+
+    if (!isValidEmailFormat(trimmedEmail)) {
+      setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailInvalidFormat);
+      return;
+    }
+
+    const trimmedPassword = password.trim();
+    if (!trimmedPassword) {
+      setPasswordError(true);
+      return;
+    }
+
+    loginUser({ email: trimmedEmail, password: trimmedPassword });
   }
 
   return (
     <main id='main-content' className='page'>
-      <form className='login__form-container' onSubmit={handleSubmit}>
+      <form className='login__form-container' onSubmit={handleSubmit} noValidate>
         <div className='login__input-container'>
           <label htmlFor='email'>Email: </label>
           <input
@@ -81,9 +112,11 @@ export default function Login() {
             type='email'
             id='email'
             name='email'
-            required='required'
+            aria-invalid={emailError}
+            aria-describedby={emailError ? 'email-error' : undefined}
             {...bindEmail}
           ></input>
+          {emailError && <span className='login__input-error' id='email-error' role='alert'>{emailErrorMessage}</span>}
         </div>
         <div className='login__input-container'>
           <label htmlFor='password'>Password: </label>
@@ -92,11 +125,13 @@ export default function Login() {
             type='password'
             id='password'
             name='password'
-            required='required'
+            aria-invalid={passwordError}
+            aria-describedby={passwordError ? 'password-error' : undefined}
             {...bindPassword}
           ></input>
+          {passwordError && <span className='login__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
         </div>
-        <button type='submit' className='login__button' disabled={isLoading}>
+        <button type='submit' className='login__button' disabled={isLoading} aria-busy={isLoading}>
           {isLoading ? 'Logging in...' : 'Log in'}
         </button>
         <div className='login__register-text'>

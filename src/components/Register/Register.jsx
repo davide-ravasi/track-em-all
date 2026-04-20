@@ -8,10 +8,11 @@ import './Register.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/UseToast';
 import Loader from '../Loader/Loader';
-
-/** Password rules for register (HTML `pattern` is unreliable with this shape; keep in sync with backend). */
-const REGISTER_PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+import {
+  AUTH_FORM_MESSAGES,
+  isValidEmailFormat,
+  isValidRegisterPassword,
+} from '../../utils/authValidation';
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -49,15 +50,17 @@ export default function Register() {
   const { value: confirmPassword, bind: bindConfirmPassword } = useInput('');
 
   const [passwordError, setPasswordError] = useState(false);
-  const passwordErrorMessage = 'Password must be at least 10 characters and include upper and lowercase letters, a number, and a symbol from @$!%*?&.';
+  const passwordErrorMessage = AUTH_FORM_MESSAGES.registerPasswordPolicy;
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const confirmPasswordErrorMessage = 'Passwords do not match';
+  const confirmPasswordErrorMessage = AUTH_FORM_MESSAGES.confirmPasswordMismatch;
   const [firstNameError, setFirstNameError] = useState(false);
-  const firstNameErrorMessage = 'First name is required';
+  const firstNameErrorMessage = AUTH_FORM_MESSAGES.firstNameRequired;
   const [lastNameError, setLastNameError] = useState(false);
-  const lastNameErrorMessage = 'Last name is required';
+  const lastNameErrorMessage = AUTH_FORM_MESSAGES.lastNameRequired;
   const [emailError, setEmailError] = useState(false);
-  const emailErrorMessage = 'Email is required';
+  const [emailErrorMessage, setEmailErrorMessage] = useState(
+    AUTH_FORM_MESSAGES.emailRequired
+  );
 
   useEffect(() => {
     if (isSuccess) {
@@ -85,36 +88,49 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFirstNameError(false);
+    setLastNameError(false);
+    setEmailError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
 
-    if (!firstName) {
+    const trimmedEmail = email.trim();
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
+
+    if (!trimmedFirstName) {
       setFirstNameError(true);
       return;
     }
-    setFirstNameError(false);
-    if (!lastName) {
+
+    if (!trimmedLastName) {
       setLastNameError(true);
       return;
     }
-    setLastNameError(false);
-    if (!email) {
+
+    if (!trimmedEmail) {
       setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailRequired);
       return;
     }
-    setEmailError(false);
 
-    if (!REGISTER_PASSWORD_REGEX.test(password)) {
+    if (!isValidEmailFormat(trimmedEmail)) {
+      setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailInvalidFormat);
+      return;
+    }
+
+    if (!isValidRegisterPassword(password)) {
       setPasswordError(true);
       return;
     }
-    setPasswordError(false);
 
     if (password !== confirmPassword) {
       setConfirmPasswordError(true);
       return;
     }
-    setConfirmPasswordError(false);
 
-    registerUser({ firstName, lastName, email, password });
+    registerUser({ firstName: trimmedFirstName, lastName: trimmedLastName, email: trimmedEmail, password });
   };
 
   if (isLoading) {
@@ -135,7 +151,7 @@ export default function Register() {
 
   return (
     <main id='main-content' className='page'>
-      <form className='register__form-container' onSubmit={handleSubmit}>
+      <form className='register__form-container' onSubmit={handleSubmit} noValidate>
         <div className='register__input-container'>
           <label htmlFor='firstname'>First Name*: </label>
           <input
@@ -143,9 +159,11 @@ export default function Register() {
             type='text'
             id='firstname'
             name='firstName'
+            aria-invalid={firstNameError}
+            aria-describedby={firstNameError ? 'firstName-error' : undefined}
             {...bindFirstName}
           ></input>
-          {firstNameError && <span className='register__input-error'>{firstNameErrorMessage}</span>}
+          {firstNameError && <span className='register__input-error' id='firstName-error' role='alert'>{firstNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
           <label htmlFor='lastname'>Last Name*: </label>
@@ -154,9 +172,11 @@ export default function Register() {
             type='text'
             id='lastname'
             name='lastName'
+            aria-invalid={lastNameError}
+            aria-describedby={lastNameError ? 'lastName-error' : undefined}
             {...bindLastName}
           ></input>
-          {lastNameError && <span className='register__input-error'>{lastNameErrorMessage}</span>}
+          {lastNameError && <span className='register__input-error' id='lastName-error' role='alert'>{lastNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
           <label htmlFor='email'>Email*: </label>
@@ -165,9 +185,11 @@ export default function Register() {
             id='email'
             name='email'
             className='register__input'
+            aria-invalid={emailError}
+            aria-describedby={emailError ? 'email-error' : undefined}
             {...bindEmail}
           ></input>
-          {emailError && <span className='register__input-error'>{emailErrorMessage}</span>}
+          {emailError && <span className='register__input-error' id='email-error' role='alert'>{emailErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
           <label htmlFor='password'>Password*: </label>
@@ -176,9 +198,11 @@ export default function Register() {
             id='password'
             name='password'
             className='register__input'
+            aria-invalid={passwordError}
+            aria-describedby={passwordError ? 'password-error' : undefined}
             {...bindPassword}
           ></input>
-          {passwordError && <span className='register__input-error'>{passwordErrorMessage}</span>}
+          {passwordError && <span className='register__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
           <label htmlFor='confirmPassword'>Confirm Password*: </label>
@@ -187,14 +211,17 @@ export default function Register() {
             id='confirmPassword'
             name='confirmPassword'
             className='register__input'
+            aria-invalid={confirmPasswordError}
+            aria-describedby={confirmPasswordError ? 'confirmPassword-error' : undefined}
             {...bindConfirmPassword}
           ></input>
-          {confirmPasswordError && <span className='register__input-error'>{confirmPasswordErrorMessage}</span>}
+          {confirmPasswordError && <span className='register__input-error' id='confirmPassword-error' role='alert'>{confirmPasswordErrorMessage}</span>}
         </div>
         <button
           type='submit'
           className='register__button'
           disabled={isLoading}
+          aria-busy={isLoading}
         >
           {isLoading ? 'Registering...' : 'Register'}
         </button>
