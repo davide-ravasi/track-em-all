@@ -6,7 +6,7 @@ globs: functions/**/*.js
 
 - JWT middleware lives in [functions/express.js](mdc:functions/express.js). It must:
   - Require `Authorization: Bearer <token>`
-  - Verify with `import.meta.env.REACT_APP_JWT_SECRET`
+  - Verify with `process.env.REACT_APP_JWT_SECRET` or `process.env.VITE_JWT_SECRET` (Netlify Functions use Node, not Vite's `import.meta.env`)
   - Attach `req.user` on success
 - Passwords must be hashed with bcrypt (see [functions/controllers/userController.js](mdc:functions/controllers/userController.js)).
 - Protect favorites routes with `protect` middleware.

@@ -29,6 +29,15 @@
     border-bottom: 1px solid white;
     color: $color-main;
   }
+  
+  &__input-error {
+    display: block;
+    text-align: right;
+    max-width: 300px;
+    color: $color-warning;
+    font-size: $font-size-small;
+    margin-top: 0.5rem;
+  }
 
   &__button {
     margin-top: 1rem;

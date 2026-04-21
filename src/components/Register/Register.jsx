@@ -8,6 +8,11 @@ import './Register.scss';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/UseToast';
 import Loader from '../Loader/Loader';
+import {
+  AUTH_FORM_MESSAGES,
+  isValidEmailFormat,
+  isValidRegisterPassword,
+} from '../../utils/authValidation';
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -42,6 +47,20 @@ export default function Register() {
   const { value: lastName, bind: bindLastName } = useInput('');
   const { value: email, bind: bindEmail } = useInput('');
   const { value: password, bind: bindPassword } = useInput('');
+  const { value: confirmPassword, bind: bindConfirmPassword } = useInput('');
+
+  const [passwordError, setPasswordError] = useState(false);
+  const passwordErrorMessage = AUTH_FORM_MESSAGES.registerPasswordPolicy;
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const confirmPasswordErrorMessage = AUTH_FORM_MESSAGES.confirmPasswordMismatch;
+  const [firstNameError, setFirstNameError] = useState(false);
+  const firstNameErrorMessage = AUTH_FORM_MESSAGES.firstNameRequired;
+  const [lastNameError, setLastNameError] = useState(false);
+  const lastNameErrorMessage = AUTH_FORM_MESSAGES.lastNameRequired;
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(
+    AUTH_FORM_MESSAGES.emailRequired
+  );
 
   useEffect(() => {
     if (isSuccess) {
@@ -69,8 +88,54 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFirstNameError(false);
+    setLastNameError(false);
+    setEmailError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
 
-    registerUser({ firstName, lastName, email, password });
+    const trimmedEmail = email.trim();
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
+
+    if (!trimmedFirstName) {
+      setFirstNameError(true);
+      return;
+    }
+
+    if (!trimmedLastName) {
+      setLastNameError(true);
+      return;
+    }
+
+    if (!trimmedEmail) {
+      setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailRequired);
+      return;
+    }
+
+    if (!isValidEmailFormat(trimmedEmail)) {
+      setEmailError(true);
+      setEmailErrorMessage(AUTH_FORM_MESSAGES.emailInvalidFormat);
+      return;
+    }
+
+    if (!isValidRegisterPassword(password)) {
+      setPasswordError(true);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      return;
+    }
+
+    registerUser({
+      firstName: trimmedFirstName,
+      lastName: trimmedLastName,
+      email: trimmedEmail,
+      password,
+    });
   };
 
   if (isLoading) {
@@ -81,7 +146,7 @@ export default function Register() {
           aria-live='polite'
           aria-atomic='true'
           role='status'
-          aria-label='Loading episodes'
+          aria-label='Loading register page'
         >
           <Loader aria-hidden='true' aria-busy='true' />
         </div>
@@ -91,54 +156,79 @@ export default function Register() {
 
   return (
     <main id='main-content' className='page'>
-      <form className='register__form-container' onSubmit={handleSubmit}>
+      <form className='register__form-container' onSubmit={handleSubmit} noValidate>
         <div className='register__input-container'>
-          <label htmlFor='firstname'>First Name: </label>
+          <label htmlFor='firstname'>First Name*: </label>
           <input
             className='register__input'
             type='text'
-            id='firstName'
+            id='firstname'
             name='firstName'
-            required='required'
+            aria-invalid={firstNameError}
+            aria-describedby={firstNameError ? 'firstName-error' : undefined}
             {...bindFirstName}
           ></input>
+          {firstNameError && <span className='register__input-error' id='firstName-error' role='alert'>{firstNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='lastname'>Last Name: </label>
+          <label htmlFor='lastname'>Last Name*: </label>
           <input
             className='register__input'
             type='text'
-            id='lastName'
+            id='lastname'
             name='lastName'
-            required='required'
+            aria-invalid={lastNameError}
+            aria-describedby={lastNameError ? 'lastName-error' : undefined}
             {...bindLastName}
           ></input>
+          {lastNameError && <span className='register__input-error' id='lastName-error' role='alert'>{lastNameErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='email'>Email:</label>
+          <label htmlFor='email'>Email*: </label>
           <input
             type='email'
+            id='email'
             name='email'
             className='register__input'
+            aria-invalid={emailError}
+            aria-describedby={emailError ? 'email-error' : undefined}
             {...bindEmail}
           ></input>
+          {emailError && <span className='register__input-error' id='email-error' role='alert'>{emailErrorMessage}</span>}
         </div>
         <div className='register__input-container'>
-          <label htmlFor='password'>Password:</label>
+          <label htmlFor='password'>Password*: </label>
           <input
             type='password'
+            id='password'
             name='password'
             className='register__input'
+            aria-invalid={passwordError}
+            aria-describedby={passwordError ? 'password-error' : undefined}
             {...bindPassword}
           ></input>
+          {passwordError && <span className='register__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
+        </div>
+        <div className='register__input-container'>
+          <label htmlFor='confirmPassword'>Confirm Password*: </label>
+          <input
+            type='password'
+            id='confirmPassword'
+            name='confirmPassword'
+            className='register__input'
+            aria-invalid={confirmPasswordError}
+            aria-describedby={confirmPasswordError ? 'confirmPassword-error' : undefined}
+            {...bindConfirmPassword}
+          ></input>
+          {confirmPasswordError && <span className='register__input-error' id='confirmPassword-error' role='alert'>{confirmPasswordErrorMessage}</span>}
         </div>
         <button
           type='submit'
           className='register__button'
-          title='Register'
-          value='Register'
+          disabled={isLoading}
+          aria-busy={isLoading}
         >
-          Register
+          {isLoading ? 'Registering...' : 'Register'}
         </button>
       </form>
     </main>

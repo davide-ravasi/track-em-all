@@ -2,7 +2,7 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2025-02-06
+**Last Updated:** 2026-04-02
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
@@ -19,17 +19,18 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 | Priority | Area                         | What to do                                                             | Why                                                                                                                |
 | -------- | ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | **1**    | **Security**                 | Input validation + rate limiting on auth → CORS/JWT review             | Protects users and app; unblocks peace of mind before new features.                                                |
-| **2**    | **Firebase**                 | ~~Remove Firebase~~ ✓ (done)                                           | —                                                                                                                  |
-| **3**    | **DevEx / CI**               | ~~Unify CI~~ ✓ ~~Prettier~~ ✓ ~~README badge~~ ✓; ~~build in CI~~ N/A   | Build on Netlify; optional: `prettier --check` in CI, lint-staged.                                                  |
+| **2**    | **Firebase**                 | Done (removed). Follow-ups: see **Security → Cleanup** and [archive](./TODO-LIST-ARCHIVE.md). | —                                                                                                                  |
+| **3**    | **DevEx / CI**               | Core tooling + CI unified (see [archive](./TODO-LIST-ARCHIVE.md)). Optional: `prettier --check` in CI, lint-staged. | Build on Netlify.                                                                                                  |
 | **4**    | **Testing**                  | More Playwright smoke tests (Show, Person, Favorites, etc.)            | You already have homepage; extend coverage before adding features.                                                 |
 | **5**    | **Performance**              | Bundle visualizer → code splitting / lazy routes                       | Understand size first, then optimize; supports faster loads.                                                       |
 | **6**    | **PWA polish**               | Maskable icons, optional update/offline/install prompts                | Improves install experience; not blocking.                                                                         |
 | **7**    | **SEO**                      | Meta + Open Graph in `index.html` → dynamic meta (e.g. Helmet)         | Good for discovery; can batch in one pass.                                                                         |
 | **8**    | **Routing / deps**           | React Router v6 evaluation, then dependency upgrades                   | Plan as a dedicated change; do after security and testing.                                                         |
 | **9**    | **Polish / later**           | Reusable loader/error, headless kit audit, form CSS, README            | When foundation is solid; improves maintainability.                                                                |
-| **—**    | **Data fetching (parallel)** | Migrate API calls to React Query (TanStack Query)                      | Caching, loading/error handling; can be done in parallel with other priorities. See **Data fetching / API** below. |
+| **—**    | **Cursor Skills**            | Add project **Skills** (`SKILL.md`) for repeatable agent workflows   | Same steps every time (tests, CI, deploy); complements `.cursor/rules`. See **Developer Experience → Cursor Skills**. |
+| **—**    | **Data fetching (parallel)** | ~~Core React Query migration~~ ✓ (see [archive](./TODO-LIST-ARCHIVE.md)). Optional: auth `useMutation`, search `useQuery`. | Remaining items in **Data fetching / API** below.                                                                  |
 
-**Quick wins when you have little time:** one more smoke test, add lint to CI, or meta + Open Graph in `index.html`.
+**Quick wins when you have little time:** one more smoke test, `prettier --check` in CI, or meta + Open Graph in `index.html`.
 
 ---
 
@@ -111,6 +112,19 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ## 🔒 Security Hardening
 
+### Frontend auth forms (`Login` / `Register`)
+
+Next slice: validation and UX on [`src/components/Login/`](../src/components/Login/) and [`src/components/Register/`](../src/components/Register/); then align the same rules in [`functions/controllers/userController.js`](../functions/controllers/userController.js) and add rate limiting (see **Backend Security** below).
+
+- [x] **Refactor validation (DRY)** — shared module [`src/utils/authValidation.js`](../src/utils/authValidation.js): `EMAIL_FORMAT_REGEX`, `REGISTER_PASSWORD_REGEX`, `isValidEmailFormat`, `isValidRegisterPassword`, `AUTH_FORM_MESSAGES`; imported by `Login` and `Register`. **Next:** reuse the same rules in [`userController.js`](../functions/controllers/userController.js) when adding server validation.
+- [ ] **firstName** / **lastName** required (trim; max length); mirror on backend register
+- [ ] **Password policy** — define rules (e.g. minimum length; optional complexity per NIST-style guidance)
+- [ ] **Register:** confirm password field + match check before submit (client-only UX; server still validates single password)
+- [ ] **Email** — format validation on client; backend: normalize (trim, lowercase) + validate
+- [ ] **Optional:** password strength meter (e.g. [zxcvbn](https://github.com/dropbox/zxcvbn) or a design-system pattern)
+- [ ] **Disable submit** while auth request is in flight (`isLoading` / thunk `pending`)
+- [ ] **Optional:** design-system refactor for inputs, buttons, and a11y (can bundle with strength indicator)
+
 ### Backend Security
 
 - [ ] Add input validation to auth endpoints
@@ -129,13 +143,12 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
   - [ ] Implement refresh token mechanism
   - [ ] Review token storage (httpOnly cookies vs localStorage)
 
-### Cleanup
+### Cleanup (post-Firebase)
 
-- [x] **Remove Firebase** (done 2025-02)
-  - [x] Removed `src/firebase/` and Firebase dependencies from package.json
-  - [x] EpisodeCard simplified: "watched" icon/buttons hidden for now (no persistence)
-  - [ ] (Later) When backend has watched-episodes API: restore "watched" feature in EpisodeCard and connect to backend
-  - [ ] Remove Firebase-related env vars from .env / Netlify if not already done
+Firebase removal is **done** — details in [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
+
+- [ ] (Later) When backend has watched-episodes API: restore "watched" feature in EpisodeCard and connect to backend
+- [ ] Remove Firebase-related env vars from `.env` / Netlify if not already done
 
 ---
 
@@ -171,15 +184,11 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ## 📡 Data fetching / API
 
-- [x] **Migrate API calls to React Query (TanStack Query)** (done)
-  - [x] Install `@tanstack/react-query` and React Query DevTools
-  - [x] Add `QueryClientProvider` and `QueryClient` in `src/index.tsx`
-  - [x] ShowList: migrated to `useQuery` (remaining: optional `useInfiniteQuery` for "Load more")
-  - [x] ShowPage, PersonPage, EpisodePage, ShowEpisodes, ShowVideo: migrated to `useQuery`
-  - [x] Remove `UseApiCall` hook (deleted)
-  - [ ] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })`
-  - [ ] (Optional) ShowList "Load more": migrate to `useInfiniteQuery`
-  - [ ] (Later) Auth (login/register/favorites): migrate to `useMutation` when desired
+Core **React Query** migration is **done** — see [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
+
+- [ ] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })`
+- [ ] (Optional) ShowList "Load more": migrate to `useInfiniteQuery`
+- [ ] (Later) Auth (login/register/favorites): migrate to `useMutation` when desired
 
 ---
 
@@ -220,9 +229,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ### Dependency Audit
 
-- [x] **Run `npm audit` and fix vulnerabilities** (done 2025-02)
-  - Safe fixes applied (`npm audit fix`); old/unused deps removed (e.g. nodemon)
-  - **7 remaining vulnerabilities documented:** firebase (moderate), tar via @mapbox/node-pre-gyp (high), tmp via @lhci/cli (low ×4). Address when doing Firebase removal or when LHCI updates its dependencies; see `npm audit` for details.
+- **npm audit pass** (2025-02) — archived in [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md). Re-run `npm audit` periodically.
 - [ ] Review and upgrade older dependencies
 - [ ] Check for deprecated packages
 - [ ] Update to latest stable versions where possible
@@ -234,22 +241,20 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ### Code Quality Tools
 
-- [x] Set up unified ESLint configuration (`eslint.config.js`, flat config)
-- [x] Set up Prettier configuration (`.prettierrc`, `.prettierignore`, `npm run format`)
-- [x] Configure ESLint + Prettier integration (`eslint-config-prettier` in `eslint.config.js`)
-- [x] Add pre-commit hooks (Husky) — runs `npm run lint` on commit. Optional later: lint-staged to lint only staged files.
+Done items (ESLint, Prettier, Husky, integration) — see [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
+
 - [ ] Document code style guidelines
+
+### Cursor Skills (Agent)
+
+- [ ] **Add Skills to the project** — Cursor Agent **Skills** (`SKILL.md`): document repeatable workflows (e.g. run Playwright locally/CI, Lighthouse, Netlify env, release checklist) so the assistant follows the same procedure. Options: repo folder (e.g. `.cursor/skills/` or `docs/skills/`) and/or user-level skills; link from project README or team onboarding if shared.
 
 ### CI/CD Improvements
 
-- [x] Add lint check to CI pipeline (`.github/workflows/eslint.yml`)
-- [x] ~~Add build check to CI pipeline~~ **N/A:** production/preview build runs on Netlify (`npm run build`); no duplicate build in GitHub Actions needed.
+Lint in CI, unified `main-workflow.yml`, BASE_URL job, caching, README badge, and “no duplicate Netlify build” decision — see [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
+
 - [ ] Add test suite to CI pipeline
 - [ ] Configure CI to run on all PRs
-- [x] Add status badges to README (GitHub Actions workflow status in README)
-- [x] **Unify CI in one pipeline** (done 2025-02): `main-workflow.yml` runs lint → lighthouse → playwright in sequence via reusable workflows; fails fast with `needs`.
-- [x] **Centralize BASE_URL** (done 2025-02): Job `set-base-url` in main workflow; output passed as input to lighthouse and playwright (no duplicated logic).
-- [x] **CI caching** (done 2025-02): npm cache (`cache: 'npm'` in setup-node) in eslint, lighthouse, playwright; Playwright browser cache in playwright.yml with conditional install.
 
 ### Component Reusability
 
@@ -290,7 +295,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 ### Styles / CSS
 
 - [ ] **Reorganize form-related CSS**
-  - [ ] Audit all form-related styles (SignIn.scss, Signup.scss, SearchBar.scss, Search.scss, etc.)
+  - [ ] Audit all form-related styles (Login.scss, Register.scss, SearchBar.scss, Search.scss, etc.)
   - [ ] Identify duplicated form patterns (inputs, labels, buttons, containers)
   - [ ] Decide approach: shared SCSS partial (e.g. `_forms.scss`), shared form component styles, or design tokens/variables for form elements
   - [ ] Consolidate and refactor form CSS to reduce duplication and improve maintainability
@@ -300,7 +305,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ## ♿ Accessibility & Semantic HTML
 
-**Accessibility pass completed:** 2025-01 (all pages and components reviewed; skip link, ARIA, semantic HTML, and form/button fixes applied). Consider manual keyboard and screen reader testing when possible.
+**Milestone (2025-01):** broad accessibility pass completed — summary in [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md). Continue with manual keyboard and screen reader testing when possible.
 
 ### General Accessibility
 
@@ -324,22 +329,16 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ---
 
-## 📋 Completed Items Log
+## 📋 Completed work
 
-Completed tasks have been moved to **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md)** for reference.
-
-- **Firebase removal** (2025-02): Firebase and `src/firebase/` removed; EpisodeCard no longer uses Firestore; "watched" UI hidden until backend supports it.
-- **CI unification** (2025-02): Single entry point `main-workflow.yml` calling reusable workflows (eslint → lighthouse → playwright) with `needs`; Node 20 in all workflows.
-- **CI: BASE_URL + caching** (2025-02): `set-base-url` job outputs base_url and passes it to lighthouse/playwright; npm cache in all workflows; Playwright browser cache in playwright.yml (conditional install on cache miss).
-- **Prettier + ESLint** (2025-02): Prettier in devDependencies, `.prettierrc` / `.prettierignore`, `format` script; `eslint-config-prettier` wired in flat config. **CI build:** intentionally skipped — Netlify builds on deploy/preview.
-- **README CI badge** (2025-02): Workflow status badge linking to GitHub Actions.
+See **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md)** for the full log of finished tasks (Firebase, React Query, CI, tooling, accessibility milestone, etc.).
 
 ---
 
 ## 📝 Notes
 
 - **Priority Order**: See **Suggested priority** section above; full phases in [TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md).
-- **DevEx sequence:** ~~Fix ESLint errors~~ ✓ ~~Husky (pre-commit)~~ ✓ ~~Lint in CI~~ ✓ ~~Unify CI (main-workflow)~~ ✓ ~~BASE_URL + cache~~ ✓ ~~Prettier + eslint-config-prettier~~ ✓ ~~README CI badge~~ ✓. ~~Build in CI~~ N/A (Netlify). Optional: `prettier --check` in CI, lint-staged.
+- **DevEx sequence:** Core items completed — see [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md). Optional: `prettier --check` in CI, lint-staged, **Cursor Skills** (see DevEx → Cursor Skills). Build in CI remains N/A (Netlify).
 - **Breaking Changes**: React Router v6 migration should be planned carefully.
 - **Firebase**: Removed. EpisodeCard "watched" feature to be restored when backend has watched-episodes API.
 - **Testing Strategy**: Consider Vitest for better Vite integration, but Jest is already working.
