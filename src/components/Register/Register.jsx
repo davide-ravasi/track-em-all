@@ -130,7 +130,12 @@ export default function Register() {
       return;
     }
 
-    registerUser({ firstName: trimmedFirstName, lastName: trimmedLastName, email: trimmedEmail, password });
+    registerUser({
+      firstName: trimmedFirstName,
+      lastName: trimmedLastName,
+      email: trimmedEmail,
+      password,
+    });
   };
 
   if (isLoading) {
