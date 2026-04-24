@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
+const { AUTH_FORM_MESSAGES } = require('./utils/authValidation');
 
 // connect express server to mongodb database
 const mongoose = require('mongoose');
@@ -16,18 +17,16 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-// end of mongodb connection
-
-// import models
-//const { Favorite } = require("./models/favorite");
-// end of import models
 
 const {
   getUser,
   loginUser,
   registerUser,
 } = require('./controllers/userController');
-const { User } = require('./models/user');
+const {
+  addFavorite,
+  removeFavorite,
+} = require('./controllers/favoriteController');
 
 app.use(cors());
 app.use(express.json());
@@ -39,104 +38,25 @@ const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Access token not found' });
+    return res
+      .status(401)
+      .json({ message: AUTH_FORM_MESSAGES.accessTokenNotFound });
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Access token not found' });
+    return res
+      .status(401)
+      .json({ message: AUTH_FORM_MESSAGES.accessTokenNotFound });
   }
 
   jwt.verify(token, jwtSecret, function (err, decoded) {
     if (err) {
-      return res.status(401).json({ message: 'Invalid token' });
+      return res.status(401).json({ message: AUTH_FORM_MESSAGES.invalidToken });
     }
     req.user = decoded; // Attach user to request
     next();
-  });
-};
-// better object with real data from api
-// to check if exists in db if not
-// retrieve from api endpoint
-// const getFavorites = (req, res) => {
-//   Favorite.find({}, (err, favorites) => {
-//     if (err) return res.status(500).send(err);
-//     console.log(favorites);
-//     res.json(favorites);
-//   });
-// };
-
-const addFavorite = async (req, res) => {
-  // Set in `protect` after jwt.verify — same payload as login: { id: user._id, iat, exp }
-  const userId = req.user?.id;
-
-  if (!userId) {
-    return res.status(401).json({ message: 'Invalid token payload' });
-  }
-
-  const { name, poster_path, vote_average, showId } = req.body;
-  const user = await User.findById(String(userId));
-
-  if (!user) {
-    return res.status(400).send('User not found');
-  }
-
-  if (String(showId).trim() === '' || !name) {
-    return res.status(400).send('The favorite data is not valid');
-  }
-
-  const favorite = {
-    showId,
-    name,
-    poster_path,
-    vote_average,
-  };
-
-  user.favorites.push(favorite);
-
-  const updatedUser = await user.save();
-
-  // TO DO:  the data can be removed from the response if not needed?
-  // TO DO: and for security reasons?
-  res.status(201).json({
-    id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    email: updatedUser.email,
-    favorites: updatedUser.favorites,
-  });
-};
-
-const removeFavorite = async (req, res) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ message: 'Invalid token payload' });
-  }
-
-  const { showId } = req.body;
-  const user = await User.findById(String(userId));
-
-  if (!user) {
-    return res.status(400).send('User not found');
-  }
-
-  if (!showId) {
-    return res.status(400).send('The favorite showId is not valid');
-  }
-
-  user.favorites = user.favorites.filter(
-    (favorite) => favorite.showId !== showId.toString()
-  );
-
-  const updatedUser = await user.save();
-
-  res.status(201).json({
-    id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    email: updatedUser.email,
-    favorites: updatedUser.favorites,
   });
 };
 
@@ -157,6 +77,16 @@ app.use(router);
 // SPA fallback only for GET / (avoid swallowing POST /user/register, etc.)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../index.html'));
+}); // Express only treats arity-4 functions as error middleware (see express/lib/router/layer.js).
+
+app.use((err, req, res, _next) => {
+  console.error(err);
+  const status = Number(err.status) || Number(err.statusCode) || 500;
+  const message =
+    process.env.NODE_ENV === 'production' && status >= 500
+      ? 'Internal server error'
+      : err.message || 'An error occurred';
+  res.status(status).json({ message });
 });
 
 module.exports = app;

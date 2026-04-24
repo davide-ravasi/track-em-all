@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { REGISTER_NAME_MAX_LENGTH } = require('../utils/authValidation');
 const Schema = mongoose.Schema;
 
 const FavoriteSchema = new Schema({
@@ -13,10 +14,12 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: true,
+      maxlength: REGISTER_NAME_MAX_LENGTH,
     },
     lastName: {
       type: String,
       required: true,
+      maxlength: REGISTER_NAME_MAX_LENGTH,
     },
     email: {
       type: String,

@@ -3,6 +3,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // Same as express.js: serverless uses process.env, not import.meta.env (Vite).
 const jwtSecret = process.env.VITE_JWT_SECRET;
+const {
+  isValidEmailFormat,
+  isValidRegisterPassword,
+  isRegisterNameLengthValid,
+  isRegisterNameCharactersValid,
+  AUTH_FORM_MESSAGES,
+} = require('../utils/authValidation');
 
 const { User } = require('../models/user');
 
@@ -26,7 +33,7 @@ const getUser = asyncHandler(async (req, res) => {
       favorites: user.favorites,
     });
   } else {
-    res.status(404).send('User not found');
+    res.status(404).json({ message: AUTH_FORM_MESSAGES.userNotFound });
   }
 });
 
@@ -34,19 +41,39 @@ const getUser = asyncHandler(async (req, res) => {
 // @route POST /user/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body ?? {};
 
-  const user = await User.findOne({ email }).select('+password');
+  const trimmedEmail = String(email ?? '')
+    .trim()
+    .toLowerCase();
+  const trimmedPassword = String(password ?? '').trim();
 
-  if (!user) {
-    res.status(400).send('User not found');
+  if (!trimmedEmail) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.emailRequired });
     return;
   }
 
-  const validPassword = await bcrypt.compare(password, user.password);
+  if (!trimmedPassword) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.loginPasswordRequired });
+    return;
+  }
+
+  if (!isValidEmailFormat(trimmedEmail)) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.emailInvalidFormat });
+    return;
+  }
+
+  const user = await User.findOne({ email: trimmedEmail }).select('+password');
+
+  if (!user) {
+    res.status(401).json({ message: AUTH_FORM_MESSAGES.emailPasswordInvalid });
+    return;
+  }
+
+  const validPassword = await bcrypt.compare(trimmedPassword, user.password);
 
   if (!validPassword) {
-    res.status(400).send('Invalid password');
+    res.status(401).json({ message: AUTH_FORM_MESSAGES.emailPasswordInvalid });
     return;
   }
 
@@ -60,48 +87,84 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 });
 
-// better object with real data from api
-// to check if exists in db if not
-// retrieve from api endpoint
-
 // @desc Register new user
 // @route POST /user/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
-    res.status(400).send('Please fill all the fields');
+  const { firstName, lastName, email, password } = req.body ?? {};
+  const trimmedFirstName = String(firstName ?? '').trim();
+  const trimmedLastName = String(lastName ?? '').trim();
+  const trimmedEmail = String(email ?? '')
+    .trim()
+    .toLowerCase();
+  const trimmedPassword = String(password ?? '').trim();
+
+  if (!trimmedFirstName) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.firstNameRequired });
     return;
   }
 
-  const existingUser = await User.findOne({ email: email });
+  if (!trimmedLastName) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.lastNameRequired });
+    return;
+  }
+
+  if (!trimmedEmail || !trimmedPassword) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.pleaseFillAllFields });
+    return;
+  }
+
+  if (
+    !isRegisterNameLengthValid(trimmedFirstName) ||
+    !isRegisterNameLengthValid(trimmedLastName)
+  ) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.registerNameTooLong });
+    return;
+  }
+
+  if (
+    !isRegisterNameCharactersValid(trimmedFirstName) ||
+    !isRegisterNameCharactersValid(trimmedLastName)
+  ) {
+    res
+      .status(400)
+      .json({ message: AUTH_FORM_MESSAGES.registerNameInvalidCharacters });
+    return;
+  }
+
+  if (!isValidEmailFormat(trimmedEmail)) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.emailInvalidFormat });
+    return;
+  }
+
+  if (!isValidRegisterPassword(trimmedPassword)) {
+    res
+      .status(400)
+      .json({ message: AUTH_FORM_MESSAGES.registerPasswordPolicy });
+    return;
+  }
+
+  const existingUser = await User.findOne({ email: trimmedEmail });
 
   if (existingUser) {
-    // try with reponse text ?
-    res.status(400).send('User already exists');
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.userAlreadyExists });
     return;
   }
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const hashedPassword = await bcrypt.hash(trimmedPassword, saltRounds);
 
-    const user = new User({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: hashedPassword,
-      favorites: [],
-    });
+  const user = new User({
+    firstName: trimmedFirstName,
+    lastName: trimmedLastName,
+    email: trimmedEmail,
+    password: hashedPassword,
+    favorites: [],
+  });
 
-    const savedUser = await user.save();
-    res.status(201).json({
-      id: savedUser._id,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(400).send('Registration failed');
-    return;
-  }
+  const savedUser = await user.save();
+  res.status(201).json({
+    id: savedUser._id,
+  });
 });
 
 module.exports = {

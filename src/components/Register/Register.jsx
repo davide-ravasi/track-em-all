@@ -10,8 +10,11 @@ import { useToast } from '../../hooks/UseToast';
 import Loader from '../Loader/Loader';
 import {
   AUTH_FORM_MESSAGES,
+  REGISTER_NAME_MAX_LENGTH,
   isValidEmailFormat,
   isValidRegisterPassword,
+  isRegisterNameLengthValid,
+  isRegisterNameCharactersValid,
 } from '../../utils/authValidation';
 
 export const useInput = (initialValue) => {
@@ -54,9 +57,13 @@ export default function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const confirmPasswordErrorMessage = AUTH_FORM_MESSAGES.confirmPasswordMismatch;
   const [firstNameError, setFirstNameError] = useState(false);
-  const firstNameErrorMessage = AUTH_FORM_MESSAGES.firstNameRequired;
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = useState(
+    AUTH_FORM_MESSAGES.firstNameRequired
+  );
   const [lastNameError, setLastNameError] = useState(false);
-  const lastNameErrorMessage = AUTH_FORM_MESSAGES.lastNameRequired;
+  const [lastNameErrorMessage, setLastNameErrorMessage] = useState(
+    AUTH_FORM_MESSAGES.lastNameRequired
+  );
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState(
     AUTH_FORM_MESSAGES.emailRequired
@@ -89,7 +96,9 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFirstNameError(false);
+    setFirstNameErrorMessage(AUTH_FORM_MESSAGES.firstNameRequired);
     setLastNameError(false);
+    setLastNameErrorMessage(AUTH_FORM_MESSAGES.lastNameRequired);
     setEmailError(false);
     setPasswordError(false);
     setConfirmPasswordError(false);
@@ -100,11 +109,37 @@ export default function Register() {
 
     if (!trimmedFirstName) {
       setFirstNameError(true);
+      setFirstNameErrorMessage(AUTH_FORM_MESSAGES.firstNameRequired);
+      return;
+    }
+
+    if (!isRegisterNameLengthValid(trimmedFirstName)) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage(AUTH_FORM_MESSAGES.registerNameTooLong);
+      return;
+    }
+
+    if (!isRegisterNameCharactersValid(trimmedFirstName)) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage(AUTH_FORM_MESSAGES.registerNameInvalidCharacters);
       return;
     }
 
     if (!trimmedLastName) {
       setLastNameError(true);
+      setLastNameErrorMessage(AUTH_FORM_MESSAGES.lastNameRequired);
+      return;
+    }
+
+    if (!isRegisterNameLengthValid(trimmedLastName)) {
+      setLastNameError(true);
+      setLastNameErrorMessage(AUTH_FORM_MESSAGES.registerNameTooLong);
+      return;
+    }
+
+    if (!isRegisterNameCharactersValid(trimmedLastName)) {
+      setLastNameError(true);
+      setLastNameErrorMessage(AUTH_FORM_MESSAGES.registerNameInvalidCharacters);
       return;
     }
 
@@ -164,6 +199,8 @@ export default function Register() {
             type='text'
             id='firstname'
             name='firstName'
+            maxLength={REGISTER_NAME_MAX_LENGTH}
+            autoComplete='given-name'
             aria-invalid={firstNameError}
             aria-describedby={firstNameError ? 'firstName-error' : undefined}
             {...bindFirstName}
@@ -177,6 +214,8 @@ export default function Register() {
             type='text'
             id='lastname'
             name='lastName'
+            maxLength={REGISTER_NAME_MAX_LENGTH}
+            autoComplete='family-name'
             aria-invalid={lastNameError}
             aria-describedby={lastNameError ? 'lastName-error' : undefined}
             {...bindLastName}
