@@ -6,6 +6,8 @@ const jwtSecret = process.env.VITE_JWT_SECRET;
 const {
   isValidEmailFormat,
   isValidRegisterPassword,
+  isRegisterNameLengthValid,
+  isRegisterNameCharactersValid,
   AUTH_FORM_MESSAGES,
 } = require('../utils/authValidation');
 
@@ -97,13 +99,36 @@ const registerUser = asyncHandler(async (req, res) => {
     .toLowerCase();
   const trimmedPassword = String(password ?? '').trim();
 
-  if (
-    !trimmedFirstName ||
-    !trimmedLastName ||
-    !trimmedEmail ||
-    !trimmedPassword
-  ) {
+  if (!trimmedFirstName) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.firstNameRequired });
+    return;
+  }
+
+  if (!trimmedLastName) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.lastNameRequired });
+    return;
+  }
+
+  if (!trimmedEmail || !trimmedPassword) {
     res.status(400).json({ message: AUTH_FORM_MESSAGES.pleaseFillAllFields });
+    return;
+  }
+
+  if (
+    !isRegisterNameLengthValid(trimmedFirstName) ||
+    !isRegisterNameLengthValid(trimmedLastName)
+  ) {
+    res.status(400).json({ message: AUTH_FORM_MESSAGES.registerNameTooLong });
+    return;
+  }
+
+  if (
+    !isRegisterNameCharactersValid(trimmedFirstName) ||
+    !isRegisterNameCharactersValid(trimmedLastName)
+  ) {
+    res
+      .status(400)
+      .json({ message: AUTH_FORM_MESSAGES.registerNameInvalidCharacters });
     return;
   }
 
