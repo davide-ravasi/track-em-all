@@ -3,9 +3,46 @@ const path = require('path');
 const serverless = require('serverless-http');
 const cors = require('cors');
 const app = express();
+app.set('trust proxy', 1);
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const { AUTH_FORM_MESSAGES } = require('./utils/authValidation');
+const rateLimit = require('express-rate-limit');
+
+const getClientIp = (req) => {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  return (
+    req.ip ||
+    req.socket?.remoteAddress ||
+    req.connection?.remoteAddress ||
+    req.headers['x-nf-client-connection-ip'] ||
+    'unknown'
+  );
+};
+
+const loginLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  limit: 10, // Limit each IP to 10 requests per `window` (here, per 10 minutes).
+  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  keyGenerator: (req) => getClientIp(req),
+  message: { message: 'Too many requests, try again later.' },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 30 * 60 * 1000, // 30 minutes
+  limit: 5, // Limit each IP to 5 requests per `window` (here, per 30 minutes).
+  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  keyGenerator: (req) => getClientIp(req),
+  message: { message: 'Too many requests, try again later.' },
+});
 
 // connect express server to mongodb database
 const mongoose = require('mongoose');
@@ -62,8 +99,8 @@ const protect = (req, res, next) => {
 
 router.post('/favorite/remove', protect, removeFavorite);
 router.post('/favorite/add', protect, addFavorite);
-router.post('/user/register', registerUser);
-router.post('/user/login', loginUser);
+router.post('/user/register', registerLimiter, registerUser);
+router.post('/user/login', loginLimiter, loginUser);
 router.get('/user', protect, getUser);
 
 // Health check endpoint
@@ -77,8 +114,9 @@ app.use(router);
 // SPA fallback only for GET / (avoid swallowing POST /user/register, etc.)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../index.html'));
-}); // Express only treats arity-4 functions as error middleware (see express/lib/router/layer.js).
+});
 
+// Express only treats arity-4 functions as error middleware (see express/lib/router/layer.js).
 app.use((err, req, res, _next) => {
   console.error(err);
   const status = Number(err.status) || Number(err.statusCode) || 500;
