@@ -3,12 +3,14 @@ const path = require('path');
 const serverless = require('serverless-http');
 const cors = require('cors');
 const app = express();
+// Behind Netlify / reverse proxy: trust one hop so req.ip and X-Forwarded-* reflect the client.
 app.set('trust proxy', 1);
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const { AUTH_FORM_MESSAGES } = require('./utils/authValidation');
 const rateLimit = require('express-rate-limit');
 
+/** Best-effort client IP for rate limiting behind a proxy (see trust proxy above). */
 const getClientIp = (req) => {
   const forwardedFor = req.headers['x-forwarded-for'];
   if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
@@ -26,7 +28,7 @@ const getClientIp = (req) => {
 
 const loginLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  limit: 10, // Limit each IP to 10 requests per `window` (here, per 10 minutes).
+  limit: 10, // max requests per key (IP) per window — mitigates brute force on login
   standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
@@ -36,7 +38,7 @@ const loginLimiter = rateLimit({
 
 const registerLimiter = rateLimit({
   windowMs: 30 * 60 * 1000, // 30 minutes
-  limit: 5, // Limit each IP to 5 requests per `window` (here, per 30 minutes).
+  limit: 5, // stricter than login — account creation is rare
   standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
@@ -44,7 +46,7 @@ const registerLimiter = rateLimit({
   message: { message: 'Too many requests, try again later.' },
 });
 
-// connect express server to mongodb database
+// MongoDB (same process as this Netlify Function)
 const mongoose = require('mongoose');
 
 // Netlify Functions run on Node, not Vite — use process.env (import.meta.env is undefined here).
@@ -65,7 +67,55 @@ const {
   removeFavorite,
 } = require('./controllers/favoriteController');
 
-app.use(cors());
+/**
+ * Builds the browser Origin allowlist for the `cors` middleware.
+ * - `CORS_ALLOWED_ORIGINS`: comma-separated origins (Functions env / Netlify dashboard), not Vite-bundled.
+ * - production with no env: empty set (fail closed until you configure origins).
+ * - non-production with no env: common local dev URLs (Vite, CRA, netlify dev).
+ */
+function getAllowedCorsOrigins() {
+  const raw = process.env.CORS_ALLOWED_ORIGINS;
+  if (raw && String(raw).trim()) {
+    return new Set(
+      String(raw)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    );
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return new Set();
+  }
+  return new Set([
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:8888',
+    'http://127.0.0.1:8888',
+  ]);
+}
+
+const allowedCorsOrigins = getAllowedCorsOrigins();
+
+// CORS: browser enforces this for JS on web pages. See wiki note cors-how-it-works.md (cerebro).
+app.use(
+  cors({
+    origin(origin, callback) {
+      // No Origin: non-browser clients (curl, health checks); allow response without ACAO mismatch issues.
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (allowedCorsOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      // Rejected: browser hides response body from the page's script (console CORS error).
+      return callback(null, false);
+    },
+    // Bearer in Authorization header; use credentials: true + explicit origins if you switch to cookies.
+    credentials: false,
+  })
+);
 // Limit request body size (JSON + urlencoded) — mitigates DoS / resource exhaustion on small API.
 // Same cap on both parsers so large payloads cannot bypass via Content-Type.
 // https://medium.com/@louistrinh/taming-large-requests-limiting-request-size-in-node-js-6791b7318bd6
@@ -74,6 +124,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 const router = express.Router();
 
+/** Require `Authorization: Bearer <jwt>`; sets req.user from verified payload. */
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -95,7 +146,7 @@ const protect = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: AUTH_FORM_MESSAGES.invalidToken });
     }
-    req.user = decoded; // Attach user to request
+    req.user = decoded; // { id, iat, exp } from login token
     next();
   });
 };
