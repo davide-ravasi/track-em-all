@@ -51,6 +51,9 @@ export default function Login() {
     }
   }, [isSuccess, history, notifySuccess, notifyInfo]);
 
+  // 
+  // Handle error state
+  //
   useEffect(() => {
     if (isError) {
       notifyError(message, {

@@ -66,8 +66,11 @@ const {
 } = require('./controllers/favoriteController');
 
 app.use(cors());
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Limit request body size (JSON + urlencoded) — mitigates DoS / resource exhaustion on small API.
+// Same cap on both parsers so large payloads cannot bypass via Content-Type.
+// https://medium.com/@louistrinh/taming-large-requests-limiting-request-size-in-node-js-6791b7318bd6
+app.use(express.json({ limit: '10kb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 const router = express.Router();
 
