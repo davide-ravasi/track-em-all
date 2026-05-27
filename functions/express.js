@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const serverless = require('serverless-http');
 const cors = require('cors');
+const helmet = require('helmet');
 const app = express();
 // Behind Netlify / reverse proxy: trust one hop so req.ip and X-Forwarded-* reflect the client.
 app.set('trust proxy', 1);
@@ -121,6 +122,44 @@ app.use(
 // https://medium.com/@louistrinh/taming-large-requests-limiting-request-size-in-node-js-6791b7318bd6
 app.use(express.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
+
+app.use(
+  helmet({
+    contentSecurityPolicy:
+      process.env.NODE_ENV === 'production'
+        ? {
+            directives: {
+              defaultSrc: ["'self'"],
+              connectSrc: ["'self'", 'https://api.tuodominio.com'], // URL del tuo backend Express
+              imgSrc: ["'self'", 'data:', 'https://image.tmdb.org'], // Fondamentale per le locandine TMDB
+              styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                'https://fonts.googleapis.com',
+              ], // Per i CSS inline di React
+              fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            },
+          }
+        : false,
+    frameguard: { action: 'deny' },
+    hsts: { maxAge: 31536000, includeSubDomains: true },
+    noSniff: true,
+    xssFilter: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    permissionsPolicy: {
+      features: {
+        camera: ['none'],
+        microphone: ['none'],
+        geolocation: ['none'],
+        payment: ['none'],
+        usb: ['none'],
+        serial: ['none'],
+        bluetooth: ['none'],
+        webauthn: ['none'],
+      },
+    },
+  })
+);
 
 const router = express.Router();
 
