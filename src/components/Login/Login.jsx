@@ -1,34 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import './Login.scss';
+import { reset } from '../../features/auth/authSlice';
 import { useAuth } from '../../contexts/AuthContext';
+import { useInput } from '../../hooks/useInput';
 import { useToast } from '../../hooks/UseToast';
 import {
   AUTH_FORM_MESSAGES,
   isValidEmailFormat,
 } from '../../utils/authValidation';
 
-export const useInput = (initialValue) => {
-  const [value, setValue] = useState(initialValue);
-
-  return {
-    value,
-    setValue,
-    reset: () => setValue(''),
-    bind: {
-      value,
-      onChange: (event) => {
-        setValue(event.target.value);
-      },
-    },
-  };
-};
-
 export default function Login() {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const { loginUser } = useAuth();
 
@@ -64,16 +51,20 @@ export default function Login() {
     }
   }, [isSuccess, history, notifySuccess, notifyInfo]);
 
+  // 
+  // Handle error state
+  //
   useEffect(() => {
     if (isError) {
       notifyError(message, {
         onClose: () => {
           resetEmail();
           resetPassword();
+          dispatch(reset());
         },
       });
     }
-  }, [isError, resetEmail, resetPassword, message, notifyError]);
+  }, [dispatch, isError, message, notifyError, resetEmail, resetPassword]);
 
   function handleSubmit(e) {
     e.preventDefault();
