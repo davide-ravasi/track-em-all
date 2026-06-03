@@ -2,3 +2,29 @@
   command = "npm install && npm run build"
   functions = "functions"
   publish = "build"
+[[headers]]
+  # Applica queste regole a tutte le pagine e risorse del sito
+  for = "/*"
+  
+  [headers.values]
+    # 1. Content Security Policy (CSP)
+    # Permette chiamate API e immagini solo da fonti fidate (incluso TMDB)
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://api.themoviedb.org; img-src 'self' data: https://image.tmdb.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com;"
+    
+    # 2. Protezione da Clickjacking (Equivalente a frameguard: 'deny')
+    X-Frame-Options = "DENY"
+    
+    # 3. Protezione da MIME-Sniffing (Equivalente a noSniff: true)
+    X-Content-Type-Options = "nosniff"
+    
+    # 4. Protezione XSS per browser datati (Equivalente a xssFilter: true)
+    X-XSS-Protection = "1; mode=block"
+    
+    # 5. Controllo dispersione dati (Equivalente a strict-origin-when-cross-origin)
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # 6. HTTP Strict Transport Security (HSTS) - Forzatura HTTPS per 1 anno
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    
+    # 7. Permissions Policy (Blindatura Hardware totale)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), webauthn=()"

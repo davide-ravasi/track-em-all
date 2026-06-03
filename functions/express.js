@@ -125,39 +125,16 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 app.use(
   helmet({
-    contentSecurityPolicy:
-      process.env.NODE_ENV === 'production'
-        ? {
-            directives: {
-              defaultSrc: ["'self'"],
-              connectSrc: ["'self'", 'https://api.themoviedb.org'],
-              imgSrc: ["'self'", 'data:', 'https://image.tmdb.org'], // Fondamentale per le locandine TMDB
-              styleSrc: [
-                "'self'",
-                "'unsafe-inline'",
-                'https://fonts.googleapis.com',
-              ], // Per i CSS inline di React
-              fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-            },
-          }
-        : false,
-    frameguard: { action: 'deny' },
-    hsts: { maxAge: 31536000, includeSubDomains: true },
-    noSniff: true,
-    xssFilter: true,
+    // 1. Disattiviamo la CSP sul backend perché la gestisce già Netlify sulla pagina HTML.
+    // Inviare una CSP su risposte JSON è superfluo e aumenta solo la dimensione degli header.
+    contentSecurityPolicy: false,
+
+    // 2. Manteniamo i pilastri fondamentali per la sicurezza dei dati
+    frameguard: { action: 'deny' }, // Impedisce che i tuoi endpoint API vengano caricati dentro iframe malevoli
+    hsts: { maxAge: 31536000, includeSubDomains: true }, // Forza la connessione HTTPS sicura anche per l'API
+    noSniff: true, // Impedisce il MIME-sniffing anche sulle risposte JSON/File del backend
+    xssFilter: true, // Protezione base per i vecchi browser
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-    permissionsPolicy: {
-      features: {
-        camera: ['none'],
-        microphone: ['none'],
-        geolocation: ['none'],
-        payment: ['none'],
-        usb: ['none'],
-        serial: ['none'],
-        bluetooth: ['none'],
-        webauthn: ['none'],
-      },
-    },
   })
 );
 
