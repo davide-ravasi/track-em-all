@@ -130,7 +130,7 @@ app.use(
         ? {
             directives: {
               defaultSrc: ["'self'"],
-              connectSrc: ["'self'", 'https://api.tuodominio.com'], // URL del tuo backend Express
+              connectSrc: ["'self'", 'https://api.themoviedb.org'],
               imgSrc: ["'self'", 'data:', 'https://image.tmdb.org'], // Fondamentale per le locandine TMDB
               styleSrc: [
                 "'self'",
