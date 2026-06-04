@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const serverless = require('serverless-http');
 const cors = require('cors');
+const helmet = require('helmet');
 const app = express();
 // Behind Netlify / reverse proxy: trust one hop so req.ip and X-Forwarded-* reflect the client.
 app.set('trust proxy', 1);
@@ -121,6 +122,21 @@ app.use(
 // https://medium.com/@louistrinh/taming-large-requests-limiting-request-size-in-node-js-6791b7318bd6
 app.use(express.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
+
+app.use(
+  helmet({
+    // 1. Disattiviamo la CSP sul backend perché la gestisce già Netlify sulla pagina HTML.
+    // Inviare una CSP su risposte JSON è superfluo e aumenta solo la dimensione degli header.
+    contentSecurityPolicy: false,
+
+    // 2. Manteniamo i pilastri fondamentali per la sicurezza dei dati
+    frameguard: { action: 'deny' }, // Impedisce che i tuoi endpoint API vengano caricati dentro iframe malevoli
+    hsts: { maxAge: 31536000, includeSubDomains: true }, // Forza la connessione HTTPS sicura anche per l'API
+    noSniff: true, // Impedisce il MIME-sniffing anche sulle risposte JSON/File del backend
+    xssFilter: true, // Protezione base per i vecchi browser
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  })
+);
 
 const router = express.Router();
 
