@@ -8,8 +8,10 @@
   
   [headers.values]
     # 1. Content Security Policy (CSP)
-    # Permette chiamate API e immagini solo da fonti fidate (incluso TMDB)
-    Content-Security-Policy = "default-src 'self'; connect-src 'self' https://api.themoviedb.org; img-src 'self' data: https://image.tmdb.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com;"
+    # script-src: Vite dev (netlify dev) injects inline React Refresh — needs 'unsafe-inline'.
+    # Production build uses external module scripts; unsafe-inline is a tradeoff for local dev on :8888.
+    # connect-src: ws/wss for Vite HMR when using netlify dev (proxy to :5173).
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.themoviedb.org ws://localhost:5173 ws://127.0.0.1:5173 ws://localhost:8888 ws://127.0.0.1:8888; img-src 'self' data: https://image.tmdb.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self';"
     
     # 2. Protezione da Clickjacking (Equivalente a frameguard: 'deny')
     X-Frame-Options = "DENY"
