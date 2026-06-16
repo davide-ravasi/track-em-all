@@ -51,8 +51,8 @@ const registerLimiter = rateLimit({
 const mongoose = require('mongoose');
 
 // Netlify Functions run on Node, not Vite — use process.env (import.meta.env is undefined here).
-const mongoDB = process.env.VITE_MONGODB_URI;
-const jwtSecret = process.env.VITE_JWT_SECRET;
+const mongoDB = process.env.MONGODB_URI;
+const jwtSecret = process.env.JWT_SECRET;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
