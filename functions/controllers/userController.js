@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // Same as express.js: serverless uses process.env, not import.meta.env (Vite).
-const jwtSecret = process.env.VITE_JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET;
 const {
   isValidEmailFormat,
   isValidRegisterPassword,
@@ -14,7 +14,9 @@ const {
 const { User } = require('../models/user');
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, jwtSecret, { expiresIn: '1h' });
+  return jwt.sign(user, jwtSecret, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME ?? '1h',
+  });
 };
 
 const saltRounds = 10;
