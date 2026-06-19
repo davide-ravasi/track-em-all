@@ -47,6 +47,16 @@ const registerLimiter = rateLimit({
   message: { message: 'Too many requests, try again later.' },
 });
 
+const favoriteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100,
+  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  keyGenerator: (req) => getClientIp(req),
+  message: { message: 'Too many requests, try again later.' },
+});
+
 // MongoDB (same process as this Netlify Function)
 const mongoose = require('mongoose');
 
@@ -167,8 +177,8 @@ const protect = (req, res, next) => {
   });
 };
 
-router.post('/favorite/remove', protect, removeFavorite);
-router.post('/favorite/add', protect, addFavorite);
+router.post('/favorite/remove', protect, favoriteLimiter, removeFavorite);
+router.post('/favorite/add', protect, favoriteLimiter, addFavorite);
 router.post('/user/register', registerLimiter, registerUser);
 router.post('/user/login', loginLimiter, loginUser);
 router.get('/user', protect, getUser);
