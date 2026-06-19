@@ -14,7 +14,9 @@ const {
 const { User } = require('../models/user');
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, jwtSecret, { expiresIn: '1h' });
+  return jwt.sign(user, jwtSecret, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME ?? '1h',
+  });
 };
 
 const saltRounds = 10;
