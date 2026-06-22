@@ -36,13 +36,7 @@ const addFavorite = asyncHandler(async (req, res) => {
 
   const updatedUser = await user.save();
 
-  // TO DO:  the data can be removed from the response if not needed?
-  // TO DO: and for security reasons?
   res.status(201).json({
-    id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    email: updatedUser.email,
     favorites: updatedUser.favorites,
   });
 });
@@ -75,10 +69,6 @@ const removeFavorite = asyncHandler(async (req, res) => {
   const updatedUser = await user.save();
 
   res.status(201).json({
-    id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    email: updatedUser.email,
     favorites: updatedUser.favorites,
   });
 });
