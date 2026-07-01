@@ -1,6 +1,13 @@
 const { AUTH_FORM_MESSAGES } = require('../utils/authValidation');
 const { User } = require('../models/user');
 const asyncHandler = require('express-async-handler');
+const {
+  FAVORITE_VALIDATION_MESSAGES,
+  nameValidation,
+  voteAverageValidation,
+  posterPathValidation,
+  showIdValidation,
+} = require('../utils/favoriteValidation');
 
 const addFavorite = asyncHandler(async (req, res) => {
   // Set in `protect` after jwt.verify — same payload as login: { id: user._id, iat, exp }
@@ -19,17 +26,35 @@ const addFavorite = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: AUTH_FORM_MESSAGES.userNotFound });
   }
 
-  if (String(showId).trim() === '' || !name) {
+  if (!showIdValidation(showId)) {
     return res
       .status(400)
-      .json({ message: AUTH_FORM_MESSAGES.favoriteDataInvalid });
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteShowIdInvalid });
+  }
+
+  if (!nameValidation(name)) {
+    return res
+      .status(400)
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteNameInvalid });
+  }
+
+  if (vote_average && !voteAverageValidation(vote_average)) {
+    return res.status(400).json({
+      message: FAVORITE_VALIDATION_MESSAGES.favoriteVoteAverageInvalid,
+    });
+  }
+
+  if (poster_path && !posterPathValidation(poster_path)) {
+    return res.status(400).json({
+      message: FAVORITE_VALIDATION_MESSAGES.favoritePosterPathInvalid,
+    });
   }
 
   const favorite = {
-    showId,
-    name,
-    poster_path,
-    vote_average,
+    showId: String(showId).trim(),
+    name: String(name).trim(),
+    poster_path: poster_path ? String(poster_path).trim() : poster_path,
+    vote_average: vote_average,
   };
 
   user.favorites.push(favorite);
@@ -56,10 +81,10 @@ const removeFavorite = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: AUTH_FORM_MESSAGES.userNotFound });
   }
 
-  if (!showId) {
+  if (!showIdValidation(showId)) {
     return res
       .status(400)
-      .json({ message: AUTH_FORM_MESSAGES.favoriteDataInvalid });
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteDataInvalid });
   }
 
   user.favorites = user.favorites.filter(
