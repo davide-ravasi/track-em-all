@@ -84,11 +84,11 @@ const removeFavorite = asyncHandler(async (req, res) => {
   if (!showIdValidation(showId)) {
     return res
       .status(400)
-      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteDataInvalid });
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteShowIdInvalid });
   }
 
   user.favorites = user.favorites.filter(
-    (favorite) => favorite.showId !== showId.toString()
+    (favorite) => favorite.showId !== String(showId).trim()
   );
 
   const updatedUser = await user.save();

@@ -1,5 +1,3 @@
-// check if the showId is valid
-
 const nameMinLength = 1;
 const nameMaxLength = 255;
 
@@ -27,17 +25,15 @@ const showIdValidation = (showId) => {
 };
 
 const nameValidation = (name) => {
-  if (
-    name === null ||
-    name === undefined ||
-    typeof name !== 'string' ||
-    name.trim() === ''
-  ) {
+  if (name === null || name === undefined || typeof name !== 'string') {
     return false;
   }
+
+  const normalized = name.trim();
   if (
-    name.trim().length < nameMinLength ||
-    name.trim().length > nameMaxLength
+    normalized === '' ||
+    normalized.length > nameMaxLength ||
+    normalized.length < nameMinLength
   ) {
     return false;
   }
