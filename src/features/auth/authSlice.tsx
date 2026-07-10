@@ -95,6 +95,7 @@ const initialState: AuthState | null = {
   isSuccess: false,
   isError: false,
   message: '',
+  favorites: [],
 };
 
 export const authSlice = createSlice({
@@ -108,6 +109,7 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = '';
+      state.favorites = [];
     },
     logout: (state) => {
       state.user = null;
@@ -116,6 +118,7 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = '';
+      state.favorites = [];
     },
   },
   extraReducers: (builder) => {
@@ -144,8 +147,8 @@ export const authSlice = createSlice({
         firstName: action.payload?.data.firstName,
         lastName: action.payload?.data.lastName,
         email: action.payload?.data.email,
-        favorites: action.payload?.data.favorites,
       };
+      state.favorites = action.payload?.data.favorites;
       //state.token = action.payload.data.token;
     });
 
@@ -166,13 +169,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = 'the favorite has been added';
-        state.user = {
-          id: action.payload.data.id,
-          firstName: action.payload.data.firstName,
-          lastName: action.payload.data.lastName,
-          email: action.payload.data.email,
-          favorites: action.payload.data.favorites,
-        };
+        state.favorites = action.payload.data.favorites;
         //state.token = action.payload.data.token;
       }
     );
@@ -194,13 +191,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = 'the favorite has been removed from your list';
-        state.user = {
-          id: action.payload.data.id,
-          firstName: action.payload.data.firstName,
-          lastName: action.payload.data.lastName,
-          email: action.payload.data.email,
-          favorites: action.payload.data.favorites,
-        };
+        state.favorites = action.payload.data.favorites;
         //state.token = action.payload.data.token;
       }
     );

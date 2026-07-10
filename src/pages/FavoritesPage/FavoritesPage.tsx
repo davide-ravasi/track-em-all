@@ -7,7 +7,7 @@ import ShowFavoriteList from '../../components/ShowFavoriteList/ShowFavoriteList
 import './FavoritesPage.scss';
 
 export default function FavoritesPage() {
-  const { favorites } = useSelector((state: RootState) => state.auth.user);
+  const { favorites } = useSelector((state: RootState) => state.auth);
 
   return (
     <main id='main-content' className='page'>

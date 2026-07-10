@@ -20,7 +20,7 @@ import { useFavorite } from '../../hooks/UseFavorite';
 
 export default function ShowPage() {
   const { id } = useParams<ShowPageType>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, favorites } = useSelector((state: RootState) => state.auth);
 
   const url = `${import.meta.env.VITE_BASE_TVSHOW_URL}${id}?api_key=${
     import.meta.env.VITE_API_KEY
@@ -42,19 +42,13 @@ export default function ShowPage() {
   const [loadingFavorite, setLoadingFavorite] = useState(false);
   const { addFavorite, removeFavorite } = useFavorite();
 
-  // TO DO: why favoriteId and id in the two different variables?
-  // (to check if it's the same)
-  let favorite: Favorite | undefined;
-
-  if (user && user.favorites) {
-    favorite = user.favorites.find((everyFavorite: Favorite) => {
-      return everyFavorite.showId === id.toString();
-    });
-  }
+  let favorite = favorites?.find((favorite: Favorite) => {
+    return favorite.showId === id.toString();
+  });
 
   const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    addFavorite({ showData, id, setLoadingFavorite });
+    addFavorite({ showData, favoriteId: id, setLoadingFavorite });
   };
 
   const handleUnfavorite = (

@@ -148,12 +148,12 @@ interface RootState {
       firstName: string;
       lastName: string;
       email: string;
-      favorites: Favorite[];
     };
     isLoading: boolean;
     isSuccess: boolean;
     isError: boolean;
     message: string | null;
+    favorites: Favorite[];
   };
 }
 
@@ -162,11 +162,11 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
-  favorites: Favorite[];
 }
 
 type AuthState = {
   user: User | null;
+  favorites: Favorite[];
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;

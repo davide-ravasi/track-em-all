@@ -7,13 +7,13 @@ export function useFavorite() {
 
   interface IAddFavoriteProps {
     showData: any;
-    id: string;
+    favoriteId: string;
     setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>>;
   }
 
   const addFavorite = ({
     showData,
-    id,
+    favoriteId,
     setLoadingFavorite,
   }: IAddFavoriteProps) => {
     setLoadingFavorite(true);
@@ -23,7 +23,7 @@ export function useFavorite() {
         name: showData?.name,
         vote_average: showData?.vote_average,
         poster_path: showData?.poster_path,
-        showId: id,
+        showId: favoriteId,
       })
     )
       .then(() => {

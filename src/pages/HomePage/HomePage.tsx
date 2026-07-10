@@ -19,29 +19,27 @@ export default function HomePage() {
   const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const [searchError, setSearchError] = useState('');
-  const { user } = useSelector((state: any) => state.auth);
+  const { user, favorites } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
-    if (user && user.favorites !== null && user.favorites.length) {
-      const randomFavoritesIndex = Math.floor(
-        Math.random() * user.favorites.length
-      );
+    if (favorites !== null && favorites.length) {
+      const randomFavoritesIndex = Math.floor(Math.random() * favorites.length);
 
-      setRecommendedId(user.favorites[randomFavoritesIndex].showId);
-      setRecommendedName(user.favorites[randomFavoritesIndex].name);
+      setRecommendedId(favorites[randomFavoritesIndex].showId);
+      setRecommendedName(favorites[randomFavoritesIndex].name);
     }
 
     // url example
     // https://api.themoviedb.org/3/tv/series_id/recommendations?language=en-US&page=1
     // https://api.themoviedb.org/3/tv/1396/recommendations?api_key=b61f13ab08388482df500390ef8de990&language=en-US&page=1
-  }, [user]);
+  }, [user, favorites]);
 
   const { isError, message } = useSelector((state: any) => state.auth);
   const { notifyError } = useToast();
 
   useEffect(() => {
     if (isError) {
-      notifyError(message.message, { autoClose: 2000 });
+      notifyError(message, { autoClose: 2000 });
     }
   }, [isError, notifyError, message]);
 
