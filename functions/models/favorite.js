@@ -3,13 +3,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const FavoriteSchema = new Schema({
-  name: String,
-  poster_path: String,
-  vote_average: Number,
+  showId: {
+    type: String,
+    required: [true, 'Show ID is required'],
+    trim: true,
+  },
+  name: {
+    type: String,
+    maxlength: [255, 'Name must be less than 255 characters'],
+    minlength: [1, 'Name must be at least 1 character'],
+    required: [true, 'Name is required'],
+    trim: true,
+  },
+  poster_path: {
+    type: String,
+    maxlength: [255, 'Poster path must be less than 255 characters'],
+    minlength: [3, 'Poster path must be at least 3 characters'],
+    trim: true,
+  },
+  vote_average: {
+    type: Number,
+    min: [0, 'Vote average must be greater than 0'],
+    max: [10, 'Vote average must be less than 10'],
+  },
 });
 
-// Compile model from schema
-const Favorite = mongoose.model('Favorite', FavoriteSchema);
-
-exports.Favorite = Favorite;
 exports.FavoriteSchema = FavoriteSchema;

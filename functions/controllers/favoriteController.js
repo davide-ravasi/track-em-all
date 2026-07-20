@@ -7,6 +7,8 @@ const {
   voteAverageValidation,
   posterPathValidation,
   showIdValidation,
+  existingFavoriteValidation,
+  maxFavoritesValidation,
 } = require('../utils/favoriteValidation');
 
 const addFavorite = asyncHandler(async (req, res) => {
@@ -48,6 +50,18 @@ const addFavorite = asyncHandler(async (req, res) => {
     return res.status(400).json({
       message: FAVORITE_VALIDATION_MESSAGES.favoritePosterPathInvalid,
     });
+  }
+
+  if (existingFavoriteValidation(user.favorites, showId)) {
+    return res
+      .status(409)
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.favoriteAlreadyExists });
+  }
+
+  if (!maxFavoritesValidation(user.favorites)) {
+    return res
+      .status(400)
+      .json({ message: FAVORITE_VALIDATION_MESSAGES.maxFavoritesReached });
   }
 
   const favorite = {
