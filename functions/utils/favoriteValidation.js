@@ -10,6 +10,8 @@ const posterPathMaxLength = 255;
 const SHOW_ID_PATTERN = /^\d+$/;
 const showIdMaxLength = 10;
 
+const maxFavorites = 100;
+
 const showIdValidation = (showId) => {
   if (showId === null || showId === undefined) {
     return false;
@@ -65,12 +67,24 @@ const posterPathValidation = (posterPath) => {
   return true;
 };
 
+const existingFavoriteValidation = (favorites, showId) => {
+  return favorites.some(
+    (favorite) => favorite.showId === String(showId).trim()
+  );
+};
+
+const maxFavoritesValidation = (favorites) => {
+  return favorites.length < maxFavorites;
+};
+
 const FAVORITE_VALIDATION_MESSAGES = {
   favoriteShowIdInvalid: 'The favorite showId is not valid',
   favoriteDataInvalid: 'The favorite data is not valid',
   favoriteNameInvalid: 'The favorite name is not valid',
   favoriteVoteAverageInvalid: 'The favorite vote average is not valid',
   favoritePosterPathInvalid: 'The favorite poster path is not valid',
+  favoriteAlreadyExists: 'The show is already in your favorites',
+  maxFavoritesReached: 'You have reached the maximum number of favorites',
 };
 
 module.exports = {
@@ -79,4 +93,6 @@ module.exports = {
   voteAverageValidation,
   posterPathValidation,
   showIdValidation,
+  existingFavoriteValidation,
+  maxFavoritesValidation,
 };
