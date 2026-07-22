@@ -30,7 +30,7 @@ export function useFavorite() {
         setLoadingFavorite(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error?.message ?? 'Favorite request failed');
         setLoadingFavorite(false);
       });
   };
@@ -55,7 +55,7 @@ export function useFavorite() {
         setLoadingFavorite(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error?.message ?? 'Favorite request failed');
         setLoadingFavorite(false);
       });
   };

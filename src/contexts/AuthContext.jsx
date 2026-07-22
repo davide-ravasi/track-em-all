@@ -67,7 +67,7 @@ export function AuthProvider({ children }) {
       }
 
     } catch (error) {
-      console.error(error);
+      console.error(error?.message ?? 'Token check failed');
       logoutUser("an error occurred while checking the token");
     }
 
