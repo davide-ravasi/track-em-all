@@ -63,7 +63,7 @@ const mongoose = require('mongoose');
 // Netlify Functions run on Node, not Vite — use process.env (import.meta.env is undefined here).
 const mongoDB = process.env.MONGODB_URI;
 const jwtSecret = process.env.JWT_SECRET;
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
