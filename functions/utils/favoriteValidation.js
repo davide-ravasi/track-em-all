@@ -1,3 +1,8 @@
+/**
+ * Favorite validation for Netlify Functions (CommonJS).
+ * Keep in sync with `src/utils/favoriteValidation.js`.
+ */
+
 const nameMinLength = 1;
 const nameMaxLength = 255;
 
