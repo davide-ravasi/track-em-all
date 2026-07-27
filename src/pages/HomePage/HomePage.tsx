@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Context } from '../../context/GlobalContext';
+import { useQuery } from '@tanstack/react-query';
 import { Sections, Show } from '../../typescript/types';
 import ShowList from '../../components/ShowList/ShowList';
 import Search from '../../components/Search/Search';
@@ -9,16 +9,14 @@ import '../../components/Search/Search.scss';
 import { getSearchUrl } from '../../utils';
 import { en } from '../../trads/en';
 import { useSelector } from 'react-redux';
-import { useToast } from '../../hooks/UseToast';
+import Loader from '../../components/Loader/Loader';
 
 export default function HomePage() {
   const [textInput, setTextInput] = useState('');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<Show[]>([]);
   const [recommendedId, setRecommendedId] = useState<string>();
   const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
-  const [searchError, setSearchError] = useState('');
   const { user, favorites } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
@@ -34,108 +32,97 @@ export default function HomePage() {
     // https://api.themoviedb.org/3/tv/1396/recommendations?api_key=b61f13ab08388482df500390ef8de990&language=en-US&page=1
   }, [user, favorites]);
 
-  const { isError, message } = useSelector((state: any) => state.auth);
-  const { notifyError } = useToast();
+  // Hooks must run at component top level — not inside submit handlers.
+  // Submit only updates `searchTerm`; this query fetches when it is non-empty.
+  const {
+    data: searchResults = [],
+    error: searchQueryError,
+    isLoading,
+  } = useQuery({
+    queryKey: ['search', searchTerm],
+    queryFn: async () => {
+      const res = await fetch(getSearchUrl(searchTerm));
+      if (!res.ok) throw new Error('Failed to fetch search results');
+      const data = await res.json();
+      return data.results as Show[];
+    },
+    enabled: !!searchTerm,
+  });
 
-  useEffect(() => {
-    if (isError) {
-      notifyError(message, { autoClose: 2000 });
-    }
-  }, [isError, notifyError, message]);
-
-  const getSearchData = async (e: React.FormEvent<HTMLFormElement>) => {
+  const getSearchData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setSearchTerm(textInput);
-
-      if (textInput) {
-        try {
-          const res = await fetch(getSearchUrl(textInput));
-          const data = await res.json();
-          setSearchResults(data.results);
-        } catch (error: unknown) {
-          if (error instanceof Error) {
-            setSearchError(error.message);
-          } else {
-            setSearchError('An unknown error occurred');
-          }
-          setSearchResults([]);
-          setSearchTerm('');
-        } finally {
-          setHideHomepageContents(true);
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        // Handle the error object
-        setSearchError(error.message);
-      } else {
-        // Handle any other exceptions
-        setSearchError('An unknown error occurred');
-      }
-    }
+    const trimmed = textInput.trim();
+    if (!trimmed) return;
+    setSearchTerm(trimmed);
+    setHideHomepageContents(true);
   };
 
   return (
-    <Context.Provider
-      value={{
-        searchTerm,
-        searchResults,
-        getSearchData,
-      }}
-    >
-      <main id='main-content' className='page'>
-        <div className='page__content-wrapper'>
-          <h1 className='page__title'>Track&apos;em All - Discover TV Shows</h1>
-          <SearchBar textInput={textInput} setTextInput={setTextInput} />
-          {!hideHomepageContents ? (
-            <>
+    <main id='main-content' className='page'>
+      <div className='page__content-wrapper'>
+        <h1 className='page__title'>Track&apos;em All - Discover TV Shows</h1>
+        <SearchBar
+          textInput={textInput}
+          setTextInput={setTextInput}
+          getSearchData={getSearchData}
+        />
+        {searchQueryError && (
+          <div className='loading-error' role='alert'>
+            {searchQueryError?.message}
+          </div>
+        )}
+        {isLoading && (
+          <div
+            className='loader'
+            aria-live='polite'
+            aria-atomic='true'
+            role='status'
+            aria-label='Loading search results'
+          >
+            <Loader aria-hidden='true' aria-busy='true' />
+          </div>
+        )}
+        {!hideHomepageContents && !isLoading ? (
+          <>
+            <ShowList
+              section={Sections.Tv}
+              category={Categories.Popular}
+              cardAmount={6}
+              data-testid='section-tv-shows'
+            />
+
+            <ShowList
+              section={Sections.Tv}
+              category={Categories.TopRated}
+              cardAmount={6}
+              data-testid='section-top-rated'
+            />
+
+            {recommendedId && recommendedName && (
               <ShowList
+                title={`because you liked:  ${recommendedName}`}
                 section={Sections.Tv}
-                category={Categories.Popular}
+                category={Categories.Recommended}
+                id={recommendedId}
                 cardAmount={6}
-                data-testid='section-tv-shows'
+                data-testid='section-recommended'
               />
+            )}
 
-              <ShowList
-                section={Sections.Tv}
-                category={Categories.TopRated}
-                cardAmount={6}
-                data-testid='section-top-rated'
-              />
-
-              {recommendedId && recommendedName && (
-                <ShowList
-                  title={`because you liked:  ${recommendedName}`}
-                  section={Sections.Tv}
-                  category={Categories.Recommended}
-                  id={recommendedId}
-                  cardAmount={6}
-                  data-testid='section-recommended'
-                />
-              )}
-
-              <ShowList
-                title={en.categories.personpopular.title}
-                section={Sections.Person}
-                category={Categories.Popular}
-                cardAmount={6}
-                data-testid='section-person-popular'
-              />
-            </>
-          ) : (
-            <>
-              <Search shows={searchResults} />
-            </>
-          )}
-          {searchError && (
-            <div role='alert' className='search-error'>
-              {searchError}
-            </div>
-          )}
-        </div>
-      </main>
-    </Context.Provider>
+            <ShowList
+              title={en.categories.personpopular.title}
+              section={Sections.Person}
+              category={Categories.Popular}
+              cardAmount={6}
+              data-testid='section-person-popular'
+            />
+          </>
+        ) : (
+          <>
+            <Search shows={searchResults} />
+          </>
+        )}
+      </div>
+    </main>
   );
 }
