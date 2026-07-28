@@ -23,6 +23,7 @@ export default function HomePage() {
     if (favorites !== null && favorites.length) {
       const randomFavoritesIndex = Math.floor(Math.random() * favorites.length);
 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setRecommendedId(favorites[randomFavoritesIndex].showId);
       setRecommendedName(favorites[randomFavoritesIndex].name);
     }
@@ -38,6 +39,7 @@ export default function HomePage() {
     data: searchResults = [],
     error: searchQueryError,
     isLoading,
+    refetch,
   } = useQuery({
     queryKey: ['search', searchTerm],
     queryFn: async () => {
@@ -53,8 +55,13 @@ export default function HomePage() {
     e.preventDefault();
     const trimmed = textInput.trim();
     if (!trimmed) return;
-    setSearchTerm(trimmed);
-    setHideHomepageContents(true);
+
+    if (trimmed === searchTerm) {
+      refetch();
+    } else {
+      setSearchTerm(trimmed);
+      setHideHomepageContents(true);
+    }
   };
 
   return (
