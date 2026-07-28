@@ -1,19 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import './SearchBar.scss';
 
-import { Context } from '../../context/GlobalContext';
-
 type SearchBarProps = {
   textInput: string;
   setTextInput: (textInput: string) => void;
+  getSearchData: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export default function SearchBar(props: SearchBarProps) {
-  const { textInput, setTextInput } = props;
-
-  const { getSearchData } = useContext(Context);
+  const { textInput, setTextInput, getSearchData } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);

@@ -61,12 +61,6 @@ type EpisodeProps = {
   showId: string;
 };
 
-type GlobalContext = {
-  searchTerm: string;
-  searchResults: Show[];
-  getSearchData: (e: React.FormEvent<HTMLFormElement>) => void;
-};
-
 type ShowPageType = {
   id: string;
 };
@@ -178,7 +172,6 @@ export type {
   Person,
   SearchProps,
   ShowPageType,
-  GlobalContext,
   ShowSeasonProps,
   Season,
   Episode,
