@@ -34,4 +34,25 @@ test('test home page main components', async ({ page }) => {
     })
   ).toBeVisible();
   await expect(sectionMostPopularActors.getByRole('article')).toHaveCount(6);
+
+  // SearchBar basics (no TMDB dependency):
+  // - empty submit: no navigation / no state switch
+  // - non-empty submit: hide the home sections and enter "Search results" view
+  const searchInput = page.getByRole('searchbox', { name: /search tv shows/i });
+  const searchSubmit = page.getByRole('button', { name: /submit search/i });
+  await expect(searchInput).toBeVisible();
+  await expect(searchSubmit).toBeVisible();
+
+  const homeTvSection = page.getByTestId('section-tv-shows');
+
+  // 1) empty submit should keep home sections visible
+  await searchInput.fill('');
+  await searchSubmit.click();
+  await expect(homeTvSection).toHaveCount(1);
+  await expect(homeTvSection).toBeVisible();
+
+  // 2) non-empty submit should switch away from home sections
+  await searchInput.fill('breaking bad');
+  await searchSubmit.click();
+  await expect(homeTvSection).toHaveCount(0);
 });
