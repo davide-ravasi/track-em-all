@@ -9,7 +9,7 @@ export default function Search(props: SearchProps) {
   const { shows } = props;
 
   return (
-    <section className='search'>
+    <section className='search' data-testid='section-search-results'>
       <h2 id='search-results'>Search Results</h2>
       <div className='search__list' role='list'>
         {shows.map((show) => {
