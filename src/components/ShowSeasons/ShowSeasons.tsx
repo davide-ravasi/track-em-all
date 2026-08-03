@@ -36,12 +36,20 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
         )}
       </button>
       {showBoxSeasons && (
-        <section id='seasons-list' aria-label='List of seasons'>
+        <section
+          id='seasons-list'
+          aria-label='List of seasons'
+          data-testid='seasons-list'
+        >
           {nmbrSeasons &&
             Array.from({ length: nmbrSeasons }, (value, key) => {
               const nmbrSeason = key + 1;
               return (
-                <div className='season' key={'season' + nmbrSeason}>
+                <div
+                  className='season'
+                  key={'season' + nmbrSeason}
+                  data-testid={`season-${nmbrSeason}`}
+                >
                   <h2>Season {nmbrSeason}</h2>
                   <ShowEpisodes season={nmbrSeason} idShow={idShow} />
                 </div>
