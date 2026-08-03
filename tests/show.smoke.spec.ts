@@ -15,8 +15,21 @@ test.describe('test show page', () => {
       page.getByRole('img', { name: /breaking bad backdrop/i })
     ).toBeVisible();
 
-    await expect(
-      page.getByRole('button', { name: /show all the episodes/i })
-    ).toBeVisible();
+    const button = page.getByRole('button', { name: /show all the episodes/i });
+    await expect(button).toBeVisible();
+
+    await button.click();
+    await expect(page.getByTestId('seasons-list')).toBeVisible();
+    const seasons = page
+      .getByTestId('seasons-list')
+      .getByRole('heading', { name: /season/i });
+    await expect(seasons).toHaveCount(5);
+    await expect(seasons.first()).toHaveText('Season 1');
+    await expect(seasons.last()).toHaveText('Season 5');
+
+    const seasonFirst = page.getByTestId('season-1');
+    await expect(seasonFirst).toBeVisible();
+    const episodes = seasonFirst.getByRole('article');
+    await expect(episodes).toHaveCount(7);
   });
 });
