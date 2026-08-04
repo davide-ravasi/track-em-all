@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('test home page', () => {
-  test('test home page main components', async ({ page }) => {
+  test('should show the home page and its main components', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle("Track'em All");
     await expect(page.getByRole('navigation')).toBeVisible();
@@ -37,7 +39,7 @@ test.describe('test home page', () => {
 });
 
 test.describe('test home page search functionality', () => {
-  test('test home page search functionality', async ({ page }) => {
+  test('should test the home page search functionality', async ({ page }) => {
     await page.goto('/');
     // SearchBar basics (no TMDB dependency):
     // - empty submit: no navigation / no state switch
