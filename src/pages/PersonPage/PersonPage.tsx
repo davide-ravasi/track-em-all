@@ -78,7 +78,7 @@ export default function PersonPage() {
             </div>
 
             {imagesData ? (
-              <section className='page__photos'>
+              <section className='page__photos' data-testid='section-photos'>
                 {photosError && (
                   <div className='loading-error' role='alert'>
                     {photosError.message}
@@ -101,7 +101,7 @@ export default function PersonPage() {
             ) : (
               <p>No photos available.</p>
             )}
-            <section className='page__related'>
+            <section className='page__related' data-testid='section-related'>
               <h2>Related</h2>
               <p>Coming soon</p>
             </section>

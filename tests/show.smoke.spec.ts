@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('test show page', () => {
-  test('test show page main components', async ({ page }) => {
+  test('should show the show page and its main components', async ({
+    page,
+  }) => {
     await page.goto('/show/1396');
     await expect(page).toHaveTitle("Track'em All");
     await expect(page.getByRole('navigation')).toBeVisible();

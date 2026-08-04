@@ -11,7 +11,7 @@ export default function PhotoList({ imagesData }: PhotoListProps) {
   return (
     <div className='photos_list'>
       <h2 className='page__h2' id='photos'>
-        PHOTOS
+        Photos
       </h2>
       <div className='photos_list__container'>
         {imagesData &&
