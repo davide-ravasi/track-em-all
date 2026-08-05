@@ -67,8 +67,15 @@ Refs: [TMDB api docs](https://developers.themoviedb.org/3/getting-started/introd
 
 ## Deployments
 
-- https://trackemall.netlify.app/ - production build of main branch
-- https://trackemalldev.netlify.app/ - production build of the develop branch
+- **Production (this repo):** https://trackem-all.netlify.app/ — Netlify site for `main` (Vite build)
+- **PR previews:** `https://deploy-preview-<N>--trackem-all.netlify.app` (see CI `BASE_URL`)
+
+**Do not use** these old/orphan URLs (legacy Chingu/CRA sites, not this deploy):
+
+- ~~https://trackemall.netlify.app/~~
+- ~~https://trackemalldev.netlify.app/~~
+
+See `docs/TODO-LIST.md` → Documentation / Netlify orphan sites (verify & delete if you regain access).
 
 ## Contributing
 
