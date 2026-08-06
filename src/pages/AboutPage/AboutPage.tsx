@@ -4,10 +4,10 @@ export default function AboutPage() {
   return (
     <main id='main-content' className='page'>
       <div className='page__content-wrapper'>
-        <h1 className='page__title'>About Show Tracker</h1>
+        <h1 className='page__title'>About Track&apos;em All</h1>
         <p>
-          Show Tracker allows you to find and track TV shows so you don&apos;t
-          miss a single episode. This app was developed by{' '}
+          Track&apos;em All allows you to find and track TV shows so you
+          don&apos;t miss a single episode. This app was developed by{' '}
           <a
             href='https://github.com/DanielLopezCS'
             target='_blank'

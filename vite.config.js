@@ -8,10 +8,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: "Track'em all - Movies and Tv series Tracker",
-        short_name: "Track'em all",
+        name: "Track'em All",
+        short_name: "Track'em All",
         description:
-          "Track'em all is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).",
+          "Track'em All is a single-page app that helps you discover new TV series, keep track of your favorite ones and know when new episodes come out (...so you don't miss them :) ).",
         icons: [
           {
             src: '/logo192.png',
