@@ -12,12 +12,12 @@ export default function Footer() {
       </section>
       <section className='footer-item'>
         <a
-          href='https://github.com/chingu-voyages/v30-bears-team-06'
-          title='Visit our Github repository'
+          href='https://github.com/davide-ravasi/track-em-all'
+          title='Visit the track-em-all GitHub repository'
           target='_blank'
           rel='noopener noreferrer'
         >
-          Github repository
+          GitHub repository
         </a>{' '}
       </section>
       <section className='footer-item'>

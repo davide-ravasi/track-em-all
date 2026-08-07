@@ -2,7 +2,7 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2026-04-02
+**Last Updated:** 2026-08-07
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
@@ -18,7 +18,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 | Priority | Area                         | What to do                                                             | Why                                                                                                                |
 | -------- | ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **1**    | **Security**                 | Input validation + rate limiting on auth → CORS/JWT review             | Protects users and app; unblocks peace of mind before new features.                                                |
+| **1**    | **Security**                 | ~~HTTP hardening, server env, JWT expiry~~ ✓ ([archive](./TODO-LIST-ARCHIVE.md)). **Next:** favorites hardening → response minimization → logging / `npm audit`. | |
 | **2**    | **Firebase**                 | Done (removed). Follow-ups: see **Security → Cleanup** and [archive](./TODO-LIST-ARCHIVE.md). | —                                                                                                                  |
 | **3**    | **DevEx / CI**               | Core tooling + CI unified (see [archive](./TODO-LIST-ARCHIVE.md)). Optional: `prettier --check` in CI, lint-staged. | Build on Netlify.                                                                                                  |
 | **4**    | **Testing**                  | More Playwright smoke tests (Show, Person, Favorites, etc.)            | You already have homepage; extend coverage before adding features.                                                 |
@@ -114,41 +114,29 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ### Frontend auth forms (`Login` / `Register`)
 
-Next slice: validation and UX on [`src/components/Login/`](../src/components/Login/) and [`src/components/Register/`](../src/components/Register/); then align the same rules in [`functions/controllers/userController.js`](../functions/controllers/userController.js) and add rate limiting (see **Backend Security** below).
+Completed items: **[TODO-LIST-ARCHIVE.md — Security / Auth forms & API validation](./TODO-LIST-ARCHIVE.md#security--auth-forms--api-validation-2026-04-08)**.
 
-- [x] **Refactor validation (DRY)** — shared module [`src/utils/authValidation.js`](../src/utils/authValidation.js): `EMAIL_FORMAT_REGEX`, `REGISTER_PASSWORD_REGEX`, `isValidEmailFormat`, `isValidRegisterPassword`, `AUTH_FORM_MESSAGES`; imported by `Login` and `Register`. **Next:** reuse the same rules in [`userController.js`](../functions/controllers/userController.js) when adding server validation.
-- [ ] **firstName** / **lastName** required (trim; max length); mirror on backend register
-- [ ] **Password policy** — define rules (e.g. minimum length; optional complexity per NIST-style guidance)
-- [ ] **Register:** confirm password field + match check before submit (client-only UX; server still validates single password)
-- [ ] **Email** — format validation on client; backend: normalize (trim, lowercase) + validate
-- [ ] **Optional:** password strength meter (e.g. [zxcvbn](https://github.com/dropbox/zxcvbn) or a design-system pattern)
-- [ ] **Disable submit** while auth request is in flight (`isLoading` / thunk `pending`)
-- [ ] **Optional:** design-system refactor for inputs, buttons, and a11y (can bundle with strength indicator)
+**Still open (optional / later):**
 
-### Backend Security
+- [ ] **Optional:** password strength meter (e.g. [zxcvbn](https://github.com/dropbox/zxcvbn))
+- [ ] **Optional:** design-system refactor for inputs, buttons, and a11y
 
-- [ ] Add input validation to auth endpoints
-  - [ ] Email format validation
-  - [ ] Password strength requirements
-  - [ ] Input sanitization
-- [ ] Add rate limiting to auth endpoints
-  - [ ] Login attempts
-  - [ ] Registration attempts
-  - [ ] API requests
-- [ ] Review and tighten CORS policy
-  - [ ] Restrict allowed origins
-  - [ ] Review credentials handling
-- [ ] Review JWT configuration
-  - [ ] Set appropriate expiry times
-  - [ ] Implement refresh token mechanism
-  - [ ] Review token storage (httpOnly cookies vs localStorage)
+### Backend Security (learning path — your order)
+
+**Done (archived):** auth validation + API errors — [2026-04-08](./TODO-LIST-ARCHIVE.md#security--auth-forms--api-validation-2026-04-08); rate limit, body limits, CORS, Helmet + Netlify CSP — [2026-06-03 HTTP](./TODO-LIST-ARCHIVE.md#backend-http-hardening-2026-06-03); **`MONGODB_URI` / `JWT_SECRET`** + env cleanup — [2026-06-03 env](./TODO-LIST-ARCHIVE.md#server-only-env-2026-06-03); **`JWT_EXPIRATION_TIME`** + fallback `1h` — [2026-06-03 JWT](./TODO-LIST-ARCHIVE.md#jwt-expiration-env-2026-06-03); **favorites response minimization** — [2026-06-03](./TODO-LIST-ARCHIVE.md#favorites-response-minimization-2026-06-03); **favorites routes hardening** — [2026-07-20](./TODO-LIST-ARCHIVE.md#favorites-routes-hardening-2026-07-20); **health check** — [2026-07-20](./TODO-LIST-ARCHIVE.md#health-check-2026-07-20); **logging & errors** — [2026-07-22](./TODO-LIST-ARCHIVE.md#logging--errors-2026-07-22); **dependency / driver hygiene** — [2026-07-22](./TODO-LIST-ARCHIVE.md#dependency--driver-hygiene-2026-07-22).
+
+**Context:** [`functions/express.js`](../functions/express.js), [`netlify.toml`](../netlify.toml), [`functions/controllers/userController.js`](../functions/controllers/userController.js), [`.env.sample`](../.env.sample). **Wiki:** [`RATE-LIMITING-AND-CLIENT-IP.md`](./RATE-LIMITING-AND-CLIENT-IP.md); cerebro `nodejs/raw/`.
+
+1. [x] **Deploy env** — `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRATION_TIME` on Netlify (2026-06). Add `CORS_ALLOWED_ORIGINS` only if you need explicit cross-origin allowlist.
+
+_Optional later: JWT refresh tokens; Bearer vs httpOnly cookies (+ CSRF)._
 
 ### Cleanup (post-Firebase)
 
 Firebase removal is **done** — details in [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
 
+- [x] Remove Firebase- and GraphQL-related env vars from `.env` / `.env.sample` (2026-06-03)
 - [ ] (Later) When backend has watched-episodes API: restore "watched" feature in EpisodeCard and connect to backend
-- [ ] Remove Firebase-related env vars from `.env` / Netlify if not already done
 
 ---
 
@@ -165,7 +153,7 @@ Firebase removal is **done** — details in [TODO-LIST-ARCHIVE.md](./TODO-LIST-A
 
 - [ ] Add smoke tests for other pages:
   - [ ] Show page (`/show/:id`)
-  - [ ] Person page (`/person/:id`)
+  - [x] Person page (`/person/:id`)
   - [ ] Favorites page (`/favorites`)
   - [ ] Listing page (`/listing/:type`)
   - [ ] Episode page (`/episode/:id`)
@@ -186,7 +174,8 @@ Firebase removal is **done** — details in [TODO-LIST-ARCHIVE.md](./TODO-LIST-A
 
 Core **React Query** migration is **done** — see [TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md).
 
-- [ ] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })`
+- [x] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })` (2026-07-27); Context search removed — props only
+- [x] (Follow-up) Same search term submit: no refetch while data is fresh (`staleTime` 5 min in `App.tsx`) — solved with `refetch()` when term unchanged (2026-07-28); note: cerebro `sources/react/raw/react-query-stale-time-and-refetch.md`
 - [ ] (Optional) ShowList "Load more": migrate to `useInfiniteQuery`
 - [ ] (Later) Auth (login/register/favorites): migrate to `useMutation` when desired
 
@@ -292,6 +281,14 @@ Lint in CI, unified `main-workflow.yml`, BASE_URL job, caching, README badge, an
   - [ ] Document choice and usage guidelines (which components to use from kit vs. custom)
   - [ ] Introduce gradually (e.g. replace one existing component as pilot) before wider adoption
 
+### Pages / content
+
+- [ ] **About page polish** (dopo Person smoke)
+  - [x] Rename “Show Tracker” → Track'em All (2026-08-06) — `AboutPage.tsx` + PWA manifest in `vite.config.js` (`name` / `short_name` / `description`)
+  - [x] Rewrite short copy (what it is, credits, TMDB attribution, repo link) (2026-08-07)
+  - [x] Improve layout/typography to match other pages (2026-08-07)
+  - [ ] Optional: smoke test About after copy is stable
+
 ### Styles / CSS
 
 - [ ] **Reorganize form-related CSS**
@@ -324,6 +321,16 @@ Lint in CI, unified `main-workflow.yml`, BASE_URL job, caching, README badge, an
   - [ ] Development workflow
   - [ ] Testing instructions
   - [ ] Deployment process
+- [x] **Netlify production URL** — README corrected to `https://trackem-all.netlify.app/` (2026-08-05). Old names without hyphen were a different/legacy project.
+- [ ] **Netlify orphan sites (verify & clean up)**
+  - [ ] Confirm ownership of `https://trackemall.netlify.app/` and `https://trackemalldev.netlify.app/` (still serving old CRA; not this repo’s current deploy)
+  - [ ] If they belong to you / Chingu voyage: unpublish or delete the Netlify sites (or lock them) so bookmarks/mobile don’t open the wrong app
+  - [ ] If access is lost: search Netlify teams / email for `trackemall`, or accept they stay as stale public demos
+  - [ ] Double-check bookmarks, home-screen PWA, and external links point to `trackem-all`
+- [ ] **Optional: rename Netlify site URL when available**
+  - [ ] If `trackemall.netlify.app` (no hyphen) becomes free after orphan cleanup: Site settings → Domain management → Edit site name
+  - [ ] Or attach a custom domain (e.g. own domain) instead of relying on `*.netlify.app`
+  - [ ] After rename/custom domain: update README, CI `base_url` (`.github/workflows/main-workflow.yml`), `CORS_ALLOWED_ORIGINS` on Netlify, bookmarks / home-screen PWA
 - [ ] Document environment variables
 - [ ] Create contributing guidelines
 
@@ -342,6 +349,7 @@ See **[TODO-LIST-ARCHIVE.md](./TODO-LIST-ARCHIVE.md)** for the full log of finis
 - **Breaking Changes**: React Router v6 migration should be planned carefully.
 - **Firebase**: Removed. EpisodeCard "watched" feature to be restored when backend has watched-episodes API.
 - **Testing Strategy**: Consider Vitest for better Vite integration, but Jest is already working.
+- **Netlify URLs (2026-08-05):** Canonical prod = `https://trackem-all.netlify.app/`. `trackemall` / `trackemalldev` (no hyphen) are orphan CRA sites from the old project — verify ownership and delete when possible (see Documentation).
 
 ---
 
