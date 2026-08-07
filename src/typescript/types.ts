@@ -127,6 +127,8 @@ type Video = {
 type ShowResponse = {
   page: number;
   results: Show[];
+  total_pages: number;
+  total_results?: number;
 };
 
 interface Favorite {
