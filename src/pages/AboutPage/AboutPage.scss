@@ -1,3 +1,29 @@
-a {
-  text-decoration: underline;
+.about {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  &__section {
+    margin-bottom: 0.75rem;
+
+    p {
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__credits {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0;
+
+    li {
+      margin-bottom: 0.35rem;
+      line-height: 1.4;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+  }
 }
