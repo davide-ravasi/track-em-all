@@ -15,16 +15,13 @@ export const useQueryShow = ({
   category,
   cardAmount,
 }: IUseQueryShowProps) => {
-  const totalPages = 6;
-
   const infiniteResults = useInfiniteQuery({
     queryKey: ['shows', 'infinite', section, category, id],
     queryFn: ({ pageParam }) =>
       fetchShows({ pageParam, section, category, id }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
-      lastPage.page < totalPages ? lastPage.page + 1 : undefined,
-    maxPages: 6,
+      lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined,
     enabled: !cardAmount,
   });
 
