@@ -87,7 +87,7 @@ export default function EpisodePage() {
         <h3 className='episode_airdate'>Air date: {air_date}</h3>
         <p className='episode_overview'>{overview}</p>
 
-        <section aria-labelledby='cast'>
+        <section aria-labelledby='cast' data-testid='section-cast'>
           <h2 id='cast'>CAST</h2>
           <div className='cast_container'>
             {castData &&
@@ -98,7 +98,7 @@ export default function EpisodePage() {
           </div>
         </section>
 
-        <section aria-labelledby='photos'>
+        <section aria-labelledby='photos' data-testid='section-photos'>
           {imagesData?.stills && <PhotoList imagesData={imagesData.stills} />}
         </section>
 
