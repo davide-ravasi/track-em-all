@@ -85,7 +85,7 @@ export default function ShowList({
   }
 
   return (
-    <section className='shows' {...props}>
+    <section className='shows' data-testid={`section-${section}`} {...props}>
       <h1>
         {sectionTitle}{' '}
         {cardAmount && linkMore && (
