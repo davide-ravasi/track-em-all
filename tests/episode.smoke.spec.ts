@@ -36,9 +36,22 @@ test.describe('episode page', () => {
         name: /pilot still/i,
       })
     ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /s01e01/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Air date: 2008-01-20/i })
+    ).toBeVisible();
+    await expect(
+      page.getByText(/When an unassuming high school chemistry/i)
+    ).toBeVisible();
 
-    await expect(page.getByTestId('section-cast')).toBeVisible();
+    const cast = page.getByTestId('section-cast');
+    await expect(cast).toBeVisible();
+    const castItems = cast.getByRole('article');
+    await expect(castItems.first()).toBeVisible();
 
-    await expect(page.getByTestId('section-photos')).toBeVisible();
+    const photos = page.getByTestId('section-photos');
+    const photosItems = photos.getByRole('img');
+    await expect(photos).toBeVisible();
+    await expect(photosItems.first()).toBeVisible();
   });
 });
