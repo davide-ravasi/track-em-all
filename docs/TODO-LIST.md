@@ -2,7 +2,7 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2026-08-07
+**Last Updated:** 2026-09-11
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
@@ -152,11 +152,11 @@ Firebase removal is **done** — details in [TODO-LIST-ARCHIVE.md](./TODO-LIST-A
 ### Playwright Smoke Tests
 
 - [ ] Add smoke tests for other pages:
-  - [ ] Show page (`/show/:id`)
+  - [x] Show page (`/show/:id`)
   - [x] Person page (`/person/:id`)
-  - [ ] Favorites page (`/favorites`)
-  - [ ] Listing page (`/listing/:type`)
-  - [ ] Episode page (`/episode/:id`)
+  - [x] Favorites page (`/favorites`) — guest→login + empty + seeded list (#124, 2026-09)
+  - [x] Listing page (`/list/...`) — popular + Load more 20→40 (#126, 2026-09-07)
+  - [x] Episode page — nav show→Pilot + shell + S01E01/air/overview + cast/photos (#127, 2026-09-07)
 - [ ] Verify Playwright HTML report upload in CI
 - [ ] Improve test reliability and error messages
 - [ ] **Try Playwright CLI (e.g. with goose)** for generating tests from natural language and compare with current workflow. Link: [Agentic Testing with Playwright CLI Skill (goose)](https://block.github.io/goose/docs/tutorials/playwright-skill/)
@@ -176,8 +176,10 @@ Core **React Query** migration is **done** — see [TODO-LIST-ARCHIVE.md](./TODO
 
 - [x] (Optional) HomePage search: replace manual `fetch` with `useQuery({ queryKey: ['search', searchTerm], enabled: !!searchTerm })` (2026-07-27); Context search removed — props only
 - [x] (Follow-up) Same search term submit: no refetch while data is fresh (`staleTime` 5 min in `App.tsx`) — solved with `refetch()` when term unchanged (2026-07-28); note: cerebro `sources/react/raw/react-query-stale-time-and-refetch.md`
-- [ ] (Optional) ShowList "Load more": migrate to `useInfiniteQuery`
-- [ ] (Later) Auth (login/register/favorites): migrate to `useMutation` when desired
+- [x] (Optional) ShowList "Load more": migrate to `useInfiniteQuery` — `getNextPageParam` da TMDB `total_pages`; niente `maxPages` (evita drop cache) (2026-08-07)
+- [x] Auth **login** → `useMutation` (#128, 2026-09-11) — `mutationFn` + `onSuccess` → `dispatch(login.fulfilled)`; session/favorites restano in Redux
+- [ ] (Later) Auth **register** / **favorites** add-remove → `useMutation` (stesso pattern ibrido RQ + Redux)
+- [ ] (Optional) Azione sync tipo `setSession` al posto di `login.fulfilled` manuale; review `AuthContext` se ridondante
 
 ---
 
