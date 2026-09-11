@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import './Login.scss';
@@ -12,6 +12,8 @@ import {
   AUTH_FORM_MESSAGES,
   isValidEmailFormat,
 } from '../../utils/authValidation';
+import { useMutation } from '@tanstack/react-query';
+import { login } from '../../features/auth/authSlice';
 
 export default function Login() {
   const history = useHistory();
@@ -19,9 +21,27 @@ export default function Login() {
 
   const { loginUser } = useAuth();
 
-  const timer = 2000;
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (response) => {
+      dispatch(login.fulfilled(response));
+      notifySuccess('You have successfully logged in!', { autoClose: timer });
+      notifyInfo('We are redirecting you to the homepage', { autoClose: timer });
 
-  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+      history.push('/');
+    },
+    onError: (error) => {
+      notifyError(error.message, {
+        onClose: () => {
+          resetEmail();
+          resetPassword();
+          dispatch(reset());
+        },
+      });
+    },
+  });
+
+  const timer = 2000;
 
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
   const { notifySuccess, notifyInfo, notifyError } = useToast();
@@ -37,34 +57,6 @@ export default function Login() {
     bind: bindPassword,
     reset: resetPassword,
   } = useInput('');
-
-  useEffect(() => {
-    if (isSuccess) {
-      notifySuccess('You have successfully logged in!', { autoClose: timer });
-      notifyInfo('We are redirecting you to the homepage', {
-        autoClose: timer,
-      });
-
-      setTimeout(() => {
-        history.push('/');
-      }, timer);
-    }
-  }, [isSuccess, history, notifySuccess, notifyInfo]);
-
-  // 
-  // Handle error state
-  //
-  useEffect(() => {
-    if (isError) {
-      notifyError(message, {
-        onClose: () => {
-          resetEmail();
-          resetPassword();
-          dispatch(reset());
-        },
-      });
-    }
-  }, [dispatch, isError, message, notifyError, resetEmail, resetPassword]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -90,7 +82,7 @@ export default function Login() {
       return;
     }
 
-    loginUser({ email: trimmedEmail, password: trimmedPassword });
+    loginMutation.mutate({ email: trimmedEmail, password: trimmedPassword });
   }
 
   return (
@@ -122,8 +114,8 @@ export default function Login() {
           ></input>
           {passwordError && <span className='login__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
         </div>
-        <button type='submit' className='login__button' disabled={isLoading} aria-busy={isLoading}>
-          {isLoading ? 'Logging in...' : 'Log in'}
+        <button type='submit' className='login__button' disabled={loginMutation.isPending} aria-busy={loginMutation.isPending}>
+          {loginMutation.isPending ? 'Logging in...' : 'Log in'}
         </button>
         <div className='login__register-text'>
           <span>Don&apos;t have account?</span>
