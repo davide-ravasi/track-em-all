@@ -1,8 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import * as jose from 'jose';
-import { logout, register, login } from '../features/auth/authSlice';
+import { logout, register } from '../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from '../hooks/UseToast';
+import authService from '../features/auth/authService';
 
 const AuthContext = React.createContext();
 
@@ -13,8 +14,6 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const dispatch = useDispatch();
   const { notifySuccess } = useToast();
-
-  const [currentUser] = useState();
   const token = localStorage.getItem('tea-token');
 
   const logoutUser = useCallback(
@@ -37,13 +36,21 @@ export function AuthProvider({ children }) {
     dispatch(register(registerUser));
   };
 
-  const loginUser = ({ email, password }) => {
+  const loginUser = async ({ email, password }) => {
     const loginUser = {
       email: email,
       password: password,
     };
 
-    dispatch(login(loginUser));
+    try {
+      return await authService.login(loginUser);
+    } catch (error) {
+      throw new Error(error?.response?.data ?? error?.message);
+    }
+
+
+
+    //dispatch(login(loginUser));
   };
 
   useEffect(() => {
@@ -73,28 +80,7 @@ export function AuthProvider({ children }) {
 
   }, [token, logoutUser]);
 
-  // function signup(email, password) {
-  //   return auth.createUserWithEmailAndPassword(email, password);
-  // }
-
-  // function login(email, password) {
-  //   return auth.signInWithEmailAndPassword(email, password);
-  // }
-
-  // function resetPassword(email) {
-  //   return auth.sendPasswordResetEmail(email);
-  // }
-
-  // function updateEmail(email) {
-  //   return currentUser.updateEmail(email);
-  // }
-
-  // function updatePassword(password) {
-  //   return currentUser.updatePassword(password);
-  // }
-
   const value = {
-    currentUser,
     logoutUser,
     registerUser,
     loginUser,
