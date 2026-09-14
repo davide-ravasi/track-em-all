@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { reset } from '../../features/auth/authSlice';
@@ -17,6 +17,8 @@ import {
   isRegisterNameLengthValid,
   isRegisterNameCharactersValid,
 } from '../../utils/authValidation';
+import { useMutation } from '@tanstack/react-query';
+import { register } from '../../features/auth/authSlice';
 
 export default function Register() {
   const history = useHistory();
@@ -26,10 +28,31 @@ export default function Register() {
 
   const { registerUser } = useAuth();
 
-  const { isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
+
   const { notifySuccess, notifyInfo, notifyError } = useToast();
+
+  const registerMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (response) => {
+      dispatch(register.fulfilled(response));
+      notifySuccess('You have successfully registered!', { autoClose: timer });
+      notifyInfo('We are redirecting you to the login page', {
+        autoClose: timer,
+      });
+
+      setTimeout(() => {
+        dispatch(reset());
+        history.push('/login');
+      }, timer);
+    },
+    onError: (error) => {
+      notifyError(error.message, {
+        onClose: () => {
+          dispatch(reset());
+        },
+      });
+    },
+  });
 
   const { value: firstName, bind: bindFirstName } = useInput('');
   const { value: lastName, bind: bindLastName } = useInput('');
@@ -53,31 +76,7 @@ export default function Register() {
   const [emailErrorMessage, setEmailErrorMessage] = useState(
     AUTH_FORM_MESSAGES.emailRequired
   );
-
-  useEffect(() => {
-    if (isSuccess) {
-      notifySuccess('You have successfully registered!', { autoClose: timer });
-      notifyInfo('We are redirecting you to the login page', {
-        autoClose: timer,
-      });
-
-      setTimeout(() => {
-        dispatch(reset());
-        history.push('/login');
-      }, timer);
-    }
-  }, [isSuccess, history, dispatch, notifySuccess, notifyInfo]);
-
-  useEffect(() => {
-    if (isError) {
-      notifyError(message, {
-        onClose: () => {
-          dispatch(reset());
-        },
-      });
-    }
-  }, [dispatch, isError, message, notifyError]);
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     setFirstNameError(false);
@@ -150,7 +149,7 @@ export default function Register() {
       return;
     }
 
-    registerUser({
+    registerMutation.mutate({
       firstName: trimmedFirstName,
       lastName: trimmedLastName,
       email: trimmedEmail,
@@ -158,7 +157,7 @@ export default function Register() {
     });
   };
 
-  if (isLoading) {
+  if (registerMutation.isPending) {
     return (
       <main id='main-content' className='page' aria-busy='true'>
         <div
@@ -249,10 +248,10 @@ export default function Register() {
         <button
           type='submit'
           className='register__button'
-          disabled={isLoading}
-          aria-busy={isLoading}
+          disabled={registerMutation.isPending}
+          aria-busy={registerMutation.isPending}
         >
-          {isLoading ? 'Registering...' : 'Register'}
+          {registerMutation.isPending ? 'Registering...' : 'Register'}
         </button>
       </form>
     </main>
