@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import * as jose from 'jose';
-import { logout, register } from '../features/auth/authSlice';
+import { logout } from '../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from '../hooks/UseToast';
 import authService from '../features/auth/authService';
@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
     [dispatch, notifySuccess]
   );
 
-  const registerUser = ({ firstName, lastName, email, password }) => {
+  const registerUser = async ({ firstName, lastName, email, password }) => {
     const registerUser = {
       firstName: firstName,
       lastName: lastName,
@@ -33,7 +33,11 @@ export function AuthProvider({ children }) {
       password: password,
     };
 
-    dispatch(register(registerUser));
+    try {
+      return await authService.register(registerUser);
+    } catch (error) {
+      throw new Error(error?.response?.data ?? error?.message);
+    }
   };
 
   const loginUser = async ({ email, password }) => {
@@ -47,10 +51,6 @@ export function AuthProvider({ children }) {
     } catch (error) {
       throw new Error(error?.response?.data ?? error?.message);
     }
-
-
-
-    //dispatch(login(loginUser));
   };
 
   useEffect(() => {
