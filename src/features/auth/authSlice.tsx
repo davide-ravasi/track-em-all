@@ -8,8 +8,8 @@ type FavoriteListResponse = {
   favorites: Favorite[];
 };
 
-/** Normalizes axios `response.data` (string or JSON body) for Redux `message`. */
-function formatErrorMessage(data: unknown): string {
+/** Normalizes axios `response.data` (string or JSON body) for toasts / Redux `message`. */
+export function formatErrorMessage(data: unknown): string {
   if (typeof data === 'string') {
     return data;
   }

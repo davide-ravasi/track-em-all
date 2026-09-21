@@ -3,6 +3,8 @@ import {
   actualHost,
   favoriteAdd,
   favoriteRemove,
+  favoriteRequestHeaders,
+  formatErrorMessage,
 } from '../features/auth/authSlice';
 import { AppDispatch } from '../app/store';
 import {
@@ -16,7 +18,6 @@ import {
 import { RootState } from '../typescript/types';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { favoriteRequestHeaders } from '../features/auth/authSlice';
 import { useMutation } from '@tanstack/react-query';
 
 type ShowData = {
@@ -35,6 +36,30 @@ export function useFavorite() {
     setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>>;
   }
 
+  interface IRemoveFavoriteFromDbProps {
+    showId: string;
+    setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>>;
+  }
+
+  const removeFavoriteFromDb = async ({
+    showId,
+  }: IRemoveFavoriteFromDbProps) => {
+    try {
+      const response = await axios.post(
+        actualHost + '/favorite/remove',
+        { showId },
+        {
+          headers: favoriteRequestHeaders(),
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      throw new Error(
+        formatErrorMessage(error?.response?.data ?? error?.message)
+      );
+    }
+  };
+
   const addFavoriteDb = async ({ showData, favoriteId }: IAddFavoriteProps) => {
     try {
       const response = await axios.post(
@@ -47,7 +72,9 @@ export function useFavorite() {
       // Plain JSON only — full AxiosResponse (headers, etc.) is not Redux-serializable
       return response.data;
     } catch (error: any) {
-      throw new Error(error?.response?.data ?? error?.message);
+      throw new Error(
+        formatErrorMessage(error?.response?.data ?? error?.message)
+      );
     }
   };
 
@@ -61,6 +88,27 @@ export function useFavorite() {
           vote_average: variables.showData.vote_average ?? 0,
           poster_path: variables.showData.poster_path ?? '',
           showId: variables.favoriteId,
+        })
+      );
+      variables.setLoadingFavorite(false);
+    },
+    onError: (error, variables) => {
+      toast.error(
+        typeof error === 'string'
+          ? error
+          : (error?.message ?? 'Favorite request failed')
+      );
+      variables.setLoadingFavorite(false);
+    },
+  });
+
+  const removeFavoriteMutation = useMutation({
+    mutationFn: removeFavoriteFromDb,
+    onSuccess: (response, variables) => {
+      // RTK: .fulfilled(payload, requestId, arg) — arg = stesso shape del thunk
+      dispatch(
+        favoriteRemove.fulfilled(response, crypto.randomUUID(), {
+          showId: variables.showId,
         })
       );
       variables.setLoadingFavorite(false);
@@ -135,24 +183,7 @@ export function useFavorite() {
       return;
     }
 
-    // See addFavorite: .unwrap() so rejected thunks hit .catch() for user toast.
-    dispatch(
-      favoriteRemove({
-        showId: favoriteId,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        setLoadingFavorite(false);
-      })
-      .catch((error) => {
-        toast.error(
-          typeof error === 'string'
-            ? error
-            : (error?.message ?? 'Favorite request failed')
-        );
-        setLoadingFavorite(false);
-      });
+    removeFavoriteMutation.mutate({ showId: favoriteId, setLoadingFavorite });
   };
 
   return { addFavorite, removeFavorite };
