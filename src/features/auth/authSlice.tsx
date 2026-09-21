@@ -4,8 +4,12 @@ import authService from './authService';
 import axios from 'axios';
 import { AuthState, Favorite } from '../../typescript/types';
 
-/** Normalizes axios `response.data` (string or JSON body) for Redux `message`. */
-function formatErrorMessage(data: unknown): string {
+type FavoriteListResponse = {
+  favorites: Favorite[];
+};
+
+/** Normalizes axios `response.data` (string or JSON body) for toasts / Redux `message`. */
+export function formatErrorMessage(data: unknown): string {
   if (typeof data === 'string') {
     return data;
   }
@@ -20,14 +24,14 @@ function formatErrorMessage(data: unknown): string {
   return 'An error occurred';
 }
 
-const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
+export const actualHost = import.meta.env.VITE_EXPRESS_ENDPOINT;
 //const actualHost =
 // "https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express";
 
 // https://trackem-all.netlify.app/.netlify/functions/express
 // https://8888-davideravasi-trackemall-mclb840f9og.ws-eu110.gitpod.io/.netlify/functions/express/favorite
 
-function favoriteRequestHeaders(): Record<string, string> {
+export function favoriteRequestHeaders(): Record<string, string> {
   const token = localStorage.getItem('tea-token');
   return {
     'Content-Type': 'application/json',
@@ -58,35 +62,39 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   }
 });
 
-export const favoriteAdd = createAsyncThunk(
-  'auth/favorites/add',
-  async (data: Favorite, thunkAPI) => {
-    try {
-      return await axios.post(actualHost + '/favorite/add', data, {
-        headers: favoriteRequestHeaders(),
-      });
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        formatErrorMessage(error.response?.data ?? error?.message)
-      );
-    }
+export const favoriteAdd = createAsyncThunk<
+  FavoriteListResponse,
+  Favorite,
+  { rejectValue: string }
+>('auth/favorites/add', async (data, thunkAPI) => {
+  try {
+    const response = await axios.post(actualHost + '/favorite/add', data, {
+      headers: favoriteRequestHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      formatErrorMessage(error.response?.data ?? error?.message)
+    );
   }
-);
+});
 
-export const favoriteRemove = createAsyncThunk(
-  'auth/favorites/remove',
-  async (data: { showId: string }, thunkAPI) => {
-    try {
-      return await axios.post(actualHost + '/favorite/remove', data, {
-        headers: favoriteRequestHeaders(),
-      });
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        formatErrorMessage(error.response?.data ?? error?.message)
-      );
-    }
+export const favoriteRemove = createAsyncThunk<
+  FavoriteListResponse,
+  { showId: string },
+  { rejectValue: string }
+>('auth/favorites/remove', async (data, thunkAPI) => {
+  try {
+    const response = await axios.post(actualHost + '/favorite/remove', data, {
+      headers: favoriteRequestHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      formatErrorMessage(error.response?.data ?? error?.message)
+    );
   }
-);
+});
 
 const initialState: AuthState | null = {
   user: null,
@@ -165,11 +173,11 @@ export const authSlice = createSlice({
     // favorite
     builder.addCase(
       favoriteAdd.fulfilled,
-      (state, action: PayloadAction<any>) => {
+      (state, action: PayloadAction<FavoriteListResponse>) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.message = 'the favorite has been added';
-        state.favorites = action.payload.data.favorites;
+        state.favorites = action.payload.favorites;
         //state.token = action.payload.data.token;
       }
     );
@@ -187,11 +195,11 @@ export const authSlice = createSlice({
 
     builder.addCase(
       favoriteRemove.fulfilled,
-      (state, action: PayloadAction<any>) => {
+      (state, action: PayloadAction<FavoriteListResponse>) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.message = 'the favorite has been removed from your list';
-        state.favorites = action.payload.data.favorites;
+        state.favorites = action.payload.favorites;
         //state.token = action.payload.data.token;
       }
     );

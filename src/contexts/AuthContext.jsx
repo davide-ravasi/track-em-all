@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import * as jose from 'jose';
-import { logout } from '../features/auth/authSlice';
+import { logout, formatErrorMessage } from '../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useToast } from '../hooks/UseToast';
 import authService from '../features/auth/authService';
@@ -36,7 +36,9 @@ export function AuthProvider({ children }) {
     try {
       return await authService.register(registerUser);
     } catch (error) {
-      throw new Error(error?.response?.data ?? error?.message);
+      throw new Error(
+        formatErrorMessage(error?.response?.data ?? error?.message)
+      );
     }
   };
 
@@ -49,7 +51,9 @@ export function AuthProvider({ children }) {
     try {
       return await authService.login(loginUser);
     } catch (error) {
-      throw new Error(error?.response?.data ?? error?.message);
+      throw new Error(
+        formatErrorMessage(error?.response?.data ?? error?.message)
+      );
     }
   };
 
