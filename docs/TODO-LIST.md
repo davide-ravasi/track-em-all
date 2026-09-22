@@ -2,13 +2,24 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2026-09-11
+**Last Updated:** 2026-09-22
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
 ---
 
 ## 🔄 In Progress
+
+*(vuoto)*
+
+---
+
+## 📌 Follow-up auth / RQ (non in corso)
+
+- [ ] Cleanup minore: onError duplicato add/remove in `UseFavorite` · opz. POST in `authService`
+- [x] `Login.jsx` → **`Login.tsx`** mergiato **#131** (2026-09-22) — `fulfilled(payload, requestId, arg)` · `response.data`
+- [ ] (Optional) `setFavorites` / `setSession` sync al posto di `.fulfilled` manuale; poi meno Redux su user/favorites
+- [ ] **Ripasso:** RTK + TypeScript (`createAsyncThunk` A/B/C, `.fulfilled`, payload vs arg) — voce in cerebro backlog ripasso
 
 ---
 
@@ -28,7 +39,7 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 | **8**    | **Routing / deps**           | React Router v6 evaluation, then dependency upgrades                   | Plan as a dedicated change; do after security and testing.                                                         |
 | **9**    | **Polish / later**           | Reusable loader/error, headless kit audit, form CSS, README            | When foundation is solid; improves maintainability.                                                                |
 | **—**    | **Cursor Skills**            | Add project **Skills** (`SKILL.md`) for repeatable agent workflows   | Same steps every time (tests, CI, deploy); complements `.cursor/rules`. See **Developer Experience → Cursor Skills**. |
-| **—**    | **Data fetching (parallel)** | ~~Core React Query migration~~ ✓ (see [archive](./TODO-LIST-ARCHIVE.md)). Optional: auth `useMutation`, search `useQuery`. | Remaining items in **Data fetching / API** below.                                                                  |
+| **—**    | **Data fetching (parallel)** | ~~Core RQ~~ ✓ · ~~auth `useMutation`~~ ✓ (#128–#130) · ~~`Login.tsx`~~ ✓ (#131). Optional: Register.tsx, `setSession`, Open Graph. | Remaining items in **Data fetching / API** below.                                                                  |
 
 **Quick wins when you have little time:** one more smoke test, `prettier --check` in CI, or meta + Open Graph in `index.html`.
 
@@ -178,8 +189,11 @@ Core **React Query** migration is **done** — see [TODO-LIST-ARCHIVE.md](./TODO
 - [x] (Follow-up) Same search term submit: no refetch while data is fresh (`staleTime` 5 min in `App.tsx`) — solved with `refetch()` when term unchanged (2026-07-28); note: cerebro `sources/react/raw/react-query-stale-time-and-refetch.md`
 - [x] (Optional) ShowList "Load more": migrate to `useInfiniteQuery` — `getNextPageParam` da TMDB `total_pages`; niente `maxPages` (evita drop cache) (2026-08-07)
 - [x] Auth **login** → `useMutation` (#128, 2026-09-11) — `mutationFn` + `onSuccess` → `dispatch(login.fulfilled)`; session/favorites restano in Redux
-- [ ] (Later) Auth **register** / **favorites** add-remove → `useMutation` (stesso pattern ibrido RQ + Redux)
-- [ ] (Optional) Azione sync tipo `setSession` al posto di `login.fulfilled` manuale; review `AuthContext` se ridondante
+- [x] Auth **register** → `useMutation` (#129, 2026-09-14) — `registerUser` → `authService.register` (come login); `onSuccess` → `register.fulfilled` + redirect `/login`
+- [x] Auth **favorites** add-remove → `useMutation` (#130, 2026-09-21) — `mutationFn` + `*.fulfilled(payload, requestId, arg)`; payload = `response.data` (serializable)
+- [x] `Login.jsx` → `Login.tsx` mergiato **#131** (2026-09-22) — type-check `login.fulfilled` · `authService` → `response.data`
+- [ ] (Later) `Register.jsx` → `Register.tsx` (stesso pattern) · opz. `setSession` / meno Redux su user
+- [ ] (Optional) Azione sync tipo `setSession` al posto di `login.fulfilled` manuale; review import inutili in `AuthContext` se `register` thunk non serve più
 
 ---
 
