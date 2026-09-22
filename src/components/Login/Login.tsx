@@ -13,7 +13,11 @@ import {
   isValidEmailFormat,
 } from '../../utils/authValidation';
 import { useMutation } from '@tanstack/react-query';
-import { login } from '../../features/auth/authSlice';
+import {
+  login,
+  LoginCredentials,
+  LoginResponse,
+} from '../../features/auth/authSlice';
 
 export default function Login() {
   const history = useHistory();
@@ -23,10 +27,17 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: (response) => {
-      dispatch(login.fulfilled(response));
+    onSuccess: (response: LoginResponse, variables: LoginCredentials) => {
+      dispatch(
+        login.fulfilled(response, crypto.randomUUID(), {
+          email: variables.email,
+          password: variables.password,
+        })
+      );
       notifySuccess('You have successfully logged in!', { autoClose: timer });
-      notifyInfo('We are redirecting you to the homepage', { autoClose: timer });
+      notifyInfo('We are redirecting you to the homepage', {
+        autoClose: timer,
+      });
 
       history.push('/');
     },
@@ -58,7 +69,7 @@ export default function Login() {
     reset: resetPassword,
   } = useInput('');
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const trimmedEmail = email.trim();
     setEmailError(false);
@@ -82,12 +93,19 @@ export default function Login() {
       return;
     }
 
-    loginMutation.mutate({ email: trimmedEmail, password: trimmedPassword });
+    loginMutation.mutate({
+      email: trimmedEmail,
+      password: trimmedPassword,
+    });
   }
 
   return (
     <main id='main-content' className='page'>
-      <form className='login__form-container' onSubmit={handleSubmit} noValidate>
+      <form
+        className='login__form-container'
+        onSubmit={handleSubmit}
+        noValidate
+      >
         <div className='login__input-container'>
           <label htmlFor='email'>Email: </label>
           <input
@@ -99,7 +117,11 @@ export default function Login() {
             aria-describedby={emailError ? 'email-error' : undefined}
             {...bindEmail}
           ></input>
-          {emailError && <span className='login__input-error' id='email-error' role='alert'>{emailErrorMessage}</span>}
+          {emailError && (
+            <span className='login__input-error' id='email-error' role='alert'>
+              {emailErrorMessage}
+            </span>
+          )}
         </div>
         <div className='login__input-container'>
           <label htmlFor='password'>Password: </label>
@@ -112,9 +134,22 @@ export default function Login() {
             aria-describedby={passwordError ? 'password-error' : undefined}
             {...bindPassword}
           ></input>
-          {passwordError && <span className='login__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
+          {passwordError && (
+            <span
+              className='login__input-error'
+              id='password-error'
+              role='alert'
+            >
+              {passwordErrorMessage}
+            </span>
+          )}
         </div>
-        <button type='submit' className='login__button' disabled={loginMutation.isPending} aria-busy={loginMutation.isPending}>
+        <button
+          type='submit'
+          className='login__button'
+          disabled={loginMutation.isPending}
+          aria-busy={loginMutation.isPending}
+        >
           {loginMutation.isPending ? 'Logging in...' : 'Log in'}
         </button>
         <div className='login__register-text'>

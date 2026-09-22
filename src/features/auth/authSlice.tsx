@@ -8,6 +8,35 @@ type FavoriteListResponse = {
   favorites: Favorite[];
 };
 
+export type RegisterResponse = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  favorites: Favorite[];
+  token: string;
+};
+export type RegisterCredentials = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+};
+
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+export type LoginResponse = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  favorites: Favorite[];
+  token: string;
+};
+
 /** Normalizes axios `response.data` (string or JSON body) for toasts / Redux `message`. */
 export function formatErrorMessage(data: unknown): string {
   if (typeof data === 'string') {
@@ -39,20 +68,25 @@ export function favoriteRequestHeaders(): Record<string, string> {
   };
 }
 
-export const register = createAsyncThunk(
-  'auth/register',
-  async (data, thunkAPI) => {
-    try {
-      return await authService.register(data);
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        formatErrorMessage(error.response?.data ?? error?.message)
-      );
-    }
+export const register = createAsyncThunk<
+  RegisterResponse,
+  RegisterCredentials,
+  { rejectValue: string }
+>('auth/register', async (data, thunkAPI) => {
+  try {
+    return await authService.register(data);
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      formatErrorMessage(error.response?.data ?? error?.message)
+    );
   }
-);
+});
 
-export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
+export const login = createAsyncThunk<
+  LoginResponse,
+  LoginCredentials,
+  { rejectValue: string }
+>('auth/login', async (data, thunkAPI) => {
   try {
     return await authService.login(data);
   } catch (error: any) {
@@ -151,12 +185,12 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = true;
       state.user = {
-        id: action.payload?.data.id,
-        firstName: action.payload?.data.firstName,
-        lastName: action.payload?.data.lastName,
-        email: action.payload?.data.email,
+        id: action.payload?.id,
+        firstName: action.payload?.firstName,
+        lastName: action.payload?.lastName,
+        email: action.payload?.email,
       };
-      state.favorites = action.payload?.data.favorites;
+      state.favorites = action.payload?.favorites;
       //state.token = action.payload.data.token;
     });
 
