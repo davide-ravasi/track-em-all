@@ -2,7 +2,7 @@
 
 This document tracks all pending tasks and improvements for the Track'em All application.
 
-**Last Updated:** 2026-09-22
+**Last Updated:** 2026-09-28
 
 **How to organize:** See **[TODO-ORGANIZATION.md](./TODO-ORGANIZATION.md)** for suggested phases, quick wins, batching by theme, and “what’s next” ideas.
 
@@ -16,8 +16,9 @@ This document tracks all pending tasks and improvements for the Track'em All app
 
 ## 📌 Follow-up auth / RQ (non in corso)
 
-- [ ] Cleanup minore: onError duplicato add/remove in `UseFavorite` · opz. POST in `authService`
+- [x] Cleanup minore: onError duplicato add/remove in `UseFavorite` → `onFavoriteError` (`dae8397`, 2026-09-28)
 - [x] `Login.jsx` → **`Login.tsx`** mergiato **#131** (2026-09-22) — `fulfilled(payload, requestId, arg)` · `response.data`
+- [x] `Register.jsx` → **`Register.tsx`** mergiato **#132** (2026-09-28) — stesso pattern Login
 - [ ] (Optional) `setFavorites` / `setSession` sync al posto di `.fulfilled` manuale; poi meno Redux su user/favorites
 - [ ] **Ripasso:** RTK + TypeScript (`createAsyncThunk` A/B/C, `.fulfilled`, payload vs arg) — voce in cerebro backlog ripasso
 
@@ -35,13 +36,13 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 | **4**    | **Testing**                  | More Playwright smoke tests (Show, Person, Favorites, etc.)            | You already have homepage; extend coverage before adding features.                                                 |
 | **5**    | **Performance**              | Bundle visualizer → code splitting / lazy routes                       | Understand size first, then optimize; supports faster loads.                                                       |
 | **6**    | **PWA polish**               | Maskable icons, optional update/offline/install prompts                | Improves install experience; not blocking.                                                                         |
-| **7**    | **SEO**                      | Meta + Open Graph in `index.html` → dynamic meta (e.g. Helmet)         | Good for discovery; can batch in one pass.                                                                         |
+| **7**    | **SEO**                      | ~~Meta + Open Graph home~~ ✓ (2026-09-28). **Next:** description ≤160 · asset 1200×630 · dynamic meta (Helmet) | Good for discovery; can batch in one pass.                                                                         |
 | **8**    | **Routing / deps**           | React Router v6 evaluation, then dependency upgrades                   | Plan as a dedicated change; do after security and testing.                                                         |
 | **9**    | **Polish / later**           | Reusable loader/error, headless kit audit, form CSS, README            | When foundation is solid; improves maintainability.                                                                |
 | **—**    | **Cursor Skills**            | Add project **Skills** (`SKILL.md`) for repeatable agent workflows   | Same steps every time (tests, CI, deploy); complements `.cursor/rules`. See **Developer Experience → Cursor Skills**. |
-| **—**    | **Data fetching (parallel)** | ~~Core RQ~~ ✓ · ~~auth `useMutation`~~ ✓ (#128–#130) · ~~`Login.tsx`~~ ✓ (#131). Optional: Register.tsx, `setSession`, Open Graph. | Remaining items in **Data fetching / API** below.                                                                  |
+| **—**    | **Data fetching (parallel)** | ~~Core RQ~~ ✓ · ~~auth `useMutation`~~ ✓ (#128–#130) · ~~Login/Register TS~~ ✓ (#131–#132). Optional: `setSession`. | Remaining items in **Data fetching / API** below.                                                                  |
 
-**Quick wins when you have little time:** one more smoke test, `prettier --check` in CI, or meta + Open Graph in `index.html`.
+**Quick wins when you have little time:** one more smoke test, `prettier --check` in CI, or SEO follow-up (description ≤160 / asset OG 1200×630).
 
 ---
 
@@ -72,20 +73,21 @@ Use this order if you want a single sequence. Details are in [TODO-ORGANIZATION.
 
 ### Meta Tags & Structured Data
 
-- [ ] Review and optimize existing meta tags in `index.html`
-  - [ ] Verify title tag is descriptive and unique
+- [x] Review and optimize existing meta tags in `index.html` (2026-09-28 — OG + Twitter home **deployed** su `trackem-all.netlify.app`; image placeholder `logo192.png`, non 1200×630)
+  - [x] Verify title tag is descriptive and unique
   - [ ] Ensure meta description is compelling and under 160 characters
-  - [ ] Add Open Graph tags for social media sharing
-    - [ ] `og:title`
-    - [ ] `og:description`
-    - [ ] `og:image`
-    - [ ] `og:url`
-    - [ ] `og:type`
-  - [ ] Add Twitter Card tags
-    - [ ] `twitter:card`
-    - [ ] `twitter:title`
-    - [ ] `twitter:description`
-    - [ ] `twitter:image`
+  - [x] Add Open Graph tags for social media sharing
+    - [x] `og:title`
+    - [x] `og:description`
+    - [x] `og:image`
+    - [x] `og:url`
+    - [x] `og:type`
+  - [x] Add Twitter Card tags
+    - [x] `twitter:card`
+    - [x] `twitter:title`
+    - [x] `twitter:description`
+    - [x] `twitter:image`
+  - [ ] (Follow-up) Asset OG dedicato 1200×630 · review `twitter:site` / `creator` se account X reale
 - [ ] Add structured data (JSON-LD) for better search visibility
   - [ ] Organization/Website schema
   - [ ] BreadcrumbList schema (if applicable)
@@ -192,7 +194,7 @@ Core **React Query** migration is **done** — see [TODO-LIST-ARCHIVE.md](./TODO
 - [x] Auth **register** → `useMutation` (#129, 2026-09-14) — `registerUser` → `authService.register` (come login); `onSuccess` → `register.fulfilled` + redirect `/login`
 - [x] Auth **favorites** add-remove → `useMutation` (#130, 2026-09-21) — `mutationFn` + `*.fulfilled(payload, requestId, arg)`; payload = `response.data` (serializable)
 - [x] `Login.jsx` → `Login.tsx` mergiato **#131** (2026-09-22) — type-check `login.fulfilled` · `authService` → `response.data`
-- [ ] (Later) `Register.jsx` → `Register.tsx` (stesso pattern) · opz. `setSession` / meno Redux su user
+- [x] `Register.jsx` → `Register.tsx` mergiato **#132** (2026-09-28) — stesso pattern Login
 - [ ] (Optional) Azione sync tipo `setSession` al posto di `login.fulfilled` manuale; review import inutili in `AuthContext` se `register` thunk non serve più
 
 ---
