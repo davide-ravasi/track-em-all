@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { reset } from '../../features/auth/authSlice';
+import { RegisterCredentials, reset } from '../../features/auth/authSlice';
 
 import './Register.scss';
 import { useAuth } from '../../contexts/AuthContext';
@@ -18,7 +18,7 @@ import {
   isRegisterNameCharactersValid,
 } from '../../utils/authValidation';
 import { useMutation } from '@tanstack/react-query';
-import { register } from '../../features/auth/authSlice';
+import { register, RegisterResponse } from '../../features/auth/authSlice';
 
 export default function Register() {
   const history = useHistory();
@@ -28,13 +28,19 @@ export default function Register() {
 
   const { registerUser } = useAuth();
 
-
   const { notifySuccess, notifyInfo, notifyError } = useToast();
 
   const registerMutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: (response) => {
-      dispatch(register.fulfilled(response));
+    onSuccess: (response: RegisterResponse, variables: RegisterCredentials) => {
+      dispatch(
+        register.fulfilled(response, crypto.randomUUID(), {
+          firstName: variables.firstName,
+          lastName: variables.lastName,
+          email: variables.email,
+          password: variables.password,
+        })
+      );
       notifySuccess('You have successfully registered!', { autoClose: timer });
       notifyInfo('We are redirecting you to the login page', {
         autoClose: timer,
@@ -63,7 +69,8 @@ export default function Register() {
   const [passwordError, setPasswordError] = useState(false);
   const passwordErrorMessage = AUTH_FORM_MESSAGES.registerPasswordPolicy;
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const confirmPasswordErrorMessage = AUTH_FORM_MESSAGES.confirmPasswordMismatch;
+  const confirmPasswordErrorMessage =
+    AUTH_FORM_MESSAGES.confirmPasswordMismatch;
   const [firstNameError, setFirstNameError] = useState(false);
   const [firstNameErrorMessage, setFirstNameErrorMessage] = useState(
     AUTH_FORM_MESSAGES.firstNameRequired
@@ -76,8 +83,8 @@ export default function Register() {
   const [emailErrorMessage, setEmailErrorMessage] = useState(
     AUTH_FORM_MESSAGES.emailRequired
   );
-  
-  const handleSubmit = (e) => {
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFirstNameError(false);
     setFirstNameErrorMessage(AUTH_FORM_MESSAGES.firstNameRequired);
@@ -105,7 +112,9 @@ export default function Register() {
 
     if (!isRegisterNameCharactersValid(trimmedFirstName)) {
       setFirstNameError(true);
-      setFirstNameErrorMessage(AUTH_FORM_MESSAGES.registerNameInvalidCharacters);
+      setFirstNameErrorMessage(
+        AUTH_FORM_MESSAGES.registerNameInvalidCharacters
+      );
       return;
     }
 
@@ -175,7 +184,11 @@ export default function Register() {
 
   return (
     <main id='main-content' className='page'>
-      <form className='register__form-container' onSubmit={handleSubmit} noValidate>
+      <form
+        className='register__form-container'
+        onSubmit={handleSubmit}
+        noValidate
+      >
         <div className='register__input-container'>
           <label htmlFor='firstname'>First Name*: </label>
           <input
@@ -189,7 +202,15 @@ export default function Register() {
             aria-describedby={firstNameError ? 'firstName-error' : undefined}
             {...bindFirstName}
           ></input>
-          {firstNameError && <span className='register__input-error' id='firstName-error' role='alert'>{firstNameErrorMessage}</span>}
+          {firstNameError && (
+            <span
+              className='register__input-error'
+              id='firstName-error'
+              role='alert'
+            >
+              {firstNameErrorMessage}
+            </span>
+          )}
         </div>
         <div className='register__input-container'>
           <label htmlFor='lastname'>Last Name*: </label>
@@ -204,7 +225,15 @@ export default function Register() {
             aria-describedby={lastNameError ? 'lastName-error' : undefined}
             {...bindLastName}
           ></input>
-          {lastNameError && <span className='register__input-error' id='lastName-error' role='alert'>{lastNameErrorMessage}</span>}
+          {lastNameError && (
+            <span
+              className='register__input-error'
+              id='lastName-error'
+              role='alert'
+            >
+              {lastNameErrorMessage}
+            </span>
+          )}
         </div>
         <div className='register__input-container'>
           <label htmlFor='email'>Email*: </label>
@@ -217,7 +246,15 @@ export default function Register() {
             aria-describedby={emailError ? 'email-error' : undefined}
             {...bindEmail}
           ></input>
-          {emailError && <span className='register__input-error' id='email-error' role='alert'>{emailErrorMessage}</span>}
+          {emailError && (
+            <span
+              className='register__input-error'
+              id='email-error'
+              role='alert'
+            >
+              {emailErrorMessage}
+            </span>
+          )}
         </div>
         <div className='register__input-container'>
           <label htmlFor='password'>Password*: </label>
@@ -230,7 +267,15 @@ export default function Register() {
             aria-describedby={passwordError ? 'password-error' : undefined}
             {...bindPassword}
           ></input>
-          {passwordError && <span className='register__input-error' id='password-error' role='alert'>{passwordErrorMessage}</span>}
+          {passwordError && (
+            <span
+              className='register__input-error'
+              id='password-error'
+              role='alert'
+            >
+              {passwordErrorMessage}
+            </span>
+          )}
         </div>
         <div className='register__input-container'>
           <label htmlFor='confirmPassword'>Confirm Password*: </label>
@@ -240,10 +285,20 @@ export default function Register() {
             name='confirmPassword'
             className='register__input'
             aria-invalid={confirmPasswordError}
-            aria-describedby={confirmPasswordError ? 'confirmPassword-error' : undefined}
+            aria-describedby={
+              confirmPasswordError ? 'confirmPassword-error' : undefined
+            }
             {...bindConfirmPassword}
           ></input>
-          {confirmPasswordError && <span className='register__input-error' id='confirmPassword-error' role='alert'>{confirmPasswordErrorMessage}</span>}
+          {confirmPasswordError && (
+            <span
+              className='register__input-error'
+              id='confirmPassword-error'
+              role='alert'
+            >
+              {confirmPasswordErrorMessage}
+            </span>
+          )}
         </div>
         <button
           type='submit'
