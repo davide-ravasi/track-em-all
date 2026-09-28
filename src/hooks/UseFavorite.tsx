@@ -78,6 +78,20 @@ export function useFavorite() {
     }
   };
 
+  const onFavoriteError = (
+    error: unknown,
+    variables: { setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>> }
+  ) => {
+    toast.error(
+      typeof error === 'string'
+        ? error
+        : error instanceof Error
+          ? error.message
+          : 'Favorite request failed'
+    );
+    variables.setLoadingFavorite(false);
+  };
+
   const addFavoriteMutation = useMutation({
     mutationFn: addFavoriteDb,
     onSuccess: (response, variables) => {
@@ -92,14 +106,7 @@ export function useFavorite() {
       );
       variables.setLoadingFavorite(false);
     },
-    onError: (error, variables) => {
-      toast.error(
-        typeof error === 'string'
-          ? error
-          : (error?.message ?? 'Favorite request failed')
-      );
-      variables.setLoadingFavorite(false);
-    },
+    onError: onFavoriteError,
   });
 
   const removeFavoriteMutation = useMutation({
@@ -113,14 +120,7 @@ export function useFavorite() {
       );
       variables.setLoadingFavorite(false);
     },
-    onError: (error, variables) => {
-      toast.error(
-        typeof error === 'string'
-          ? error
-          : (error?.message ?? 'Favorite request failed')
-      );
-      variables.setLoadingFavorite(false);
-    },
+    onError: onFavoriteError,
   });
 
   const addFavorite = async ({
