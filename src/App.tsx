@@ -5,6 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import HomePage from './pages/HomePage/HomePage';
 import AboutPage from './pages/AboutPage/AboutPage';
@@ -38,46 +39,48 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className='app'>
-        <Router>
-          <AuthProvider>
-            <Header />
-            <Switch>
-              <Route path='/' exact component={HomePage} />
-              <Route path='/about' exact component={AboutPage} />
-              <Route path='/login' exact component={Login} />
-              <Route path='/register' exact component={Register} />
-              <Route
-                exact
-                path='/signin'
-                render={() => <Redirect to='/login' />}
-              />
-              <Route
-                exact
-                path='/signup'
-                render={() => <Redirect to='/register' />}
-              />
-              <Route
-                path='/list/:section/:id?/:category/'
-                exact
-                component={ListingPage}
-              />
-              <PrivateRoute path='/favorites'>
-                <FavoritesPage />
-              </PrivateRoute>
-              {/* <Route path="/favorites" exact component={FavoritesPage} /> */}
-              <Route path='/show/:id' exact component={ShowPage} />
-              <Route path='/episode/:id' exact component={EpisodePage} />
-              <Route path='/person/:id' exact component={PersonPage} />
-            </Switch>
-            <Footer />
-          </AuthProvider>
-        </Router>
-        <ToastContainer />
-      </div>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <div className='app'>
+          <Router>
+            <AuthProvider>
+              <Header />
+              <Switch>
+                <Route path='/' exact component={HomePage} />
+                <Route path='/about' exact component={AboutPage} />
+                <Route path='/login' exact component={Login} />
+                <Route path='/register' exact component={Register} />
+                <Route
+                  exact
+                  path='/signin'
+                  render={() => <Redirect to='/login' />}
+                />
+                <Route
+                  exact
+                  path='/signup'
+                  render={() => <Redirect to='/register' />}
+                />
+                <Route
+                  path='/list/:section/:id?/:category/'
+                  exact
+                  component={ListingPage}
+                />
+                <PrivateRoute path='/favorites'>
+                  <FavoritesPage />
+                </PrivateRoute>
+                {/* <Route path="/favorites" exact component={FavoritesPage} /> */}
+                <Route path='/show/:id' exact component={ShowPage} />
+                <Route path='/episode/:id' exact component={EpisodePage} />
+                <Route path='/person/:id' exact component={PersonPage} />
+              </Switch>
+              <Footer />
+            </AuthProvider>
+          </Router>
+          <ToastContainer />
+        </div>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

@@ -17,6 +17,7 @@ import { Favorite, RootState, ShowPageType } from '../../typescript/types';
 import './ShowPage.scss';
 import { useSelector } from 'react-redux';
 import { useFavorite } from '../../hooks/UseFavorite';
+import { Helmet } from 'react-helmet-async';
 
 export default function ShowPage() {
   const { id } = useParams<ShowPageType>();
@@ -59,129 +60,158 @@ export default function ShowPage() {
     removeFavorite({ favoriteId, setLoadingFavorite });
   };
 
+  const pageTitle = showData?.name
+    ? `${showData.name} | Track'em All`
+    : "Show | Track'em All";
+
+  const rawOverview = showData?.overview?.trim() ?? '';
+  const metaDescription =
+    rawOverview.length === 0
+      ? showData?.name
+        ? `Details, seasons and cast for ${showData.name} on Track'em All.`
+        : "Track TV shows with Track'em All."
+      : rawOverview.length <= 160
+        ? rawOverview
+        : `${rawOverview.slice(0, 157).trimEnd()}...`;
+
+  const ogImage =
+    getUrlImages('big', showData?.backdrop_path) ||
+    'https://trackem-all.netlify.app/og-image.png';
+
   return (
-    <main id='main-content' className='page'>
-      <div className='page__content-wrapper'>
-        {error && (
-          <div className='loading-error' role='alert'>
-            {error.message}
-          </div>
-        )}
-        {isLoading && (
-          <div
-            className='loader'
-            aria-live='polite'
-            aria-atomic='true'
-            role='status'
-            aria-label='Loading show information'
-          >
-            <Loader aria-hidden='true' aria-busy='true' />
-          </div>
-        )}
-        {showData && (
-          <section className='show'>
-            <div className='show__media-wrapper'>
-              <button
-                type='button'
-                className='show__card-add'
-                aria-busy={loadingFavorite}
-                onClick={(e) =>
-                  favorite ? handleUnfavorite(e, id) : handleFavorite(e)
-                }
-              >
-                {user && (
-                  <>
-                    {!loadingFavorite && (
-                      <FontAwesomeIcon
-                        icon={faHeart}
-                        aria-hidden='true'
-                        className={favorite ? 'selected' : ''}
-                      />
-                    )}
-                    {loadingFavorite && (
-                      <FontAwesomeIcon
-                        icon={faCircleNotch}
-                        aria-hidden='true'
-                        className={'fa-spin'}
-                      />
-                    )}
-                    <span className='sr-only'>
-                      {favorite
-                        ? `Remove ${showData.name} from favorites`
-                        : `Add ${showData.name} to favorites`}
-                    </span>
-                  </>
+    <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name='description' content={metaDescription} />
+        <meta property='og:title' content={pageTitle} />
+        <meta property='og:description' content={metaDescription} />
+        <meta property='og:image' content={ogImage} />
+        <meta property='og:url' content={window.location.href} />
+        <meta property='og:type' content='website' />
+      </Helmet>
+      <main id='main-content' className='page'>
+        <div className='page__content-wrapper'>
+          {error && (
+            <div className='loading-error' role='alert'>
+              {error.message}
+            </div>
+          )}
+          {isLoading && (
+            <div
+              className='loader'
+              aria-live='polite'
+              aria-atomic='true'
+              role='status'
+              aria-label='Loading show information'
+            >
+              <Loader aria-hidden='true' aria-busy='true' />
+            </div>
+          )}
+          {showData && (
+            <section className='show'>
+              <div className='show__media-wrapper'>
+                <button
+                  type='button'
+                  className='show__card-add'
+                  aria-busy={loadingFavorite}
+                  onClick={(e) =>
+                    favorite ? handleUnfavorite(e, id) : handleFavorite(e)
+                  }
+                >
+                  {user && (
+                    <>
+                      {!loadingFavorite && (
+                        <FontAwesomeIcon
+                          icon={faHeart}
+                          aria-hidden='true'
+                          className={favorite ? 'selected' : ''}
+                        />
+                      )}
+                      {loadingFavorite && (
+                        <FontAwesomeIcon
+                          icon={faCircleNotch}
+                          aria-hidden='true'
+                          className={'fa-spin'}
+                        />
+                      )}
+                      <span className='sr-only'>
+                        {favorite
+                          ? `Remove ${showData.name} from favorites`
+                          : `Add ${showData.name} to favorites`}
+                      </span>
+                    </>
+                  )}
+                </button>
+
+                {showData.backdrop_path && (
+                  <img
+                    alt={`${showData.name} backdrop`}
+                    src={getUrlImages('big', showData.backdrop_path)}
+                  />
                 )}
-              </button>
+              </div>
+              <div className='show__content-wrapper'>
+                <div className='show__language'>
+                  <span>Languages: </span>
+                  {showData.languages &&
+                    showData.languages.map(
+                      (lang: string, i: number, arr: string[]) => {
+                        return (
+                          <span key={`language-${i}`}>
+                            {lang}
+                            {arr.length - 1 !== i && ' / '}
+                          </span>
+                        );
+                      }
+                    )}
+                </div>
+                <h1 className='show__title'>
+                  {showData.name}
+                  <VoteBox vote={showData.vote_average} />
+                </h1>
+                <div className='show__genres'>
+                  {showData.genres &&
+                    showData.genres.map(
+                      (genre: Genre, i: number, arr: Genre[]) => {
+                        return (
+                          <span key={`genre-${i}`}>
+                            {genre.name}
+                            {arr.length - 1 !== i && ' / '}
+                          </span>
+                        );
+                      }
+                    )}
+                </div>
+                <div className='show__description'>{showData.overview}</div>
+                <div className='show__creators'>
+                  <span>Created by: </span>
+                  {showData.created_by &&
+                    showData.created_by.map(
+                      (creator: Creator, i: number, arr: Creator[]) => {
+                        return (
+                          <span key={`creator-${i}`}>
+                            {creator.name}
+                            {arr.length - 1 !== i && ', '}
+                          </span>
+                        );
+                      }
+                    )}
+                </div>
+                <div className='show__details'>
+                  <p>Number of seasons: {showData.number_of_seasons} </p>
+                  <p>Number of episodes: {showData.number_of_episodes}</p>
+                </div>
+              </div>
+            </section>
+          )}
 
-              {showData.backdrop_path && (
-                <img
-                  alt={`${showData.name} backdrop`}
-                  src={getUrlImages('big', showData.backdrop_path)}
-                />
-              )}
-            </div>
-            <div className='show__content-wrapper'>
-              <div className='show__language'>
-                <span>Languages: </span>
-                {showData.languages &&
-                  showData.languages.map(
-                    (lang: string, i: number, arr: string[]) => {
-                      return (
-                        <span key={`language-${i}`}>
-                          {lang}
-                          {arr.length - 1 !== i && ' / '}
-                        </span>
-                      );
-                    }
-                  )}
-              </div>
-              <h1 className='show__title'>
-                {showData.name}
-                <VoteBox vote={showData.vote_average} />
-              </h1>
-              <div className='show__genres'>
-                {showData.genres &&
-                  showData.genres.map(
-                    (genre: Genre, i: number, arr: Genre[]) => {
-                      return (
-                        <span key={`genre-${i}`}>
-                          {genre.name}
-                          {arr.length - 1 !== i && ' / '}
-                        </span>
-                      );
-                    }
-                  )}
-              </div>
-              <div className='show__description'>{showData.overview}</div>
-              <div className='show__creators'>
-                <span>Created by: </span>
-                {showData.created_by &&
-                  showData.created_by.map(
-                    (creator: Creator, i: number, arr: Creator[]) => {
-                      return (
-                        <span key={`creator-${i}`}>
-                          {creator.name}
-                          {arr.length - 1 !== i && ', '}
-                        </span>
-                      );
-                    }
-                  )}
-              </div>
-              <div className='show__details'>
-                <p>Number of seasons: {showData.number_of_seasons} </p>
-                <p>Number of episodes: {showData.number_of_episodes}</p>
-              </div>
-            </div>
-          </section>
-        )}
+          {showData && (
+            <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
+          )}
 
-        {showData && (
-          <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
-        )}
-
-        {showData && <ShowVideo idShow={id} showName={showData.name} />}
-      </div>
-    </main>
+          {showData && <ShowVideo idShow={id} showName={showData.name} />}
+        </div>
+      </main>
+    </>
   );
 }
