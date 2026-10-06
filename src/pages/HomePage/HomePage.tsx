@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Sections, Show } from '../../typescript/types';
 import ShowList from '../../components/ShowList/ShowList';
@@ -11,13 +12,24 @@ import { en } from '../../trads/en';
 import { useSelector } from 'react-redux';
 import Loader from '../../components/Loader/Loader';
 
+type HomeLocationState = { resetSearch?: boolean };
+
 export default function HomePage() {
+  const location = useLocation<HomeLocationState>();
   const [textInput, setTextInput] = useState('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [recommendedId, setRecommendedId] = useState<string>();
   const [recommendedName, setRecommendedName] = useState<string>();
   const [hideHomepageContents, setHideHomepageContents] = useState(false);
   const { user, favorites } = useSelector((state: any) => state.auth);
+
+  useEffect(() => {
+    if (location.state?.resetSearch) {
+      setTextInput('');
+      setSearchTerm('');
+      setHideHomepageContents(false);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (favorites !== null && favorites.length) {

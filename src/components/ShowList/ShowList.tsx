@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Categories, Person, Sections, Show } from '../../typescript/types';
 
 import './ShowList.scss';
@@ -89,12 +90,12 @@ export default function ShowList({
       <h1>
         {sectionTitle}{' '}
         {cardAmount && linkMore && (
-          <a
+          <Link
             className='shows__show-more'
-            href={`/list/${section}/${id ? id + '/' : ''}${category}`}
+            to={`/list/${section}/${id ? `${id}/` : ''}${category}`}
           >
-            {'show more >'}
-          </a>
+            show more &gt;
+          </Link>
         )}
       </h1>
       {!shows ||

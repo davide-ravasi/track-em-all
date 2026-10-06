@@ -17,7 +17,10 @@ export default function Header() {
       <nav className='navbar' aria-label='Main navigation menu'>
         <div className='navbar__links'>
           <div className='navbar-container--left'>
-            <Link to='/' className='navbar_menuItem'>
+            <Link
+              to={{ pathname: '/', state: { resetSearch: true } }}
+              className='navbar_menuItem'
+            >
               <img
                 src='/track-em-all.svg'
                 alt="Track'em all logo"
