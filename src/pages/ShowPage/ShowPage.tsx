@@ -78,16 +78,30 @@ export default function ShowPage() {
     getUrlImages('big', showData?.backdrop_path) ||
     'https://trackem-all.netlify.app/og-image.png';
 
+  const websiteBase = (
+    import.meta.env.VITE_WEBSITE_BASE_URL || 'https://trackem-all.netlify.app'
+  ).replace(/\/$/, '');
+  const canonicalUrl = `${websiteBase}/show/${id}`;
+
   return (
     <>
       <Helmet>
         <title>{pageTitle}</title>
+        <link rel='canonical' href={canonicalUrl} />
         <meta name='description' content={metaDescription} />
         <meta property='og:title' content={pageTitle} />
         <meta property='og:description' content={metaDescription} />
         <meta property='og:image' content={ogImage} />
-        <meta property='og:url' content={window.location.href} />
+        <meta property='og:url' content={canonicalUrl} />
         <meta property='og:type' content='website' />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:title' content={pageTitle} />
+        <meta name='twitter:description' content={metaDescription} />
+        <meta name='twitter:image' content={ogImage} />
+        <meta
+          name='twitter:image:alt'
+          content={showData?.name ? String(showData.name) : "Track'em All"}
+        />
       </Helmet>
       <main id='main-content' className='page'>
         <div className='page__content-wrapper'>

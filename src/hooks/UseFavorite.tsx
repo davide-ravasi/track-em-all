@@ -80,7 +80,9 @@ export function useFavorite() {
 
   const onFavoriteError = (
     error: unknown,
-    variables: { setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>> }
+    variables: {
+      setLoadingFavorite: React.Dispatch<React.SetStateAction<boolean>>;
+    }
   ) => {
     toast.error(
       typeof error === 'string'
