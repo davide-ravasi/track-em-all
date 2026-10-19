@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { getUrlImages, padNumber } from '../../utils';
 import { EpisodeProps, Actor } from '../../typescript/types';
 import Loader from '../../components/Loader/Loader';
@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet-async';
 
 export default function EpisodePage() {
   const location = useLocation<EpisodeProps>();
+  const { id } = useParams<{ id: string }>();
   const {
     season_number,
     episode_number,
@@ -80,7 +81,7 @@ export default function EpisodePage() {
         : `${rawOverview.slice(0, 157).trimEnd()}...`;
 
   const pageTitle = name ? `${name} | Track'em All` : "Episode | Track'em All";
-  const canonicalUrl = `${websiteBase}/episode/${episode_number}`;
+  const canonicalUrl = `${websiteBase}/episode/${id}`;
   const ogImage =
     getUrlImages('big', still_path) ||
     'https://trackem-all.netlify.app/og-image.png';

@@ -102,6 +102,18 @@ export default function ShowPage() {
           name='twitter:image:alt'
           content={showData?.name ? String(showData.name) : "Track'em All"}
         />
+        {showData && (
+          <script type='application/ld+json'>
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'TVSeries',
+              name: showData.name,
+              description: showData.overview,
+              image: ogImage,
+              url: canonicalUrl,
+            })}
+          </script>
+        )}
       </Helmet>
       <main id='main-content' className='page'>
         <div className='page__content-wrapper'>
