@@ -59,6 +59,7 @@ type EpisodeProps = {
   still_path: string;
   name: string;
   showId: string;
+  showName: string;
 };
 
 type ShowPageType = {
@@ -68,6 +69,7 @@ type ShowPageType = {
 type ShowSeasonProps = {
   season: number;
   idShow: string;
+  showName: string;
 };
 
 type Season = {
@@ -84,6 +86,7 @@ type Episode = {
   air_date: number;
   season_number: number;
   overview: string;
+  showName: string;
 };
 
 type Actor = {

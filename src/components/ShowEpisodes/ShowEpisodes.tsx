@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Episode } from '../../typescript/types';
 
 export const ShowEpisodes = (props: ShowSeasonProps) => {
-  const { season, idShow } = props;
+  const { season, idShow, showName } = props;
   const url = `${
     import.meta.env.VITE_BASE_TVSHOW_URL
   }${idShow}/season/${season}?api_key=${import.meta.env.VITE_API_KEY}`;
@@ -43,7 +43,12 @@ export const ShowEpisodes = (props: ShowSeasonProps) => {
         data.episodes.length > 0 &&
         data.episodes.map((episode: Episode) => {
           return (
-            <EpisodeCard key={episode.id} episode={episode} showId={idShow} />
+            <EpisodeCard
+              key={episode.id}
+              episode={episode}
+              showId={idShow}
+              showName={showName}
+            />
           );
         })}
     </div>

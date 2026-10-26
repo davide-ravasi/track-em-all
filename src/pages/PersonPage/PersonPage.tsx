@@ -77,6 +77,22 @@ export default function PersonPage() {
           name='twitter:image:alt'
           content={personData?.name ? String(personData.name) : "Track'em All"}
         />
+        {personData && (
+          <script type='application/ld+json'>
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: personData.name,
+              description: metaDescription,
+              image: ogImage,
+              url: canonicalUrl,
+              ...(personData.birthday && { birthDate: personData.birthday }),
+              ...(personData.place_of_birth && {
+                birthPlace: personData.place_of_birth,
+              }),
+            })}
+          </script>
+        )}
       </Helmet>
       <main id='main-content' className='page'>
         <div className='page__content-wrapper'>

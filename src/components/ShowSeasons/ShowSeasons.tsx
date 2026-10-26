@@ -9,10 +9,11 @@ import './ShowSeasons.scss';
 type ShowSeasonsProps = {
   nmbrSeasons?: number;
   idShow: string;
+  showName: string;
 };
 
 export default function ShowSeasons(props: ShowSeasonsProps) {
-  const { nmbrSeasons, idShow } = props;
+  const { nmbrSeasons, idShow, showName } = props;
   const [showBoxSeasons, setShowBoxSeasons] = useState(false);
   const toggleSeasons = () => {
     setShowBoxSeasons(!showBoxSeasons);
@@ -51,7 +52,11 @@ export default function ShowSeasons(props: ShowSeasonsProps) {
                   data-testid={`season-${nmbrSeason}`}
                 >
                   <h2>Season {nmbrSeason}</h2>
-                  <ShowEpisodes season={nmbrSeason} idShow={idShow} />
+                  <ShowEpisodes
+                    season={nmbrSeason}
+                    idShow={idShow}
+                    showName={showName}
+                  />
                 </div>
               );
             })}

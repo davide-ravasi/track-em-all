@@ -232,7 +232,11 @@ export default function ShowPage() {
           )}
 
           {showData && (
-            <ShowSeasons nmbrSeasons={showData.number_of_seasons} idShow={id} />
+            <ShowSeasons
+              nmbrSeasons={showData.number_of_seasons}
+              idShow={id}
+              showName={showData.name}
+            />
           )}
 
           {showData && <ShowVideo idShow={id} showName={showData.name} />}

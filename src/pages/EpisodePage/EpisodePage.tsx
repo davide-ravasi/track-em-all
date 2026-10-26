@@ -19,6 +19,7 @@ export default function EpisodePage() {
     still_path,
     name,
     showId,
+    showName,
   } = location.state;
 
   const castUrl = `${
@@ -105,6 +106,29 @@ export default function EpisodePage() {
           name='twitter:image:alt'
           content={name ? String(name) : "Track'em All"}
         />
+        {name && (
+          <script type='application/ld+json'>
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'TVEpisode',
+              name: name,
+              description: metaDescription,
+              image: ogImage,
+              url: canonicalUrl,
+              ...(episode_number != null && { episodeNumber: episode_number }),
+              ...(air_date && { datePublished: air_date }),
+              partOfSeason: {
+                '@type': 'TVSeason',
+                ...(season_number != null && { seasonNumber: season_number }),
+                partOfSeries: {
+                  '@type': 'TVSeries',
+                  name: showName,
+                  ...(showId && { url: `${websiteBase}/show/${showId}` }),
+                },
+              },
+            })}
+          </script>
+        )}
       </Helmet>
       <main id='main-content' className='page'>
         <div className='page__content-wrapper'>
