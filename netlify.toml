@@ -2,6 +2,14 @@
   command = "npm install && npm run build"
   functions = "functions"
   publish = "build"
+
+# netlify dev (:8888) proxies to Vite. Without this, CLI may start Vite twice
+# (5173 “ready” then a second `npm run dev` on 5174) and proxy the dead port.
+[dev]
+  framework = "#custom"
+  command = "npm run dev -- --port 5173 --strictPort"
+  targetPort = 5173
+  port = 8888
 [[headers]]
   # Applica queste regole a tutte le pagine e risorse del sito
   for = "/*"
