@@ -43,6 +43,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "analyze": "vite-bundle-visualizer",
     "test:playwright": "playwright test --ui",
     "test:lighthouse": "lhci autorun",
     "lint": "eslint .",
@@ -86,6 +87,7 @@
     "husky": "^9.1.7",
     "prettier": "^3.8.1",
     "vite": "^7.1.12",
+    "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-pwa": "^1.1.0"
   }
 }

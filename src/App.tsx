@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -9,9 +9,6 @@ import { HelmetProvider } from 'react-helmet-async';
 
 import HomePage from './pages/HomePage/HomePage';
 import AboutPage from './pages/AboutPage/AboutPage';
-import FavoritesPage from './pages/FavoritesPage/FavoritesPage';
-import EpisodePage from './pages/EpisodePage/EpisodePage';
-import ShowPage from './pages/ShowPage/ShowPage';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Register from './components/Register/Register';
@@ -21,11 +18,16 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ToastContainer } from 'react-toastify';
 
 import './App.scss';
-import ListingPage from './pages/ListingPage/ListingPage';
-import PersonPage from './pages/PersonPage/PersonPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Loader from './components/Loader/Loader';
+
+const ShowPage = React.lazy(() => import('./pages/ShowPage/ShowPage'));
+const EpisodePage = React.lazy(() => import('./pages/EpisodePage/EpisodePage'));
+const FavoritesPage = React.lazy(() => import('./pages/FavoritesPage/FavoritesPage'));
+const PersonPage = React.lazy(() => import('./pages/PersonPage/PersonPage'));
+const ListingPage = React.lazy(() => import('./pages/ListingPage/ListingPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,34 +47,36 @@ function App() {
           <Router>
             <AuthProvider>
               <Header />
-              <Switch>
-                <Route path='/' exact component={HomePage} />
-                <Route path='/about' exact component={AboutPage} />
-                <Route path='/login' exact component={Login} />
-                <Route path='/register' exact component={Register} />
-                <Route
-                  exact
-                  path='/signin'
-                  render={() => <Redirect to='/login' />}
-                />
-                <Route
-                  exact
-                  path='/signup'
-                  render={() => <Redirect to='/register' />}
-                />
-                <Route
-                  path='/list/:section/:id?/:category/'
-                  exact
-                  component={ListingPage}
-                />
-                <PrivateRoute path='/favorites'>
-                  <FavoritesPage />
-                </PrivateRoute>
-                {/* <Route path="/favorites" exact component={FavoritesPage} /> */}
-                <Route path='/show/:id' exact component={ShowPage} />
-                <Route path='/episode/:id' exact component={EpisodePage} />
-                <Route path='/person/:id' exact component={PersonPage} />
-              </Switch>
+              <Suspense fallback={<Loader />}>
+                <Switch>
+                  <Route path='/' exact component={HomePage} />
+                  <Route path='/about' exact component={AboutPage} />
+                  <Route path='/login' exact component={Login} />
+                  <Route path='/register' exact component={Register} />
+                  <Route
+                    exact
+                    path='/signin'
+                    render={() => <Redirect to='/login' />}
+                  />
+                  <Route
+                    exact
+                    path='/signup'
+                    render={() => <Redirect to='/register' />}
+                  />
+                  <Route
+                    path='/list/:section/:id?/:category/'
+                    exact
+                    component={ListingPage}
+                  />
+                  <PrivateRoute path='/favorites'>
+                    <FavoritesPage />
+                  </PrivateRoute>
+                  {/* <Route path="/favorites" exact component={FavoritesPage} /> */}
+                  <Route path='/show/:id' exact component={ShowPage} />
+                  <Route path='/episode/:id' exact component={EpisodePage} />
+                  <Route path='/person/:id' exact component={PersonPage} />
+                </Switch>
+              </Suspense>
               <Footer />
             </AuthProvider>
           </Router>
